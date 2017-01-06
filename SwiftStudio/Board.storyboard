@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="rCA-3l-qkJ">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Main View Controller-->
+        <scene sceneID="PO1-KM-Dga">
+            <objects>
+                <collectionViewController id="9Qn-T8-ydf" customClass="MainViewController" customModule="SwiftStudio" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="kS2-pS-zKr">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="viX-w2-Adv">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="BH6-Ga-jz8">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </view>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="9Qn-T8-ydf" id="PUD-0f-dLd"/>
+                            <outlet property="delegate" destination="9Qn-T8-ydf" id="5W4-Aa-Fj4"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7kI-zb-HHA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-958" y="918"/>
+        </scene>
+        <!--Chat View Controller-->
+        <scene sceneID="84Z-9E-9Nw">
+            <objects>
+                <collectionViewController id="XEG-Cp-KTJ" customClass="ChatViewController" customModule="SwiftStudio" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="fMt-Xp-fE2">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="1gF-my-k93">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="dxn-aH-I8f">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </view>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="XEG-Cp-KTJ" id="TsZ-uw-Sb6"/>
+                            <outlet property="delegate" destination="XEG-Cp-KTJ" id="hvU-4D-5Za"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KqV-8i-2wd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-279" y="910"/>
+        </scene>
+        <!--UserList-->
+        <scene sceneID="lyY-WF-XAx">
+            <objects>
+                <viewControllerPlaceholder storyboardName="UserList" id="ar4-Dd-0jD" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4fz-ki-Bnn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="505" y="667"/>
+        </scene>
+        <!--Storyboard Reference-->
+        <scene sceneID="ShR-bM-g2R">
+            <objects>
+                <viewControllerPlaceholder id="rfg-kK-mtv" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XnS-3l-hw9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="279" y="808"/>
+        </scene>
+        <!--MileStone-->
+        <scene sceneID="346-PX-stq">
+            <objects>
+                <viewControllerPlaceholder storyboardName="MileStone" id="uHf-gM-1CM" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QRs-H4-4bv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="294" y="667"/>
+        </scene>
+        <!--Setting-->
+        <scene sceneID="tgN-ew-wEG">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Setting" id="OCU-lh-CiU" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="glA-3t-ECI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="739" y="667"/>
+        </scene>
+        <!--Custom Tab Bar Controller-->
+        <scene sceneID="Xtt-57-FSh">
+            <objects>
+                <viewController storyboardIdentifier="CustomTabBarController" id="rCA-3l-qkJ" customClass="CustomTabBarController" customModule="SwiftStudio" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="mbW-O2-PfV"/>
+                        <viewControllerLayoutGuide type="bottom" id="Q5v-lR-3nx"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="F83-MZ-qlH">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fdr-cO-VQk">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="689"/>
+                                <color key="backgroundColor" red="0.0" green="1" blue="0.68685630029719169" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZYP-Re-pyB">
+                                <rect key="frame" x="0.0" y="687" width="414" height="49"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Q0-Xs-XGB" customClass="CustomButton" customModule="SwiftStudio" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="82.666666666666671" height="49"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="49" id="rIr-iQ-urw"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <state key="normal" title="게시판">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="9Qn-T8-ydf" kind="custom" identifier="Board" customClass="CustomNavigationSegue" customModule="SwiftStudio" customModuleProvider="target" id="d2F-uJ-iGt"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n2a-U1-sgY" customClass="CustomButton" customModule="SwiftStudio" customModuleProvider="target">
+                                        <rect key="frame" x="165.66666666666666" y="0.0" width="82.666666666666686" height="49"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="49" id="cs8-J7-AsC"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <state key="normal" title="마일스톤">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="uHf-gM-1CM" kind="custom" identifier="MileStone" customClass="CustomNavigationSegue" customModule="SwiftStudio" customModuleProvider="target" id="V6h-0U-fC2"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Xa-PC-QKF" customClass="CustomButton" customModule="SwiftStudio" customModuleProvider="target">
+                                        <rect key="frame" x="248.33333333333331" y="0.0" width="82.999999999999943" height="49"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="49" id="Cc6-d6-Ww9"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <state key="normal" title="사용자목록">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="ar4-Dd-0jD" kind="custom" identifier="UserList" customClass="CustomNavigationSegue" customModule="SwiftStudio" customModuleProvider="target" id="MtC-7T-P5K"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FPf-dH-Cje" customClass="CustomButton" customModule="SwiftStudio" customModuleProvider="target">
+                                        <rect key="frame" x="331.33333333333326" y="0.0" width="82.666666666666686" height="49"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="49" id="9dI-Lx-8jt"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <state key="normal" title="셋팅">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="OCU-lh-CiU" kind="custom" identifier="Setting" customClass="CustomNavigationSegue" customModule="SwiftStudio" customModuleProvider="target" id="bo5-g0-8xN"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xG4-1i-Q1P" customClass="CustomButton" customModule="SwiftStudio" customModuleProvider="target">
+                                        <rect key="frame" x="82.666666666666657" y="0.0" width="82.999999999999972" height="49"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="49" id="5yj-G2-8uv"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <state key="normal" title="채팅">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="XEG-Cp-KTJ" kind="custom" identifier="Chat" customClass="CustomNavigationSegue" customModule="SwiftStudio" customModuleProvider="target" id="MrJ-a8-PZD"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.79287981201129487" green="0.79288948955043848" blue="0.80960501269035534" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="5Xa-PC-QKF" firstAttribute="leading" secondItem="n2a-U1-sgY" secondAttribute="trailing" id="2Ep-gE-83e"/>
+                                    <constraint firstItem="xG4-1i-Q1P" firstAttribute="width" secondItem="ZYP-Re-pyB" secondAttribute="width" multiplier="0.2" id="73k-Bv-OLa"/>
+                                    <constraint firstItem="5Xa-PC-QKF" firstAttribute="top" secondItem="ZYP-Re-pyB" secondAttribute="top" id="7XB-HG-16w"/>
+                                    <constraint firstItem="xG4-1i-Q1P" firstAttribute="top" secondItem="ZYP-Re-pyB" secondAttribute="top" id="8DT-SM-Zd7"/>
+                                    <constraint firstItem="FPf-dH-Cje" firstAttribute="width" secondItem="ZYP-Re-pyB" secondAttribute="width" multiplier="0.2" id="F8F-vA-TVH"/>
+                                    <constraint firstItem="n2a-U1-sgY" firstAttribute="width" secondItem="ZYP-Re-pyB" secondAttribute="width" multiplier="0.2" id="Gbh-MS-d7z"/>
+                                    <constraint firstAttribute="trailing" secondItem="FPf-dH-Cje" secondAttribute="trailing" id="LLl-7G-uEm"/>
+                                    <constraint firstItem="3Q0-Xs-XGB" firstAttribute="leading" secondItem="ZYP-Re-pyB" secondAttribute="leading" id="RPO-lA-116"/>
+                                    <constraint firstItem="3Q0-Xs-XGB" firstAttribute="top" secondItem="ZYP-Re-pyB" secondAttribute="top" id="SXb-Ub-baD"/>
+                                    <constraint firstItem="3Q0-Xs-XGB" firstAttribute="width" secondItem="ZYP-Re-pyB" secondAttribute="width" multiplier="0.2" id="TYs-bq-Yf1"/>
+                                    <constraint firstItem="n2a-U1-sgY" firstAttribute="top" secondItem="ZYP-Re-pyB" secondAttribute="top" id="aeZ-jv-dqU"/>
+                                    <constraint firstItem="FPf-dH-Cje" firstAttribute="leading" secondItem="5Xa-PC-QKF" secondAttribute="trailing" id="gGp-l3-dgm"/>
+                                    <constraint firstAttribute="height" constant="49" id="gx3-F3-glK"/>
+                                    <constraint firstItem="5Xa-PC-QKF" firstAttribute="width" secondItem="ZYP-Re-pyB" secondAttribute="width" multiplier="0.2" id="hBl-Ha-gug"/>
+                                    <constraint firstItem="n2a-U1-sgY" firstAttribute="leading" secondItem="xG4-1i-Q1P" secondAttribute="trailing" id="r3U-BZ-Zja"/>
+                                    <constraint firstItem="xG4-1i-Q1P" firstAttribute="leading" secondItem="3Q0-Xs-XGB" secondAttribute="trailing" id="rhg-Ux-pLI"/>
+                                    <constraint firstItem="FPf-dH-Cje" firstAttribute="top" secondItem="ZYP-Re-pyB" secondAttribute="top" id="tic-GH-6ei"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Fdr-cO-VQk" secondAttribute="trailing" id="98i-tz-gkP"/>
+                            <constraint firstAttribute="trailing" secondItem="ZYP-Re-pyB" secondAttribute="trailing" id="abN-P9-eXn"/>
+                            <constraint firstItem="Q5v-lR-3nx" firstAttribute="top" secondItem="Fdr-cO-VQk" secondAttribute="bottom" constant="47" id="eSn-H4-MwO"/>
+                            <constraint firstItem="Fdr-cO-VQk" firstAttribute="leading" secondItem="F83-MZ-qlH" secondAttribute="leading" id="ibK-xh-SMP"/>
+                            <constraint firstItem="ZYP-Re-pyB" firstAttribute="leading" secondItem="F83-MZ-qlH" secondAttribute="leading" id="jhs-VO-MdK"/>
+                            <constraint firstItem="Fdr-cO-VQk" firstAttribute="top" secondItem="F83-MZ-qlH" secondAttribute="top" id="q5y-Dm-Pty"/>
+                            <constraint firstItem="Q5v-lR-3nx" firstAttribute="top" secondItem="ZYP-Re-pyB" secondAttribute="bottom" id="uyQ-tK-GFe"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="boardButton" destination="3Q0-Xs-XGB" id="gDo-R1-Lwn"/>
+                        <outlet property="bottomView" destination="ZYP-Re-pyB" id="bGY-kR-ZR2"/>
+                        <outlet property="chatButton" destination="xG4-1i-Q1P" id="NKD-nO-Apd"/>
+                        <outlet property="milestoneButton" destination="n2a-U1-sgY" id="kzv-s5-O8O"/>
+                        <outlet property="placeholderView" destination="Fdr-cO-VQk" id="ZeI-Rr-JML"/>
+                        <outlet property="settingButton" destination="FPf-dH-Cje" id="Fu6-0A-KaY"/>
+                        <outlet property="userListButton" destination="5Xa-PC-QKF" id="MXz-ac-Gzf"/>
+                        <outlet property="view" destination="F83-MZ-qlH" id="Lcd-ku-69S"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Sfz-3g-XgQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="21.600000000000001" y="160.56971514242881"/>
+        </scene>
+    </scenes>
+</document>
