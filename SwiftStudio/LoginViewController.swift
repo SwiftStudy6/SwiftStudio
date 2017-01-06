@@ -194,8 +194,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     
     @IBAction func buttonTouchUpInside(_ sender:AnyObject){
-        print("touchupInsideUp Button : \(sender.tag)")
-        
+               
         if(sender.tag == 0){//login button
             
             let stroyBoard = UIStoryboard(name: "Board", bundle: nil)
