@@ -16,6 +16,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        /*
+         StoryBoard없이 연결할 경우 앱설정 (맨위 프로젝트 설정) -> General -> Main Interface (빈칸)
+         놓은 상태에서 아래 코드와 같이 하면 됩니다.
+         */
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.makeKeyAndVisible();
+        
+        let loginViewController = LoginViewController()
+        window?.rootViewController = loginViewController
+        
+//        let naviContorller = UINavigationController(rootViewController: loginViewController)
+//        naviContorller.navigationBar.isHidden = true; //네비게이션 바 숨기기
+//        window?.rootViewController = naviContorller
+        
+
+
+        
+        
         return true
     }
 
