@@ -7,33 +7,110 @@
 //
 
 import UIKit
+import Firebase
+import SwiftyJSON
+import SDWebImage
 
-private let reuseIdentifier = "Cell"
+private let reuseIdentifier = "BoardCell"
 
+//Define Model Of Board
 class BoradObject : NSObject {
-    var userId : String? = nil
-    var userName : String? = nil
-    var profileImgUrl : String? = nil
-    var bodyText : String? = nil
+    
+    var boradNum        : NSNumber?     //Board uique Numver
+    var authorId        : String?       //Author Id
+    var userName        : String?       //Author Name
+    var profileImgUrl   : String?       //Author Profile Url by string
+    var profileImg      : UIImage?      //Author Profile Image
+    var bodyText        : String?       //Board Body Text
+    var editTime        : String?       //Board Edited Time yyyy/MM/dd hh:mm
+    
+    //init each
+    init(_ boardNum: NSNumber, _ authorId: String, _ userName: String, _ profileImgUrl: String, _ profileImg: UIImage, _ bodyText : String, _ editTime : String){
+        self.boradNum = boardNum
+        self.authorId = authorId
+        self.userName = userName
+        self.profileImg = profileImg
+        self.profileImgUrl = profileImgUrl
+        self.bodyText = bodyText
+        self.editTime = editTime
+    }
+    
+    convenience override init(){
+        self.boradNum = nil
+        self.authorId = nil
+        self.userName = nil
+        self.profileImg = nil
+        self.profileImgUrl = nil
+        self.bodyText = nil
+        self.editTime = nil
+    }
+    
+    //inin with json
+    init(_ json:Any){
+        let json = JSON(json)
+        
+        self.boradNum = json["boardNo"].number
+        self.authorId   = json["userId"].string
+        self.userName = json["userName"].string
+        if let url = json["profileUrl"].string {
+            let imageView = UIImageView()
+            imageView.sd_setImage(with: URL(string: url))
+            
+            self.profileImg = imageView.image
+        }
+        
+        self.bodyText = json["bodyText"].string
+        self.editTime = json["editTime"].string
+    }
+
 }
 
 protocol BoardCellDelegate  {
-    func editButtonEvent(sender:UIButton)
-    func likeButtonEvent(sender:UIButton)
-    func replyButtonEvent(sender:UIButton)
-    func shareButtonEvent(sender:UIButton)
+    func editButtonEvent(sender:UIButton, cell : BoardCell)
+    func likeButtonEvent(sender:UIButton, cell : BoardCell)
+    func replyButtonEvent(sender:UIButton, cell : BoardCell)
+    func shareButtonEvent(sender:UIButton, cell : BoardCell)
 }
 
 //Board Cell Definition
 class BoardCell : UICollectionViewCell {
     
+    
+    var boardNo      : NSNumber! = 0                //Board Number
+    var authorId     : String! = nil                //Board Writer Id(User Id)
     var userImage    : UIImageView! = nil           //Profile image
     var userName     : UILabel? = nil               //Username
     var editTime     : UILabel? = nil               //Edited time
     var textRecorded : UITextView? = nil            //Text
+    
     var delegate     : BoardCellDelegate? = nil     //BoardCellDelegate Object
     
-    override init(frame: CGRect){
+    var dataObject   : BoradObject! {
+       
+        set(newValue){
+            self.boardNo = newValue.boradNum
+            self.userName?.text = newValue.userName
+            self.authorId = newValue.authorId
+            self.userImage.image = newValue.profileImg
+            self.textRecorded?.text = newValue.bodyText
+            self.editTime?.text = newValue.editTime
+        }
+        
+        get{
+            let returnVal : BoradObject! = nil
+            
+            returnVal.boradNum = self.boardNo
+            returnVal.authorId   = self.authorId
+            returnVal.userName = self.userName?.text
+            returnVal.bodyText = self.textRecorded?.text
+            returnVal.profileImg = self.userImage.image
+            returnVal.editTime = self.editTime?.text
+            
+            return returnVal
+        }
+    }
+    
+        override init(frame: CGRect){
         super.init(frame:frame)
         setSetting()
     }
@@ -93,12 +170,7 @@ class BoardCell : UICollectionViewCell {
         editButton.widthAnchor.constraint(equalToConstant: 26).isActive = true
         editButton.heightAnchor.constraint(equalToConstant: 26).isActive = true
 
-        //TODO : Add small Menu
-        //let editMenu = UIVIew()
-        
-        
-        
-        
+
         //setting UserName
         self.userName = UILabel()
         self.userName?.textAlignment = .left
@@ -219,31 +291,36 @@ class BoardCell : UICollectionViewCell {
     
     //Button Delegate Fucniton
     @IBAction func editButtonTouchUpinside(_ sender:UIButton){
-        print(123)
-        self.delegate?.editButtonEvent(sender:sender)
+        self.delegate?.editButtonEvent(sender:sender, cell: self)
     }
     
     @IBAction func likeButtonTouchUpInside(_ sender:UIButton){
-        self.delegate?.likeButtonEvent(sender: sender)
+        self.delegate?.likeButtonEvent(sender: sender, cell: self)
     }
     
     @IBAction func replyButtonTouchUpInside(_ sender:UIButton){
-        self.delegate?.replyButtonEvent(sender:sender)
+        self.delegate?.replyButtonEvent(sender:sender, cell: self)
     }
     
     @IBAction func shareButtonTouchUpInside(_ sender:UIButton){
-        self.delegate?.shareButtonEvent(sender: sender)
+        self.delegate?.shareButtonEvent(sender: sender, cell: self)
     }
     
 }
-
-
+/*************************************************************************************
+ * Start
+ *************************************************************************************/
 
 //Definition Class MainViewController
 class MainViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, BoardCellDelegate {
+    
+    private var ref : FIRDatabaseReference!
+    private var data : String!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.ref = FIRDatabase.database().reference()
         
         // Register cell classes
         self.collectionView!.register(BoardCell.self, forCellWithReuseIdentifier: reuseIdentifier)
@@ -261,6 +338,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
     }
 
+    
+    func dataSetting(){
+        self.data = "{'board': [{'boardNo':\(1), 'authorId':'Daivd', 'bodyText':'테스트1'}]}"
+        
+        
+    }
+    
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -277,20 +361,26 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! BoardCell
         
-        
-        
         // Configure the cell
-        //example
-        cell.userImage?.image = UIImage(named: "User")
         
-        cell.userName?.text = "User Name"
-        cell.editTime?.text = "2017년 1월 3일 오후 5:00"
-        cell.textRecorded?.text = "테스트"
+        
+        
+        let data = JSON("{ board : [{'boardNo':'\(1)'}]")
+        
+        
+        cell.dataObject = BoradObject(data)
+        
+        
+//        cell.userImage?.image = UIImage(named: "User")
+//        
+//        cell.userName?.text = "User Name"
+//        cell.editTime?.text = "2017년 1월 3일 오후 5:00"
+//        cell.textRecorded?.text = "테스트"
+        
+        
+        
         
         cell.delegate = self
-    
-        
-        
         
         return cell
     }
@@ -299,34 +389,79 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     // MARK : BoardCellDelegate
     
     //Edit Button
-    func editButtonEvent(sender: UIButton) {
-        //Example
-//        let testViewController = TestViewController()
-//        var topController = UIApplication.shared.keyWindow?.rootViewController
-//        while ((topController?.presentedViewController) != nil) {
-//            topController = topController?.presentedViewController
-//        }
-//       
-//        let naviController = UINavigationController(rootViewController: testViewController)
-//        topController?.present(naviController, animated: true, completion: nil)
+    func editButtonEvent(sender: UIButton, cell : BoardCell) {
+        
+        //let key = ref.child("board").child("boardNo").
+        
+        let user = FIRAuth.auth()?.currentUser
+        let no = cell.boardNo
+        let authorId = cell.authorId
+        
+        let alertController = UIAlertController(title: "게시물 수정", message: nil, preferredStyle: .actionSheet)
+     
+        
+        let addNoticeAction = UIAlertAction(title: "공지사항 등록", style: .default) { (Void) in
+            
+        }
+        
+        let delNoticeAction = UIAlertAction(title: "공지사항 내리기", style: .default) { (Void) in
+            
+        }
+        
+        let editAction = UIAlertAction(title: "글 수정", style: .default) { (Void) in
+            
+        }
+        let delAction = UIAlertAction(title: "글 삭제", style: .destructive) { (Void) in
+           
+            if(user?.uid == authorId){
+                //TODO : change DelYn
+                
+            }
+            
+        }
         
         
-//        present(testViewController, animated: true, completion: nil)
+        alertController.addAction(addNoticeAction)
+        alertController.addAction(delNoticeAction)
+        alertController.addAction(editAction)
+        
+        if(user?.uid == authorId){
+            alertController.addAction(delAction)
+        }
+        
+        self.present(alertController, animated: true, completion: nil)
+        
     }
     
     //Like Button
-    func likeButtonEvent(sender: UIButton) {
+    func likeButtonEvent(sender: UIButton, cell : BoardCell) {
         //code
     }
     
     //Reply Button
-    func replyButtonEvent(sender: UIButton) {
+    func replyButtonEvent(sender: UIButton, cell : BoardCell) {
         //code
+        let boardDetailController = UIViewController()
+        let navigationController = UINavigationController(rootViewController: boardDetailController)
+        
+        self.view.window?.rootViewController?.present(navigationController, animated: true, completion: nil)
+        
     }
     
     //Share Button
-    func shareButtonEvent(sender: UIButton) {
+    func shareButtonEvent(sender: UIButton, cell : BoardCell) {
         //code
+        let alertController = UIAlertController(title: "공유", message: nil, preferredStyle: .actionSheet)
+        
+        let cancleAction = UIAlertAction(title: "택스트내용 복사", style: .cancel, handler:{ (Void) in
+            UIPasteboard.general.string = cell.textRecorded?.text
+        })
+        
+        alertController.addAction(cancleAction)
+        
+        
+        self.present(alertController, animated: true, completion: nil)
+        
     }
     
     
@@ -343,7 +478,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     // Uncomment this method to specify if the specified item should be selected
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        print(111)
+        
         return true
     }
     

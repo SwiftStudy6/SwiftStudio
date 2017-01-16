@@ -12,6 +12,7 @@
 		02FC4C861E166B1B00E1EF61 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02FC4C841E166B1B00E1EF61 /* Main.storyboard */; };
 		02FC4C881E166B1B00E1EF61 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02FC4C871E166B1B00E1EF61 /* Assets.xcassets */; };
 		02FC4C8B1E166B1B00E1EF61 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02FC4C891E166B1B00E1EF61 /* LaunchScreen.storyboard */; };
+		8E3D54921E22372E00163BA0 /* ChatLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3D54911E22372E00163BA0 /* ChatLogViewController.swift */; };
 		8E408EF41E1FD07A00A7B38C /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E408EEC1E1FD07A00A7B38C /* ChatViewController.swift */; };
 		8E408EF51E1FD07A00A7B38C /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E408EED1E1FD07A00A7B38C /* CustomButton.swift */; };
 		8E408EF61E1FD07A00A7B38C /* CustomNavigationSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E408EEE1E1FD07A00A7B38C /* CustomNavigationSegue.swift */; };
@@ -45,6 +46,7 @@
 		02FC4C8C1E166B1B00E1EF61 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44CA5C99B5C87210A9C2FEE1 /* Pods_SwiftStudio.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftStudio.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E001633EDC68637FE8613D3 /* Pods-SwiftStudio.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftStudio.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftStudio/Pods-SwiftStudio.debug.xcconfig"; sourceTree = "<group>"; };
+		8E3D54911E22372E00163BA0 /* ChatLogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLogViewController.swift; sourceTree = "<group>"; };
 		8E408EEC1E1FD07A00A7B38C /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		8E408EED1E1FD07A00A7B38C /* CustomButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		8E408EEE1E1FD07A00A7B38C /* CustomNavigationSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomNavigationSegue.swift; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 				02FC4C821E166B1B00E1EF61 /* ViewController.swift */,
 				8E408EF01E1FD07A00A7B38C /* MainViewController.swift */,
 				F6B2F9071E27537600E0A1BD /* MileStoneViewController.swift */,
+				8E3D54911E22372E00163BA0 /* ChatLogViewController.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -335,6 +338,7 @@
 				8E408EF71E1FD07A00A7B38C /* CustomTabBarController.swift in Sources */,
 				8E408F061E1FF2F100A7B38C /* LoginViewController.swift in Sources */,
 				02FC4C831E166B1B00E1EF61 /* ViewController.swift in Sources */,
+				8E3D54921E22372E00163BA0 /* ChatLogViewController.swift in Sources */,
 				8E408EF41E1FD07A00A7B38C /* ChatViewController.swift in Sources */,
 				02FC4C811E166B1B00E1EF61 /* AppDelegate.swift in Sources */,
 			);

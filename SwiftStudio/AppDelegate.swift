@@ -4,7 +4,12 @@
 //
 //  Created by 유명식 on 2016. 12. 30..
 //  Copyright © 2016년 swift. All rights reserved.
+// -----------------------------------------------------------------------------------------------
+//  변경 내역 적기
+// -----------------------------------------------------------------------------------------------
+//  2016.01.07 June Kang - 파이어베이스를 위한 설정 및 Main.storyborad연동 제거 (단, 경우에 따라서 다시 연결가능)
 //
+// -----------------------------------------------------------------------------------------------
 
 import UIKit
 import Firebase
@@ -35,10 +40,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        let naviContorller = UINavigationController(rootViewController: loginViewController)
 //        naviContorller.navigationBar.isHidden = true; //네비게이션 바 숨기기
 //        window?.rootViewController = naviContorller
-        
-
-
-        
         
         return true
     }
