@@ -35,16 +35,6 @@ class BoradObject : NSObject {
         self.editTime = editTime
     }
     
-    convenience override init(){
-        self.boradNum = nil
-        self.authorId = nil
-        self.userName = nil
-        self.profileImg = nil
-        self.profileImgUrl = nil
-        self.bodyText = nil
-        self.editTime = nil
-    }
-    
     //inin with json
     init(_ json:Any){
         let json = JSON(json)
