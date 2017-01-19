@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="EGt-EK-dej">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Board Create View Controller-->
+        <scene sceneID="hSB-oV-6MW">
+            <objects>
+                <viewController id="EGt-EK-dej" customClass="BoardCreateViewController" customModule="SwiftStudio" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="d6z-6j-rI5"/>
+                        <viewControllerLayoutGuide type="bottom" id="kGU-ZF-EsX"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="GEs-Fk-2Ct">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="g2e-Jn-GdE">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
+                                <connections>
+                                    <outlet property="delegate" destination="EGt-EK-dej" id="OxV-uo-6Ve"/>
+                                </connections>
+                            </textView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8wt-Jq-miM" userLabel="toolbarView">
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="MXS-o5-1pl"/>
+                                </constraints>
+                            </view>
+                            <activityIndicatorView hidden="YES" opaque="NO" alpha="0.40000000596046448" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="8db-o3-Dnh">
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="g2e-Jn-GdE" firstAttribute="top" secondItem="d6z-6j-rI5" secondAttribute="bottom" id="Gyt-gR-eGo"/>
+                            <constraint firstItem="kGU-ZF-EsX" firstAttribute="top" secondItem="8wt-Jq-miM" secondAttribute="bottom" id="Ij0-Nf-sYa"/>
+                            <constraint firstItem="8wt-Jq-miM" firstAttribute="top" secondItem="g2e-Jn-GdE" secondAttribute="bottom" id="RPQ-hX-Z1h"/>
+                            <constraint firstItem="8db-o3-Dnh" firstAttribute="top" secondItem="d6z-6j-rI5" secondAttribute="bottom" id="XTW-iY-Oxj"/>
+                            <constraint firstItem="8wt-Jq-miM" firstAttribute="leading" secondItem="GEs-Fk-2Ct" secondAttribute="leadingMargin" constant="-16" id="cmA-mr-aqr"/>
+                            <constraint firstItem="g2e-Jn-GdE" firstAttribute="leading" secondItem="GEs-Fk-2Ct" secondAttribute="leadingMargin" constant="-16" id="fkB-6a-OHe"/>
+                            <constraint firstAttribute="trailing" secondItem="8db-o3-Dnh" secondAttribute="trailing" id="kAL-L4-r2a"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="8wt-Jq-miM" secondAttribute="trailing" constant="-16" id="kFq-Sv-wtl"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="g2e-Jn-GdE" secondAttribute="trailing" constant="-16" id="kUT-zq-lhy"/>
+                            <constraint firstItem="8db-o3-Dnh" firstAttribute="leading" secondItem="GEs-Fk-2Ct" secondAttribute="leading" id="w6I-Ie-dvu"/>
+                            <constraint firstItem="8wt-Jq-miM" firstAttribute="top" secondItem="8db-o3-Dnh" secondAttribute="bottom" id="zrA-Mb-I10"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="loadingView" destination="8db-o3-Dnh" id="rNr-bQ-4TZ"/>
+                        <outlet property="textView" destination="g2e-Jn-GdE" id="baD-46-gWi"/>
+                        <outlet property="toolbarView" destination="8wt-Jq-miM" id="f1L-HD-3Qv"/>
+                        <outlet property="toolbarViewBottomAnchor" destination="Ij0-Nf-sYa" id="26T-pD-1Xw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gne-Hg-8e1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1752.8" y="510.49475262368821"/>
+        </scene>
+    </scenes>
+</document>

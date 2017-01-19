@@ -14,7 +14,7 @@ import SDWebImage
 private let reuseIdentifier = "BoardCell"
 
 //Define Model Of Board
-class BoradObject : NSObject {
+class BoardObject : NSObject {
     
     var boradNum        : NSNumber?     //Board uique Numver
     var authorId        : String?       //Author Id
@@ -35,15 +35,15 @@ class BoradObject : NSObject {
         self.editTime = editTime
     }
     
-    convenience override init(){
-        self.boradNum = nil
-        self.authorId = nil
-        self.userName = nil
-        self.profileImg = nil
-        self.profileImgUrl = nil
-        self.bodyText = nil
-        self.editTime = nil
-    }
+//    convenience override init(){
+//        self.boradNum = nil
+//        self.authorId = nil
+//        self.userName = nil
+//        self.profileImg = nil
+//        self.profileImgUrl = nil
+//        self.bodyText = nil
+//        self.editTime = nil
+//    }
     
     //inin with json
     init(_ json:Any){
@@ -85,7 +85,7 @@ class BoardCell : UICollectionViewCell {
     
     var delegate     : BoardCellDelegate? = nil     //BoardCellDelegate Object
     
-    var dataObject   : BoradObject! {
+    var dataObject   : BoardObject! {
        
         set(newValue){
             self.boardNo = newValue.boradNum
@@ -97,7 +97,7 @@ class BoardCell : UICollectionViewCell {
         }
         
         get{
-            let returnVal : BoradObject! = nil
+            let returnVal : BoardObject! = nil
             
             returnVal.boradNum = self.boardNo
             returnVal.authorId   = self.authorId
@@ -316,9 +316,18 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     private var ref : FIRDatabaseReference!
     private var data : String!
+    
+    lazy var composeBarButtonItem: UIBarButtonItem = {
+        let button = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.navToWriteHandle))
+        
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        navigationItem.title = "메인"
+        navigationItem.rightBarButtonItem = composeBarButtonItem
         
         self.ref = FIRDatabase.database().reference()
         
@@ -338,6 +347,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
     }
 
+    
     
     func dataSetting(){
         self.data = "{'board': [{'boardNo':\(1), 'authorId':'Daivd', 'bodyText':'테스트1'}]}"
@@ -368,7 +378,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         let data = JSON("{ board : [{'boardNo':'\(1)'}]")
         
         
-        cell.dataObject = BoradObject(data)
+        cell.dataObject = BoardObject(data)
         
         
 //        cell.userImage?.image = UIImage(named: "User")
@@ -440,11 +450,15 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     //Reply Button
     func replyButtonEvent(sender: UIButton, cell : BoardCell) {
-        //code
-        let boardDetailController = UIViewController()
-        let navigationController = UINavigationController(rootViewController: boardDetailController)
+        let vc = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
         
-        self.view.window?.rootViewController?.present(navigationController, animated: true, completion: nil)
+        navigationController?.pushViewController(vc, animated: true)
+        
+        //code
+//        let boardDetailController = UIViewController()
+//        let navigationController = UINavigationController(rootViewController: boardDetailController)
+//        
+//        self.view.window?.rootViewController?.present(navigationController, animated: true, completion: nil)
         
     }
     
@@ -480,6 +494,19 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         
         return true
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
+        
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func navToWriteHandle(){
+        //게시판생성뷰 이동
+        
+        let vc = UIStoryboard(name: "BoardCreate", bundle: nil).instantiateInitialViewController() as! BoardCreateViewController
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     /*
