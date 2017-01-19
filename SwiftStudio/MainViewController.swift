@@ -16,17 +16,18 @@ private let reuseIdentifier = "BoardCell"
 //Define Model Of Board
 class BoradObject : NSObject {
     
-    var boradNum        : NSNumber?     //Board uique Numver
-    var authorId        : String?       //Author Id
+    var boradKey        : String?       //Board uique Key
+    var authorId        : String?       //Author Id(userId)
     var userName        : String?       //Author Name
     var profileImgUrl   : String?       //Author Profile Url by string
     var profileImg      : UIImage?      //Author Profile Image
     var bodyText        : String?       //Board Body Text
     var editTime        : String?       //Board Edited Time yyyy/MM/dd hh:mm
     
+    
     //init each
-    init(_ boardNum: NSNumber, _ authorId: String, _ userName: String, _ profileImgUrl: String, _ profileImg: UIImage, _ bodyText : String, _ editTime : String){
-        self.boradNum = boardNum
+    init(_ boardNum: String, _ authorId: String, _ userName: String, _ profileImgUrl: String, _ profileImg: UIImage, _ bodyText : String, _ editTime : String){
+        self.boradKey = boardNum
         self.authorId = authorId
         self.userName = userName
         self.profileImg = profileImg
@@ -39,7 +40,7 @@ class BoradObject : NSObject {
     init(_ json:Any){
         let json = JSON(json)
         
-        self.boradNum = json["boardNo"].number
+        self.boradKey = json["boardNo"].string
         self.authorId   = json["userId"].string
         self.userName = json["userName"].string
         if let url = json["profileUrl"].string {
@@ -52,6 +53,22 @@ class BoradObject : NSObject {
         self.bodyText = json["bodyText"].string
         self.editTime = json["editTime"].string
     }
+    
+    convenience override init(){
+        let replaceHolderImg = UIImage(named: "user.png")
+        self.init("", "", "", "" , replaceHolderImg!, "" , "")
+    }
+    
+    func objectToNSDic() -> NSDictionary {
+        let dic : NSDictionary! =  nil
+        
+        dic.setValue(self.userName, forKey: "userName")
+        dic.setValue(self.authorId, forKey: "authorId")
+        
+        return dic
+    }
+    
+    
 
 }
 
@@ -66,7 +83,7 @@ protocol BoardCellDelegate  {
 class BoardCell : UICollectionViewCell {
     
     
-    var boardNo      : NSNumber! = 0                //Board Number
+    var key          : String! = nil                  //Board Key
     var authorId     : String! = nil                //Board Writer Id(User Id)
     var userImage    : UIImageView! = nil           //Profile image
     var userName     : UILabel? = nil               //Username
@@ -78,7 +95,7 @@ class BoardCell : UICollectionViewCell {
     var dataObject   : BoradObject! {
        
         set(newValue){
-            self.boardNo = newValue.boradNum
+            self.key = newValue.boradKey
             self.userName?.text = newValue.userName
             self.authorId = newValue.authorId
             self.userImage.image = newValue.profileImg
@@ -89,7 +106,7 @@ class BoardCell : UICollectionViewCell {
         get{
             let returnVal : BoradObject! = nil
             
-            returnVal.boradNum = self.boardNo
+            returnVal.boradKey = self.key
             returnVal.authorId   = self.authorId
             returnVal.userName = self.userName?.text
             returnVal.bodyText = self.textRecorded?.text
@@ -384,7 +401,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         //let key = ref.child("board").child("boardNo").
         
         let user = FIRAuth.auth()?.currentUser
-        let no = cell.boardNo
+        let key = cell.key
         let authorId = cell.authorId
         
         let alertController = UIAlertController(title: "게시물 수정", message: nil, preferredStyle: .actionSheet)

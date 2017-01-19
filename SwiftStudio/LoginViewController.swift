@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import Toaster
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
 
@@ -38,7 +41,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         //Label
         let label : UILabel = {
             let _label = UILabel(/*frame: CGRect(x: 28, y: 90, width: view.frame.width-(28*2), height: 65)*/)
-            _label.text = "Moim"
+            _label.text = "Swift Study"
             _label.textColor = pinkshRed
             _label.font = UIFont.boldSystemFont(ofSize: 48)
             _label.textAlignment = NSTextAlignment.center
@@ -70,6 +73,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             _textField.translatesAutoresizingMaskIntoConstraints = false
             _textField.keyboardType = .emailAddress
             _textField.returnKeyType = .next
+            _textField.autocapitalizationType = .none
             
             return _textField
         }()
@@ -94,6 +98,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             _textField.delegate = self
             _textField.tag = 2
             _textField.returnKeyType = .done
+            _textField.autocapitalizationType = .none
             
             return _textField
         }()
@@ -197,19 +202,103 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                
         if(sender.tag == 0){//login button
             
-            let stroyBoard = UIStoryboard(name: "Board", bundle: nil)
-            
-            if let resultController = stroyBoard.instantiateViewController(withIdentifier: "CustomTabBarController") as? CustomTabBarController {
-                self.view.window?.rootViewController?.present(resultController, animated: true, completion: nil)
-                
-                //self.present(resultController, animated: true, completion: nil)
+            guard self.emailTextField.text != nil, self.passwdTextField.text != nil else {
+                Toast(text: "이메일 혹은 패스워드를 다시 확인하여주십시오").show()
+                return
             }
-                      
+            
+            
+            
+            FIRAuth.auth()?.signIn(withEmail: self.emailTextField.text!, password: self.passwdTextField.text!, completion: { (user, error) in
+                
+                
+                guard user?.uid != nil , error == nil else {
+                    let toast = Toast(text: "등록이 안되어 있거나, 이메일, 비밀번호를 다시 확인 하여주십시오.")
+                    
+                    toast.show()
+                    return
+                }
+                
+                print("SIGN IN :\n \(user!)")
+                
+                let stroyBoard = UIStoryboard(name: "Board", bundle: nil)
+                
+                if let resultController = stroyBoard.instantiateViewController(withIdentifier: "CustomTabBarController") as? CustomTabBarController {
+                    self.view.window?.rootViewController?.present(resultController, animated: true, completion: nil)
+                    
+                    //self.present(resultController, animated: true, completion: nil)
+                }
+
+            })
             
             
         }else if(sender.tag == 1){ //forgot buuton
+            let test = TestViewController()
+            let navi = UINavigationController(rootViewController: test)
+            
+            present(navi, animated: true, completion: nil)
             
         }else{ //signin button
+            let signUpController = UIAlertController(title: "회원가입", message:"이메일, 비번.유저명 입력해주세요", preferredStyle: .alert)
+            
+            signUpController.addTextField(configurationHandler: { (email) in
+                //code
+                email.placeholder = "Email"
+                email.keyboardType = .emailAddress
+                email.returnKeyType = .next
+    
+            })
+            signUpController.addTextField(configurationHandler: { (passwd) in
+                //
+                passwd.placeholder = "PASSWORD"
+                passwd.isSecureTextEntry = true
+                passwd.returnKeyType = .next
+            })
+            signUpController.addTextField(configurationHandler: { (userName) in
+                //
+                userName.placeholder = "User Name"
+                userName.returnKeyType = .done
+            })
+            
+            
+            let uploadAction = UIAlertAction(title: "가입하기", style: .default, handler: { (alert) in
+                let email : UITextField! = signUpController.textFields![0]
+                let passwd : UITextField! = signUpController.textFields![1]
+                let name : UITextField! = signUpController.textFields![2]
+                
+                FIRAuth.auth()?.createUser(withEmail: email.text!, password: passwd.text!, completion: {(user, error) in
+                    
+                    
+                    guard error == nil, user != nil else{
+                        Toast(text: "이미 있는 유저이거나 잘못된 정보를 입력하셨습니다.").show()
+                        return
+                    }
+                    
+                    print("SIGN UP :\n (user!)")
+                    
+                    let ref = FIRDatabase.database().reference()
+                    ref.child("users").child((user?.uid)!).setValue(["username":name.text])
+                    
+                    
+                    ref.observeSingleEvent(of: .childAdded, with: { (snapshot) in
+                        if(snapshot.value != nil){
+                            Toast(text: "등록 완료로그인을 해주세요").show()
+                        }
+                    })
+                    
+                    
+                })
+            })
+            
+            let cancelAction = UIAlertAction(title: "취소", style: .destructive, handler: { (UIAlertAction) in
+            
+            })
+            
+            signUpController.addAction(uploadAction)
+            signUpController.addAction(cancelAction)
+            
+            present(signUpController, animated: true, completion: nil)
+            
             
         }
     }
