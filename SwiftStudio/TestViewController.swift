@@ -78,7 +78,7 @@ class TestViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         eventTestDatas()
         
-        //User 가 인증되지 않았을경우 처음으로 돌아간다.
+        //User 가 인증되지 않았을경우 처음으로 돌아간다. ( 테스트를 위해 삭제 )
 //        guard (FIRAuth.auth()?.currentUser) != nil else{
 //            self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
 //            return
