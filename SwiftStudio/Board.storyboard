@@ -25,7 +25,7 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="BH6-Ga-jz8" customClass="BoardCell" customModule="SwiftStudio" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="BoardCell" id="BH6-Ga-jz8" customClass="BoardCell" customModule="SwiftStudio" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -76,7 +76,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KqV-8i-2wd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-279" y="910"/>
+            <point key="canvasLocation" x="-151" y="1134"/>
         </scene>
         <!--UserList-->
         <scene sceneID="lyY-WF-XAx">
@@ -84,7 +84,7 @@
                 <viewControllerPlaceholder storyboardName="UserList" id="ar4-Dd-0jD" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4fz-ki-Bnn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="505" y="667"/>
+            <point key="canvasLocation" x="439" y="764"/>
         </scene>
         <!--MileStone-->
         <scene sceneID="346-PX-stq">
@@ -92,7 +92,7 @@
                 <viewControllerPlaceholder storyboardName="MileStone" id="uHf-gM-1CM" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QRs-H4-4bv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="294" y="667"/>
+            <point key="canvasLocation" x="196" y="757"/>
         </scene>
         <!--Setting-->
         <scene sceneID="tgN-ew-wEG">
@@ -100,7 +100,7 @@
                 <viewControllerPlaceholder storyboardName="Setting" id="OCU-lh-CiU" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="glA-3t-ECI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="739" y="667"/>
+            <point key="canvasLocation" x="717" y="740"/>
         </scene>
         <!--Custom Tab Bar Controller-->
         <scene sceneID="Xtt-57-FSh">
