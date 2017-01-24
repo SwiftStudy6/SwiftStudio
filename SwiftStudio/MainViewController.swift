@@ -11,7 +11,6 @@ import Firebase
 import SwiftyJSON
 import SDWebImage
 
-//Protocol BoradCell
 protocol BoardCellDelegate  {
     func editButtonEvent(sender:UIButton, cell : BoardCell)
     func likeButtonEvent(sender:UIButton, cell : BoardCell)
@@ -523,7 +522,6 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         self.refreshController = UIRefreshControl()
         
         
-        
         // Register cell classes
         self.collectionView!.register(BoardCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier2)
@@ -541,7 +539,6 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         super.didReceiveMemoryWarning()
         
     }
-
 
     
     // MARK: UICollectionViewDataSource
@@ -621,10 +618,20 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+
+        if(indexPath.section == 0){
+            return
+        }
+        
         collectionView.deselectItem(at: indexPath, animated: true)
-        //        let vc = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
-        //
-        //        navigationController?.pushViewController(vc, animated: true)
+        
+        let boardDetailController = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
+        
+        boardDetailController.boardData = self.boardList[indexPath.row] as? BoardObject
+        
+        self.navigationController?.pushViewController(boardDetailController, animated: true)
+        
     }
 
     
@@ -772,15 +779,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     //Reply Button
     func replyButtonEvent(sender: UIButton, cell : BoardCell) {
-//        let vc = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
-//        
-//        navigationController?.pushViewController(vc, animated: true)
+        let boardDetailController = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
         
-        //code
-//        let boardDetailController = UIViewController()
-//        let navigationController = UINavigationController(rootViewController: boardDetailController)
-//        
-//        self.view.window?.rootViewController?.present(navigationController, animated: true, completion: nil)
+        boardDetailController.boardData = cell.dataObject
+        
+        let navigationController = UINavigationController(rootViewController: boardDetailController)
+        
+        self.view.window?.rootViewController?.present(navigationController, animated: true, completion: nil)
         
     }
     
@@ -815,6 +820,7 @@ extension NSDate {
         return formater.string(from: self as Date)
     }
     
+
     func toString(_ format:String?) -> String {
         
         let formater = DateFormatter()
@@ -837,7 +843,7 @@ extension UIView {
             viewsDictionary[key] = view
             view.translatesAutoresizingMaskIntoConstraints = false
         }
-        
+
         
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
     }
