@@ -32,6 +32,7 @@
 		8E408F121E1FF91B00A7B38C /* chatCompose@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E408F111E1FF91B00A7B38C /* chatCompose@3x.png */; };
 		8E68FC011E2FA63400AB058C /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E68FC001E2FA63400AB058C /* TestViewController.swift */; };
 		8E68FC041E333FAB00AB058C /* NoticeObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E68FC031E333FAB00AB058C /* NoticeObject.swift */; };
+		8E68FC081E36737800AB058C /* BoardObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E68FC071E36737800AB058C /* BoardObject.swift */; };
 		8E7863B71E206BE2006062C7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8E7863B61E206BE2006062C7 /* GoogleService-Info.plist */; };
 		EAEC83430219D128C6F4DE90 /* Pods_SwiftStudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44CA5C99B5C87210A9C2FEE1 /* Pods_SwiftStudio.framework */; };
 		F6B2F9081E27537600E0A1BD /* MileStoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B2F9071E27537600E0A1BD /* MileStoneViewController.swift */; };
@@ -68,6 +69,7 @@
 		8E408F111E1FF91B00A7B38C /* chatCompose@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatCompose@3x.png"; sourceTree = "<group>"; };
 		8E68FC001E2FA63400AB058C /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		8E68FC031E333FAB00AB058C /* NoticeObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoticeObject.swift; sourceTree = "<group>"; };
+		8E68FC071E36737800AB058C /* BoardObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardObject.swift; sourceTree = "<group>"; };
 		8E7863B61E206BE2006062C7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F6B2F9071E27537600E0A1BD /* MileStoneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MileStoneViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -206,6 +208,7 @@
 			isa = PBXGroup;
 			children = (
 				8E68FC031E333FAB00AB058C /* NoticeObject.swift */,
+				8E68FC071E36737800AB058C /* BoardObject.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -348,6 +351,7 @@
 			files = (
 				8E408EF81E1FD07A00A7B38C /* MainViewController.swift in Sources */,
 				8E408EF61E1FD07A00A7B38C /* CustomNavigationSegue.swift in Sources */,
+				8E68FC081E36737800AB058C /* BoardObject.swift in Sources */,
 				8E68FC011E2FA63400AB058C /* TestViewController.swift in Sources */,
 				F6B2F9081E27537600E0A1BD /* MileStoneViewController.swift in Sources */,
 				8E408EF51E1FD07A00A7B38C /* CustomButton.swift in Sources */,

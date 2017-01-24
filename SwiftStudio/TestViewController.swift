@@ -114,7 +114,7 @@ class TestViewController: UIViewController, UITableViewDelegate, UITableViewData
             guard snapshot.value != nil else {
                 return
             }
-            print(snapshot.value)
+            print(snapshot.value!)
             self.reloadTestData()
 
         })

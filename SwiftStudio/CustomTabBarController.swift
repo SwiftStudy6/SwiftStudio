@@ -110,8 +110,8 @@ class CustomTabBarController: UIViewController {
         
         self.bottomView.backgroundColor = .white
         
-        let lineView = UIView(frame: CGRect(x: 0, y: 1, width: self.view.frame.width, height: 1))
-        lineView.backgroundColor = .gray
+        let lineView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 1))
+        lineView.backgroundColor = UIColor.darkGray.withAlphaComponent(0.31)
         
         self.bottomView.addSubview(lineView)
         
