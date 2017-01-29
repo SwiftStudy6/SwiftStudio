@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import FBSDKLoginKit
 
-class LoginViewController: UIViewController, UITextFieldDelegate {
+class LoginViewController: UIViewController, UITextFieldDelegate,FBSDKLoginButtonDelegate {
 
     private var emailTextField  : UITextField! = nil
     private var passwdTextField : UITextField! = nil
@@ -170,6 +171,27 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         signinButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -28).isActive = true
         signinButton.heightAnchor.constraint(equalToConstant: 22).isActive = true
         signinButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -37).isActive = true
+        
+        
+        
+        //FaceBook Login
+        let facebookLoginButton = FBSDKLoginButton()
+        view.addSubview(facebookLoginButton)
+        facebookLoginButton.frame = CGRect(x: 16, y: 50, width: view.frame.width-32, height: 50)
+        facebookLoginButton.delegate = self
+        
+    }
+    
+    
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
+        print("Did log out of facebook")
+    }
+    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
+        if error != nil{
+            print(error)
+            return
+        }
+        print(result.token.tokenString)
         
     }
 
