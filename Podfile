@@ -13,7 +13,13 @@ target 'SwiftStudio' do
   pod 'Firebase/Messaging'
   pod 'Firebase/Database'
   pod 'Firebase/Storage'
+  
 
+  #Login
+
+  pod 'FBSDKCoreKit'
+  pod 'FBSDKShareKit'
+  pod 'FBSDKLoginKit'
   #SDWebImage
   pod 'SDWebImage', '~>3.8'
 
