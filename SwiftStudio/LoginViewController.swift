@@ -224,7 +224,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 let stroyBoard = UIStoryboard(name: "Board", bundle: nil)
                 
                 if let resultController = stroyBoard.instantiateViewController(withIdentifier: "CustomTabBarController") as? CustomTabBarController {
-                    
                     self.view.window?.rootViewController?.present(resultController, animated: true, completion: nil)
                     
                 }

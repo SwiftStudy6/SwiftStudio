@@ -96,6 +96,17 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         navigationItem.title = "게시글 생성"
         navigationController?.navigationBar.isTranslucent = false
         
+        //David June Kang 17.01.26 - 백버튼 추가
+        let backButton = UIBarButtonItem(barButtonSystemItem: .redo, target: self, action: #selector(backHandler))
+        navigationItem.leftBarButtonItem = backButton
+        self.view.backgroundColor = .white
+        
+        let naviBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 70))
+        naviBar.items = [navigationItem]
+        naviBar.barTintColor = .white
+        self.view.addSubview(naviBar)
+        self.tableView.frame = CGRect(x: 0, y: 70, width: self.view.frame.width, height: self.tableView.frame.height-70)
+        
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateTextView(notification:)), name: Notification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTextView(notification:)), name: Notification.Name.UIKeyboardWillHide, object: nil)
@@ -104,6 +115,10 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         fetchReplys()
     }
     
+    
+    func backHandler(){
+        self.navigationController?.dismiss(animated: true, completion: nil)
+    }
     func fetchReplys(){
         self.isLoading = true
         

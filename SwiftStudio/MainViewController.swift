@@ -43,14 +43,14 @@ class BoardCell : UICollectionViewCell {
         }
         
         get{
-            let returnVal : BoardObject! = nil
+            let returnVal = BoardObject()
             
-            returnVal.boradKey = self.key
+            returnVal.boradKey   = self.key
             returnVal.authorId   = self.authorId
             returnVal.authorName = self.authorName?.text
-            returnVal.bodyText = self.textRecorded?.text
+            returnVal.bodyText   = self.textRecorded?.text
             returnVal.profileImg = self.userImage.image
-            returnVal.editTime = self.editTime?.text
+            returnVal.editTime   = self.editTime?.text
             
             return returnVal
         }
@@ -381,6 +381,9 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     var boardList : Array<Any>! = []
     var noticeList : Array<Any>! = []
     
+    var rootController : CustomTabBarController?
+    
+    
     //불러운 포스트 개수를 배열에 추가한다. (100 * x)
     func loadOfPosts(_ pageCount : UInt){
         boardRef.queryLimited(toFirst: rangeOfPosts * pageCount).observeSingleEvent(of: .value, with: {(snapshot) in
@@ -518,6 +521,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         self.view.addSubview(naviBar)
         
+        
         //RefreshController Setting
         self.refreshController = UIRefreshControl()
         
@@ -627,11 +631,23 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         collectionView.deselectItem(at: indexPath, animated: true)
         
         let boardDetailController = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
-        
+        let navi = UINavigationController(rootViewController: boardDetailController)
+        navi.isNavigationBarHidden = true
         boardDetailController.boardData = self.boardList[indexPath.row] as? BoardObject
         
-        self.navigationController?.pushViewController(boardDetailController, animated: true)
         
+        //view hierarchy 오류로 인해서 방법을 바꿈
+        //원인 : CustomTabbarController안에 뷰어를 인식하지 못하는것 같음 
+        //원래 self.view.window.rootViewController로 가능했으나 구조상의 문제로 방법을 바꿈
+        var activateController = UIApplication.shared.keyWindow?.rootViewController
+        
+        if(activateController?.isKind(of: UINavigationController.self))!{
+            activateController = (activateController as! UINavigationController).visibleViewController
+        }else if((activateController?.presentedViewController) != nil){
+            activateController = activateController?.presentedViewController
+        }
+        
+        activateController?.present(navi, animated: true, completion: nil)
     }
 
     
@@ -783,10 +799,12 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         boardDetailController.boardData = cell.dataObject
         
-        let navigationController = UINavigationController(rootViewController: boardDetailController)
+//        let navigationController = UINavigationController(rootViewController: boardDetailController)
+//        
+//        self.view.window?.rootViewController?.present(navigationController, animated: true, completion: nil)
         
-        self.view.window?.rootViewController?.present(navigationController, animated: true, completion: nil)
-        
+        let rootViwController = CustomTabBarController()
+        rootViwController.pushViewController(boardDetailController,true)
     }
     
     //Share Button
@@ -846,5 +864,11 @@ extension UIView {
 
         
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
+    }
+}
+
+extension CustomTabBarController {
+    func pushViewController(_ viewController:UIViewController, _ animated  : Bool){
+        self.navigationController?.pushViewController(viewController, animated: animated)
     }
 }
