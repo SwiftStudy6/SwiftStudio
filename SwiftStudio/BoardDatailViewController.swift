@@ -96,17 +96,41 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         navigationItem.title = "게시글 생성"
         navigationController?.navigationBar.isTranslucent = false
         
-        //David June Kang 17.01.26 - 백버튼 추가
-        let backButton = UIBarButtonItem(barButtonSystemItem: .redo, target: self, action: #selector(backHandler))
-        navigationItem.leftBarButtonItem = backButton
-        self.view.backgroundColor = .white
+        //David June Kang  -----------------------------------------------------------------------------------------------------
         
+        //17.01.26 - 백버튼 추가
+        //17.02.01 - 백버튼 커스터마이징
+        
+        self.view.backgroundColor = .white //배경색을 하얀색으로 둔다.(필수)
+        
+        //버튼을 위한 색상설정
+        let defaultColor = UIColor(red: 0, green: 112, blue: 225, alpha: 1.0)   //Apple Default Color
+        let defaultColor2 = UIColor(red: 0, green: 112, blue: 225, alpha: 0.25)
+        
+        //뒤로가기버튼
+        let backButton = UIButton(frame: CGRect(x: 0, y: 10, width: 60, height: 30))
+        backButton.addTarget(self, action: #selector(backHandler), for: .touchUpInside)
+        backButton.setTitle("< Back", for: .normal)
+        backButton.titleLabel?.textAlignment = .left
+        backButton.setTitleColor(defaultColor, for: .normal)
+        backButton.setTitleColor(defaultColor2, for: .highlighted)
+        
+        //버튼아이템 커스텀
+        let leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+
+        //네비바를 강제로 넣는다.
         let naviBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 70))
         naviBar.items = [navigationItem]
         naviBar.barTintColor = .white
         self.view.addSubview(naviBar)
+        
+        //위에서 70포인트를 내린다 ( 20 (상태바) + 50 (네비바) )
         self.tableView.frame = CGRect(x: 0, y: 70, width: self.view.frame.width, height: self.tableView.frame.height-70)
         
+        
+        //---------------------------------------------------------------------------------------------------------------------
+
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateTextView(notification:)), name: Notification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTextView(notification:)), name: Notification.Name.UIKeyboardWillHide, object: nil)

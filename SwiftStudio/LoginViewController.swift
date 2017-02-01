@@ -35,7 +35,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         //View Background color
         self.view.backgroundColor = UIColor.white
         
-        let pinkshRed = UIColor(red: 233/255, green: 29/255, blue: 41/255, alpha: 1.0)
+        let pinkshRed = UIColor(red: 233, green: 29, blue: 41, alpha: 1.0)
         
         
         //Label

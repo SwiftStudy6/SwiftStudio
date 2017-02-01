@@ -485,8 +485,9 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     func navToWriteHandle(){
         //게시판생성뷰 이동
         
-        //        let vc = UIStoryboard(name: "BoardCreate", bundle: nil).instantiateInitialViewController() as! BoardCreateViewController
-        //        navigationController?.pushViewController(vc, animated: true)
+        let vc = UIStoryboard(name: "BoardCreate", bundle: nil).instantiateInitialViewController() as! BoardCreateViewController
+    
+        showViewController(vc, true)
     }
     
     
@@ -631,23 +632,12 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         collectionView.deselectItem(at: indexPath, animated: true)
         
         let boardDetailController = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
-        let navi = UINavigationController(rootViewController: boardDetailController)
-        navi.isNavigationBarHidden = true
         boardDetailController.boardData = self.boardList[indexPath.row] as? BoardObject
         
+        let navigationController = UINavigationController(rootViewController: boardDetailController)
+        navigationController.isNavigationBarHidden = true
         
-        //view hierarchy 오류로 인해서 방법을 바꿈
-        //원인 : CustomTabbarController안에 뷰어를 인식하지 못하는것 같음 
-        //원래 self.view.window.rootViewController로 가능했으나 구조상의 문제로 방법을 바꿈
-        var activateController = UIApplication.shared.keyWindow?.rootViewController
-        
-        if(activateController?.isKind(of: UINavigationController.self))!{
-            activateController = (activateController as! UINavigationController).visibleViewController
-        }else if((activateController?.presentedViewController) != nil){
-            activateController = activateController?.presentedViewController
-        }
-        
-        activateController?.present(navi, animated: true, completion: nil)
+        showViewController(navigationController, true)
     }
 
     
@@ -822,6 +812,21 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         self.present(alertController, animated: true, completion: nil)
         
     }
+    
+    //view hierarchy 오류로 인해서 방법을 바꿈
+    //원인 : CustomTabbarController안에 뷰어를 인식하지 못하는것 같음
+    //원래 self.view.window.rootViewController로 가능했으나 구조상의 문제로 방법을 바꿈
+    func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+        var activateController = UIApplication.shared.keyWindow?.rootViewController
+        
+        if(activateController?.isKind(of: UINavigationController.self))!{
+            activateController = (activateController as! UINavigationController).visibleViewController
+        }else if((activateController?.presentedViewController) != nil){
+            activateController = activateController?.presentedViewController
+        }
+        
+        activateController?.present(viewController, animated: animated, completion: completion)
+    }
 
 }
 
@@ -870,5 +875,29 @@ extension UIView {
 extension CustomTabBarController {
     func pushViewController(_ viewController:UIViewController, _ animated  : Bool){
         self.navigationController?.pushViewController(viewController, animated: animated)
+    }
+}
+
+extension UIColor {
+    convenience init(red: Int, green: Int, blue: Int) {
+        assert(red >= 0 && red <= 255, "Invalid red component")
+        assert(green >= 0 && green <= 255, "Invalid green component")
+        assert(blue >= 0 && blue <= 255, "Invalid blue component")
+        
+        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+    }
+    
+    @nonobjc
+    convenience init(red: Int, green: Int, blue: Int, alpha : Float) {
+        assert(red >= 0 && red <= 255, "Invalid red component")
+        assert(green >= 0 && green <= 255, "Invalid green component")
+        assert(blue >= 0 && blue <= 255, "Invalid blue component")
+        
+        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: CGFloat(alpha))
+    }
+
+    
+    convenience init(netHex:Int) {
+        self.init(red:(netHex >> 16) & 0xff, green:(netHex >> 8) & 0xff, blue:netHex & 0xff)
     }
 }
