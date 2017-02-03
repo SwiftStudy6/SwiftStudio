@@ -1,16 +1,16 @@
 //
-//  ChatLogViewController.swift
+//  GroupViewController.swift
 //  SwiftStudio
 //
-//  Created by David June Kang on 2017. 1. 8..
+//  Created by David June Kang on 2017. 2. 1..
 //  Copyright © 2017년 swift. All rights reserved.
 //
 
 import UIKit
 
-private let reuseIdentifier = "ChatLogCell"
+private let reuseIdentifier = "Cell"
 
-class ChatLogViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class GroupViewController: UICollectionViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

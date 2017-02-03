@@ -34,13 +34,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible();
         
-        let loginViewController = LoginViewController()
+
+        let loginViewController = LoginViewController()      
+        
         window?.rootViewController = loginViewController
-        
-//        let naviContorller = UINavigationController(rootViewController: loginViewController)
-//        naviContorller.navigationBar.isHidden = true; //네비게이션 바 숨기기
-//        window?.rootViewController = naviContorller
-        
+                
         return true
     }
 
