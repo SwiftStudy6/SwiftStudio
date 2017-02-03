@@ -8,12 +8,25 @@
 
 import UIKit
 import FBSDKLoginKit
+import Firebase
 
-class LoginViewController: UIViewController, UITextFieldDelegate,FBSDKLoginButtonDelegate {
-
+class LoginViewController: UIViewController, UITextFieldDelegate,FBSDKLoginButtonDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate {
+    
     private var emailTextField  : UITextField! = nil
     private var passwdTextField : UITextField! = nil
-    
+    lazy var profileImageView : UIImageView = {
+        
+        
+        let imageView = UIImageView()
+        imageView.image = UIImage()
+        imageView.backgroundColor = UIColor.red
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,12 +34,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate,FBSDKLoginButto
         createView()
         
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     
     func createView(){
         
@@ -52,7 +65,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate,FBSDKLoginButto
         
         
         label.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 28).isActive = true
-        label.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -28).isActive = true 
+        label.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -28).isActive = true
         label.topAnchor.constraint(equalTo: view.topAnchor, constant: 90).isActive = true
         label.heightAnchor.constraint(equalToConstant: 65).isActive = true
         
@@ -127,8 +140,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate,FBSDKLoginButto
         loginButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -28).isActive = true
         loginButton.topAnchor.constraint(equalTo: self.passwdTextField.bottomAnchor, constant: 20).isActive = true
         loginButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    
-
+        
+        
         
         //forgot button
         let forgotButton : UIButton = {
@@ -151,26 +164,19 @@ class LoginViewController: UIViewController, UITextFieldDelegate,FBSDKLoginButto
         forgotButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 25).isActive = true
         forgotButton.heightAnchor.constraint(equalToConstant: 19).isActive = true
         
-        //signin button
-        let signinButton : UIButton = {
-            let _button = UIButton(/*frame: CGRect(x: 28, y: 608, width: view.frame.width-(28*2), height: 22)*/)
-            _button.setTitle("Don’t have an account?", for: .normal)
-            _button.titleLabel?.textAlignment = .center
-            _button.setTitleColor(UIColor(red:139/255, green:153/255, blue:159/255, alpha:1.0), for: .normal)
-            _button.setTitleColor(.white, for: .highlighted)
-            _button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-            _button.addTarget(self, action: #selector(buttonTouchUpInside(_:)), for: .touchUpInside)
-            _button.tag = 2
-            _button.translatesAutoresizingMaskIntoConstraints = false
-            
-            return _button
-        }()
-        self.view.addSubview(signinButton)
         
-        signinButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 28).isActive = true
-        signinButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -28).isActive = true
-        signinButton.heightAnchor.constraint(equalToConstant: 22).isActive = true
-        signinButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -37).isActive = true
+        
+        
+        
+        
+        self.view.addSubview(profileImageView)
+        profileImageView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 28).isActive = true
+        profileImageView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -28).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 22).isActive = true
+        profileImageView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -37).isActive = true
+        
+        
+        
         
         
         
@@ -181,20 +187,62 @@ class LoginViewController: UIViewController, UITextFieldDelegate,FBSDKLoginButto
         facebookLoginButton.delegate = self
         
     }
+    func handleSelectProfileImageView(){
+        
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = true //사진 화면 수정 카카오톡 프로필
+        
+        present(picker, animated: true, completion: nil)
+        
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        var selectedImageFromPicker : UIImage?
+        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage{
+            selectedImageFromPicker = editedImage //수정한 이미지
+        }
+        else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage{
+            selectedImageFromPicker = originalImage //원본 이미지
+        }
+        if let selectedImage = selectedImageFromPicker{
+            profileImageView.image = selectedImage // 선택한 이미지 적용
+        }
+        ///..파일 업로드 코드
+        dismiss(animated: true, completion: nil)
+    }
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        //FaceBook Logout
+        print("canceled picker")
+        dismiss(animated: true, completion: nil)
+        
+    }
     
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
         print("Did log out of facebook")
     }
-    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
+    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result:
+        FBSDKLoginManagerLoginResult!, error: Error!) {
+        //FaceBook Login
+        
         if error != nil{
             print(error)
             return
         }
-        print(result.token.tokenString)
+        print(result)
+
+        
+        
+//        CurrentUser.shared.userName =
+//        CurrentUser.shared.profileUrl =
+//        CurrentUser.shared.profileImg =
+//        
+        
         
     }
-
+    
     
     //TextField Delegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -216,7 +264,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate,FBSDKLoginButto
     
     
     @IBAction func buttonTouchUpInside(_ sender:AnyObject){
-               
+        
         if(sender.tag == 0){//login button
             
             let stroyBoard = UIStoryboard(name: "Board", bundle: nil)
@@ -226,7 +274,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate,FBSDKLoginButto
                 
                 //self.present(resultController, animated: true, completion: nil)
             }
-                      
+            
             
             
         }else if(sender.tag == 1){ //forgot buuton
@@ -237,6 +285,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate,FBSDKLoginButto
     }
     
 }
+
+
+
 
 
 

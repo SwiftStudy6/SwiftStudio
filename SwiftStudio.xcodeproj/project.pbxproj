@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0201C5111E446F5400C7BED1 /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0201C5101E446F5400C7BED1 /* CurrentUser.swift */; };
 		02FC4C811E166B1B00E1EF61 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FC4C801E166B1B00E1EF61 /* AppDelegate.swift */; };
 		02FC4C831E166B1B00E1EF61 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FC4C821E166B1B00E1EF61 /* ViewController.swift */; };
 		02FC4C861E166B1B00E1EF61 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02FC4C841E166B1B00E1EF61 /* Main.storyboard */; };
@@ -35,6 +36,7 @@
 
 /* Begin PBXFileReference section */
 		00886F2C53CE8FE7124D7783 /* Pods-SwiftStudio.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftStudio.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftStudio/Pods-SwiftStudio.release.xcconfig"; sourceTree = "<group>"; };
+		0201C5101E446F5400C7BED1 /* CurrentUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
 		02FC4C7D1E166B1B00E1EF61 /* SwiftStudio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftStudio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		02FC4C801E166B1B00E1EF61 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		02FC4C821E166B1B00E1EF61 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -76,6 +78,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0201C50E1E446F2400C7BED1 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				0201C5101E446F5400C7BED1 /* CurrentUser.swift */,
+			);
+			name = Config;
+			sourceTree = "<group>";
+		};
 		02FC4C741E166B1B00E1EF61 = {
 			isa = PBXGroup;
 			children = (
@@ -165,6 +175,7 @@
 		8E408F021E1FD87500A7B38C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0201C50E1E446F2400C7BED1 /* Config */,
 				8E408F031E1FF19500A7B38C /* View */,
 				8E408EEB1E1FD00B00A7B38C /* Custom */,
 				8E408F041E1FF19C00A7B38C /* SubView */,
@@ -332,6 +343,7 @@
 				8E408F061E1FF2F100A7B38C /* LoginViewController.swift in Sources */,
 				02FC4C831E166B1B00E1EF61 /* ViewController.swift in Sources */,
 				8E408EF41E1FD07A00A7B38C /* ChatViewController.swift in Sources */,
+				0201C5111E446F5400C7BED1 /* CurrentUser.swift in Sources */,
 				02FC4C811E166B1B00E1EF61 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
