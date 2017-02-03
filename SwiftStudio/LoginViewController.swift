@@ -209,7 +209,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate,FBSDKLoginButto
         if let selectedImage = selectedImageFromPicker{
             profileImageView.image = selectedImage // 선택한 이미지 적용
         }
-        ///..파일 업로드 코드
+        
+        let storageRed = FIRStorage.storage().reference().child("test.png");
+        if let uploadData = UIImagePNGRepresentation(selectedImageFromPicker!){
+            storageRed.put(uploadData, metadata: nil, completion: { (metadata, err) in
+                if err != nil{
+                    print("err : ",err)
+                    return
+                }
+                print("metadata : ",metadata)
+            })
+        }
+        
         dismiss(animated: true, completion: nil)
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
