@@ -8,7 +8,6 @@
 
 import UIKit
 import Firebase
-import SwiftyJSON
 import SDWebImage
 
 protocol BoardCellDelegate  {
@@ -20,7 +19,7 @@ protocol BoardCellDelegate  {
 
 //Board Cell Definition
 class BoardCell : UICollectionViewCell {
-    
+
     
     var key          : String! = nil                  //Board Key
     var authorId     : String! = nil                //Board Writer Id(User Id)
@@ -368,6 +367,12 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     private var refreshController : UIRefreshControl!
     
+    lazy var homeBarButtonItem: UIBarButtonItem = {
+        let button = UIBarButtonItem(image: UIImage(named: "Home"), style: .plain, target: self, action: #selector(self.returnHome))
+        
+        return button
+    }()
+    
     lazy var composeBarButtonItem: UIBarButtonItem = {
         let button = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.navToWriteHandle))
         
@@ -398,15 +403,31 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 var dict = rest.value as! [String : Any]
                 var obj: BoardObject! = BoardObject()
                 obj.boradKey = rest.key
-                obj.bodyText = dict["bodyText"] as! String?
+                obj.bodyText = dict["text"] as! String?
                 
-                let userObj = dict["author"] as! [String : Any]
+                let userSnapshot = dict["author"] as! FIRDataSnapshot
+                
+                var userObj : [String : Any]? = nil
+                
+                let userEnum = userSnapshot.children
+                while let userRest = userEnum.nextObject() as? FIRDataSnapshot {
+                    userObj?["uid"] = userRest.key
+                    
+                    let innerDic = userRest.value as! [String : Any]
+                    userObj?["userName"] = innerDic["userName"]
+                    userObj?["profileUrl"] = innerDic["profileUrl"]
+                    
+                }
+                
+                let editTime = NSDate(timeIntervalSince1970: dict["editTIme"] as! Double)
+                
+
                 obj = BoardObject(rest.key,
-                                  userObj["uid"] as! String,
-                                  userObj["name"] as! String,
-                                  userObj["imgUrl"] as! String,
-                                  dict["bodyText"] as! String,
-                                  dict["editTime"] as! String)
+                                  userObj?["uid"] as! String,
+                                  userObj?["userName"] as! String,
+                                  userObj?["profileUrl"] as! String,
+                                  dict["text"] as! String,
+                                  editTime.toString())
                 
                 
                 tempList.append(obj)
@@ -422,6 +443,8 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                     j = j + 1
                 }
             }
+            
+            self.boardList = tempList
             
             if(self.boardList.count > 0){
                 DispatchQueue.main.async {
@@ -490,9 +513,15 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         showViewController(vc, true)
     }
     
+    func returnHome(){
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //loadEvent()
         
         if(self.boardList.count == 0){
             let bObj : BoardObject! = BoardObject()
@@ -509,18 +538,20 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             self.titleString = "메인"
         }
         
-        
-        
+              
         navigationItem.title = self.titleString
         navigationItem.rightBarButtonItem = composeBarButtonItem
+        navigationItem.leftBarButtonItem = homeBarButtonItem
         
-        // 네비게이션 바를 추가한다.
-        let naviBar = UINavigationBar()
-        naviBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 70)
-        naviBar.items = [navigationItem]
-        naviBar.barTintColor = .white
+        //self.navigationController?.navigationBar.items = [self.navigationItem]
         
-        self.view.addSubview(naviBar)
+//        // 네비게이션 바를 추가한다.
+//        let naviBar = UINavigationBar()
+//        naviBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 70)
+//        naviBar.items = [navigationItem]
+//        naviBar.barTintColor = .white
+//        
+//        self.view.addSubview(naviBar)
         
         
         //RefreshController Setting
@@ -535,7 +566,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         self.view.backgroundColor = .white
         self.collectionView?.backgroundColor = UIColor.gray.withAlphaComponent(0.25)
         
-        self.collectionView?.frame = CGRect(x: 0, y: 70, width: self.view.frame.width, height: (self.collectionView?.frame.height)!-70)
+        //self.collectionView?.frame = CGRect(x: 0, y: 70, width: self.view.frame.width, height: (self.collectionView?.frame.height)!-70)
        
     }
     
@@ -635,9 +666,11 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         boardDetailController.boardData = self.boardList[indexPath.row] as? BoardObject
         
         let navigationController = UINavigationController(rootViewController: boardDetailController)
-        navigationController.isNavigationBarHidden = true
-        
+        //navigationController.isNavigationBarHidden = true
+    
         showViewController(navigationController, true)
+        
+//        self.navigationController?.pushViewController(boardDetailController, animated: true)
     }
 
     
@@ -662,7 +695,8 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             let noticeKey = boardKey!
             let data : [String : Any] = ["authorId":authorId!,
                                          "text": cell.textRecorded!.text,
-                                         "time": FIRServerValue.timestamp()]
+                                         "recordTime": FIRServerValue.timestamp(),
+                                         "editTime": FIRServerValue.timestamp()]
             
             self.noticeRef.setValue(["\(noticeKey)":data])
         }
@@ -752,13 +786,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     //Like Button
     func likeButtonEvent(sender: UIButton, cell : BoardCell) {
-        //code
+        //code 
         print("press like button : \(cell.indexPath.row)")
         boardRef.runTransactionBlock({ (currentData) -> FIRTransactionResult in
             if var post = currentData.value as? [String : AnyObject], let uid = FIRAuth.auth()?.currentUser?.uid {
                 var likes: Dictionary<String, Bool>
-                likes = post["stars"] as? [String : Bool] ?? [:]
-                var likeCount = post["starCount"] as? Int ?? 0
+                likes = post["like"] as? [String : Bool] ?? [:]
+                var likeCount = post["likeCount"] as? Int ?? 0
                 if let _ = likes[uid] {
                     // Unlike the post and remove self from likes
                     likeCount -= 1
@@ -769,7 +803,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                     likes[uid] = true
                 }
                 post["likeCount"] = likeCount as AnyObject?
-                post["likes"] = likes as AnyObject?
+                post["like"] = likes as AnyObject?
                 
                 // Set value and report transaction success
                 currentData.value = post
@@ -820,14 +854,37 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         var activateController = UIApplication.shared.keyWindow?.rootViewController
         
         if(activateController?.isKind(of: UINavigationController.self))!{
+            print("showViewController - Navigation")
+            activateController = (activateController as! UINavigationController).visibleViewController
+            
+            activateController?.present(viewController, animated: animated, completion: completion)
+
+        }else if((activateController?.presentedViewController) != nil){
+            print("showViewController - Nomal")
+            activateController = activateController?.presentedViewController
+            if(activateController?.isKind(of: UINavigationController.self))!{
+                print("showViewController - Nomal - Navigation")
+                (activateController as! UINavigationController).pushViewController(viewController, animated: true)
+            }
+            activateController?.present(viewController, animated: animated, completion: completion)
+        }
+        
+//        activateController?.present(viewController, animated: animated, completion: completion)
+
+    }
+    
+    
+    func closeViewController(_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+        var activateController = UIApplication.shared.keyWindow?.rootViewController
+        
+        if(activateController?.isKind(of: UINavigationController.self))!{
             activateController = (activateController as! UINavigationController).visibleViewController
         }else if((activateController?.presentedViewController) != nil){
             activateController = activateController?.presentedViewController
         }
         
-        activateController?.present(viewController, animated: animated, completion: completion)
+        activateController?.dismiss(animated: animated, completion: completion)
     }
-
 }
 
 extension NSDate {

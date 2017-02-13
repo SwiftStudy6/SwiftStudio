@@ -219,13 +219,28 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     return
                 }
                 
-                print("SIGN IN :\n \(user!)")
+//                print("SIGN IN :\n \(user!)")
+//                
+//                let storyBoardName = "Tabbar"
+//                
+//                let storyBoard = UIStoryboard(name: storyBoardName, bundle: nil)
+//                
+//                let resultController = storyBoard.instantiateInitialViewController()!
+//                
+//                self.present(resultController, animated: true, completion: nil)
+//                
                 
-                let stroyBoard = UIStoryboard(name: "Board", bundle: nil)
+                let storyBoardName = "Board"
+                let identifier = "CustomTabBarController"
                 
-                if let resultController = stroyBoard.instantiateViewController(withIdentifier: "CustomTabBarController") as? CustomTabBarController {
-                    self.view.window?.rootViewController?.present(resultController, animated: true, completion: nil)
+                let stroyBoard = UIStoryboard(name: storyBoardName, bundle: nil)
+                
+                if let resultController = stroyBoard.instantiateViewController(withIdentifier: identifier) as? CustomTabBarController {
                     
+                    let nc = UINavigationController(rootViewController: resultController)
+                    nc.isNavigationBarHidden = true
+                    
+                    self.view.window?.rootViewController?.present(nc, animated: true, completion: nil)
                 }
 
             })
