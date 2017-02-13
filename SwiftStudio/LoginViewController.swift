@@ -273,7 +273,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         return
                     }
                     
-                    print("SIGN UP :\n (user!)")
+                    print("SIGN UP :\n \(user!)")
                     
                     let ref = FIRDatabase.database().reference()
                     ref.child("users").child((user?.uid)!).setValue(["username":name.text])

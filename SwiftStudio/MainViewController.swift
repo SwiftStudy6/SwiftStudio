@@ -635,7 +635,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         boardDetailController.boardData = self.boardList[indexPath.row] as? BoardObject
         
         let navigationController = UINavigationController(rootViewController: boardDetailController)
-        navigationController.isNavigationBarHidden = true
+        navigationController.isNavigationBarHidden = false
         
         showViewController(navigationController, true)
     }
