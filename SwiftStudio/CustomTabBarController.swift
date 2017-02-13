@@ -25,6 +25,7 @@ class CustomTabBarController: UIViewController {
     @IBOutlet var tabBarButtons : [CustomButton] = []
     var targetIdentifier : CustomButton! = nil
     
+    var titleStr: String! = nil
     
     private let pinkshRed = UIColor(red: 233/255, green: 29/255, blue: 41/255, alpha: 1.0);
     
@@ -87,6 +88,13 @@ class CustomTabBarController: UIViewController {
         availableIdentifiers = ["Board", "Chat", "MileStone", "UserList", "Setting"]
         tabBarButtons = [self.boardButton, self.chatButton, self.milestoneButton, self.userListButton, self.settingButton]
         
+        //메인타이틀을 올려
+        if(self.titleStr == nil){
+            self.titleStr = "Swift Study"
+        }
+            
+        navigationItem.title = self.titleStr
+        
         tabbarSetting()
         
         self.performSegue(withIdentifier: "Board", sender: tabBarButtons[0])
@@ -102,8 +110,8 @@ class CustomTabBarController: UIViewController {
         
         self.bottomView.backgroundColor = .white
         
-        let lineView = UIView(frame: CGRect(x: 0, y: 1, width: self.view.frame.width, height: 1))
-        lineView.backgroundColor = .gray
+        let lineView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 1))
+        lineView.backgroundColor = UIColor.darkGray.withAlphaComponent(0.31)
         
         self.bottomView.addSubview(lineView)
         
