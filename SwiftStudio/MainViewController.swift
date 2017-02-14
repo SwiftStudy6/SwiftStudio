@@ -514,7 +514,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     func returnHome(){
-        self.dismiss(animated: true, completion: nil)
+        closeViewController(true)
     }
     
     
@@ -534,8 +534,12 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             self.boardList.append(bObj)
         }
         
-        if(self.titleString == nil){
-            self.titleString = "메인"
+        let customController = CustomTabBarController.sharedInstance
+        
+        self.titleString = "메인"
+        
+        if let title = customController.titleStr {
+            self.titleString = title
         }
         
               
@@ -545,13 +549,15 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         //self.navigationController?.navigationBar.items = [self.navigationItem]
         
-//        // 네비게이션 바를 추가한다.
-//        let naviBar = UINavigationBar()
-//        naviBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 70)
-//        naviBar.items = [navigationItem]
-//        naviBar.barTintColor = .white
-//        
-//        self.view.addSubview(naviBar)
+        // 네비게이션 바를 추가한다.
+        let naviBar = UINavigationBar()
+        naviBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 64)
+        naviBar.items = [navigationItem]
+        naviBar.barTintColor = .white
+        
+        self.view.addSubview(naviBar)
+        
+        self.collectionView?.frame = CGRect(x: 0, y: 64, width: self.view.frame.width, height: (self.collectionView?.frame.height)!-64)
         
         
         //RefreshController Setting
@@ -566,7 +572,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         self.view.backgroundColor = .white
         self.collectionView?.backgroundColor = UIColor.gray.withAlphaComponent(0.25)
         
-        //self.collectionView?.frame = CGRect(x: 0, y: 70, width: self.view.frame.width, height: (self.collectionView?.frame.height)!-70)
+        
        
     }
     
@@ -666,7 +672,9 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         boardDetailController.boardData = self.boardList[indexPath.row] as? BoardObject
         
         let navigationController = UINavigationController(rootViewController: boardDetailController)
+
         //navigationController.isNavigationBarHidden = true
+        navigationController.isNavigationBarHidden = false
     
         showViewController(navigationController, true)
         
@@ -864,7 +872,8 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             activateController = activateController?.presentedViewController
             if(activateController?.isKind(of: UINavigationController.self))!{
                 print("showViewController - Nomal - Navigation")
-                (activateController as! UINavigationController).pushViewController(viewController, animated: true)
+                activateController?.navigationController?.isNavigationBarHidden = true
+                //(activateController as! UINavigationController).pushViewController(viewController, animated: true)
             }
             activateController?.present(viewController, animated: animated, completion: completion)
         }

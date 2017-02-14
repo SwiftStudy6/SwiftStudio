@@ -9,7 +9,9 @@
 import UIKit
 
 class CustomTabBarController: UIViewController {
-
+    
+    static let sharedInstance = CustomTabBarController()
+    
     var currentViewController : UIViewController? = nil
     @IBOutlet weak var placeholderView  : UIView? = nil
     @IBOutlet var bottomView: UIView!
@@ -81,19 +83,13 @@ class CustomTabBarController: UIViewController {
         }
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         availableIdentifiers = ["Board", "Chat", "MileStone", "UserList", "Setting"]
         tabBarButtons = [self.boardButton, self.chatButton, self.milestoneButton, self.userListButton, self.settingButton]
         
-        //메인타이틀을 올려
-        if(self.titleStr == nil){
-            self.titleStr = "Swift Study"
-        }
-            
-        navigationItem.title = self.titleStr
+        
         
         tabbarSetting()
         

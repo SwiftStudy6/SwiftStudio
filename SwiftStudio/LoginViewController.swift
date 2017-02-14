@@ -219,8 +219,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     return
                 }
                 
-//                print("SIGN IN :\n \(user!)")
-//                
+                print("SIGN IN :\n \(user!)")
+//
 //                let storyBoardName = "Tabbar"
 //                
 //                let storyBoard = UIStoryboard(name: storyBoardName, bundle: nil)
@@ -237,10 +237,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 
                 if let resultController = stroyBoard.instantiateViewController(withIdentifier: identifier) as? CustomTabBarController {
                     
-                    let nc = UINavigationController(rootViewController: resultController)
-                    nc.isNavigationBarHidden = true
+                    let singleton = CustomTabBarController.sharedInstance
+                    singleton.titleStr = "Swift Study"
                     
-                    self.view.window?.rootViewController?.present(nc, animated: true, completion: nil)
+                    self.view.window?.rootViewController?.present(resultController, animated: true, completion: nil)
                 }
 
             })
@@ -288,7 +288,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         return
                     }
                     
-                    print("SIGN UP :\n (user!)")
+                    print("SIGN UP :\n \(user!)")
                     
                     let ref = FIRDatabase.database().reference()
                     ref.child("users").child((user?.uid)!).setValue(["username":name.text])

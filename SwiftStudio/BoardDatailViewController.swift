@@ -1,4 +1,5 @@
 import UIKit
+import Firebase
 
 class User: NSObject {
     public var id: UInt!
@@ -7,7 +8,7 @@ class User: NSObject {
 }
 
 class Reply: NSObject {
-    public var id: UInt!
+    public var id: String!
     public var content: String!
     public var user: User!
     public var time: String!
@@ -57,6 +58,8 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
     private var page: UInt = 0
     private var isLoading = false
     
+    private var ref: FIRDatabaseReference!
+    
     var delegate: MainViewController?
     var boardData: BoardObject?
     var replys = [Reply]()
@@ -75,10 +78,10 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
     
     
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.ref = FIRDatabase.database().reference()
         
         setupData()
         
@@ -100,7 +103,17 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         
         //17.01.26 - 백버튼 추가
         //17.02.01 - 백버튼 커스터마이징
-  /*
+        //17.02.14 - 네비바 사이즈 70 -> 64로 변경
+        self.navigationController?.isNavigationBarHidden = true
+        
+        let statusOffset : CGFloat = 20.0;
+        let heightOffset : CGFloat = 44.0;
+        let naviBarOffset : CGFloat = statusOffset + heightOffset;
+        
+        
+        //위에서 70포인트를 내린다 ( 20 (상태바) + 44 (네비바) )
+        self.tableView.frame = CGRect(x: 0, y: naviBarOffset, width: self.view.frame.width, height: self.tableView.frame.height-naviBarOffset)
+        
         self.view.backgroundColor = .white //배경색을 하얀색으로 둔다.(필수)
         
         //버튼을 위한 색상설정
@@ -108,7 +121,7 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         let defaultColor2 = UIColor(red: 0, green: 112, blue: 225, alpha: 0.25)
         
         //뒤로가기버튼
-        let backButton = UIButton(frame: CGRect(x: 0, y: 10, width: 60, height: 30))
+        let backButton = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: heightOffset))
         backButton.addTarget(self, action: #selector(backHandler), for: .touchUpInside)
         backButton.setTitle("< Back", for: .normal)
         backButton.titleLabel?.textAlignment = .left
@@ -120,15 +133,14 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         navigationItem.leftBarButtonItem = leftBarButtonItem
 
         //네비바를 강제로 넣는다.
-        let naviBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 70))
+        let naviBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: naviBarOffset))
         naviBar.items = [navigationItem]
         naviBar.barTintColor = .white
         self.view.addSubview(naviBar)
         
-        //위에서 70포인트를 내린다 ( 20 (상태바) + 50 (네비바) )
-        self.tableView.frame = CGRect(x: 0, y: 70, width: self.view.frame.width, height: self.tableView.frame.height-70)
+
         
-*/
+
         //---------------------------------------------------------------------------------------------------------------------
 
         
@@ -147,24 +159,39 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         self.isLoading = true
         
         
-        while page < 10 {
+        
+        ref.child("BoardReplys").observeSingleEvent(of: .value, with: { (snapShot) in
+            let enumerate = snapShot.children
             
-            createReply()
-            page += 1
-        }
+            while let rest = enumerate.nextObject() as? FIRDataSnapshot {
+                let dic = rest.value as! [String:Any]
+                
+                let reply = Reply()
+                reply.id = rest.key
+                reply.content = dic["content"] as? String
+                reply.time = dic["time"] as? String
+                
+                self.replys.append(reply)
+            }
+            
+            DispatchQueue.main.async {
+                self.isLoading = false
+                self.tableView.reloadData()
+            }
+        })
         
-        DispatchQueue.main.async {
-            self.isLoading = false
-            self.tableView.reloadData()
-        }
-        
+//        while page < 10 {
+//            
+//            createReply()
+//            page += 1
+//        }
     }
     
     func createReply(){
         let reply = Reply()
         reply.content = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."
         
-        reply.id = page
+        //reply.id = page
         reply.time = "어제밤"
         
         let user = User()
@@ -266,7 +293,6 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! BoardDetailCell
-        
         cell.reply = replys[indexPath.row]
         
         return cell
@@ -278,14 +304,15 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         
         let reply = Reply()
         reply.content = toolbarTextView.text
-        reply.id = 200
         reply.time = "방금막"
         
         let user = User()
         user.userName = "SHW"
         user.id = 190
-        
         reply.user = user
+        
+        let saveData = ["content" : toolbarTextView.text, "time": "방금막"] as [String : Any]
+        ref.child("BoardReplys").setValue(saveData)
         
         tableView.beginUpdates()
         replys.insert(reply, at: 0)
@@ -299,7 +326,6 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         
         tableView.reloadRows(at: [indexPath], with: .automatic)
         tableView.scrollToRow(at: indexPath, at: .top, animated: true)
-        
     }
     
     /*

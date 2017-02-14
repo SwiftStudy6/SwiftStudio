@@ -35,7 +35,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible();
         
 
-        let loginViewController = LoginViewController()      
+        let loginViewController = LoginViewController()
+        //let mainViewController = MainViewController(collectionViewLayout: UICollectionViewFlowLayout())
         
         window?.rootViewController = loginViewController
                 
