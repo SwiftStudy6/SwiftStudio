@@ -1,17 +1,18 @@
 import UIKit
 import Firebase
+import Toaster
 
 class User: NSObject {
-    public var id: UInt!
+    public var uid: String!
     public var userName: String!
-    public var avatar: String?
+    public var profile_url: String?
 }
 
 class Reply: NSObject {
-    public var id: String!
-    public var content: String!
+    public var replyKey: String!
+    public var text: String!
     public var user: User!
-    public var time: String!
+    public var recordTime: String!
 }
 
 class BoardDetailCell: UITableViewCell {
@@ -24,10 +25,10 @@ class BoardDetailCell: UITableViewCell {
     
     var reply: Reply? {
         didSet {
-            if let content = reply?.content {
+            if let content = reply?.text {
                 contentLabel.text = content
             }
-            if let time = reply?.time {
+            if let time = reply?.recordTime {
                 timeLabel.text = time
             }
             
@@ -58,7 +59,7 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
     private var page: UInt = 0
     private var isLoading = false
     
-    private var ref: FIRDatabaseReference!
+    private var replyRef: FIRDatabaseReference! = FIRDatabase.database().reference().child("Board-Replys")
     
     var delegate: MainViewController?
     var boardData: BoardObject?
@@ -80,8 +81,6 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.ref = FIRDatabase.database().reference()
         
         setupData()
         
@@ -144,25 +143,39 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
     
     
     func backHandler(){
-        self.navigationController?.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
+    
     func fetchReplys(){
         self.isLoading = true
         
+        let boardKey = boardData?.boradKey
         
-        
-        ref.child("BoardReplys").observeSingleEvent(of: .value, with: { (snapShot) in
+        replyRef.queryOrdered(byChild: "boardKey").queryEqual(toValue: boardKey).observeSingleEvent(of: .value, with: { (snapShot) in
             let enumerate = snapShot.children
             
-            while let rest = enumerate.nextObject() as? FIRDataSnapshot {
-                let dic = rest.value as! [String:Any]
+            for item in enumerate {
                 
-                let reply = Reply()
-                reply.id = rest.key
-                reply.content = dic["content"] as? String
-                reply.time = dic["time"] as? String
-                
-                self.replys.append(reply)
+                if let item = item as? FIRDataSnapshot {
+                    let dic = item.value as! [String : Any]
+                    let author = dic["author"] as! [String : String]
+                    let user = User()
+                    user.uid = author["uid"]
+                    user.userName = author["userName"]
+                    user.profile_url = author["profile_url"]
+                    
+                    let reply = Reply()
+                    reply.replyKey = item.key
+                    reply.text = dic["text"] as? String
+                    reply.user = user
+                    
+                    if let time = dic["recordTime"] as? Int {
+                        reply.recordTime = NSDate(timeIntervalSince1970: Double(time/1000)).toString()
+                    }
+                    
+                    self.replys.append(reply)
+                }
+            
             }
             
             DispatchQueue.main.async {
@@ -170,29 +183,11 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
                 self.tableView.reloadData()
             }
         })
-        
-//        while page < 10 {
-//            
-//            createReply()
-//            page += 1
-//        }
     }
     
     func createReply(){
-        let reply = Reply()
-        reply.content = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."
+        //let reply = Reply()
         
-        //reply.id = page
-        reply.time = "어제밤"
-        
-        let user = User()
-        user.id = page
-        user.userName = "user \(page+1)"
-        
-        reply.user = user
-        
-        
-        replys.append(reply)
     }
     
     func hideKeyboard(){
@@ -290,79 +285,61 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     @IBAction func sendAction(_ sender: UIButton) {
-        //toolbarTextView.resignFirstResponder()
+        guard let boardKey = boardData?.boradKey else {return}
         
         
-        let reply = Reply()
-        reply.content = toolbarTextView.text
-        reply.time = "방금막"
+        let value : [String : Any] = [
+            "text" : toolbarTextView.text,
+            "recordTime" : FIRServerValue.timestamp(),
+            "author" : [
+                "uid" : "test",
+                "profile_url" : "url",
+                "userName" : "song"
+            ],
+            "boardKey" : boardKey
+        ]
         
-        let user = User()
-        user.userName = "SHW"
-        user.id = 190
-        reply.user = user
+        replyRef.childByAutoId().setValue(value) { error, ref in
+            if let err = error {
+                debugPrint(err.localizedDescription)
+                Toast(text: "실패").show()
+            }else{
+                
+                debugPrint( ref.key )
+                
+                
+                let user = User()
+                user.userName = "song"
+                user.uid = "uid"
+                user.profile_url = "usl"
+                
+                let reply = Reply()
+                reply.replyKey = ref.key
+                reply.text = self.toolbarTextView.text
+                reply.recordTime = NSDate().toString()
+                reply.user = user
+                
+                Toast(text: "성공").show()
+                
+                self.toolbarTextView.resignFirstResponder()
+                self.toolbarTextView.text = nil
+                
+                self.tableView.beginUpdates()
+                self.replys.insert(reply, at: 0)
+                let indexPath = IndexPath(row: 0, section: 0)
+                self.tableView.insertRows(at: [indexPath], with: .automatic)
+                
+                self.tableView.endUpdates()
+                
+                
+                self.tableView.reloadRows(at: [indexPath], with: .automatic)
+                self.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+            }
+            
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
+        }
         
-        let saveData = ["content" : toolbarTextView.text, "time": "방금막"] as [String : Any]
-        ref.child("BoardReplys").setValue(saveData)
-        
-        tableView.beginUpdates()
-        replys.insert(reply, at: 0)
-        let indexPath = IndexPath(row: 0, section: 0)
-        tableView.insertRows(at: [indexPath], with: .automatic)
-        
-        tableView.endUpdates()
-        
-        
-        toolbarTextView.text = ""
-        
-        tableView.reloadRows(at: [indexPath], with: .automatic)
-        tableView.scrollToRow(at: indexPath, at: .top, animated: true)
     }
-    
-    /*
-     // Override to support conditional editing of the table view.
-     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the specified item to be editable.
-     return true
-     }
-     */
-    
-    /*
-     // Override to support editing the table view.
-     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-     if editingStyle == .delete {
-     // Delete the row from the data source
-     tableView.deleteRows(at: [indexPath], with: .fade)
-     } else if editingStyle == .insert {
-     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-     }
-     }
-     */
-    
-    /*
-     // Override to support rearranging the table view.
-     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-     
-     }
-     */
-    
-    /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
     
 }
 

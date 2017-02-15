@@ -54,6 +54,7 @@ class BoardCreateViewController: UIViewController {
         navBar.items = [navigationItem]
     }
     
+    
     func backNavHandler(){
         dismiss(animated: true, completion: nil)
     }
@@ -83,27 +84,6 @@ class BoardCreateViewController: UIViewController {
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
             }
         }
-        
-//        let board = Board()
-//        board.content = textView.text
-//        board.time = "지금 막"
-//        board.id = UInt((delegate?.boards.count)!)
-//        board.likeCount = 0
-//        
-//        let user = User()
-//        user.userName = "SHW"
-//        user.id = 190
-//        
-//        
-//        board.user = user
-//        
-//        delegate?.addBoard(data: board)
-//        
-//        textView.text = ""
-//        
-//        navigationController?.popViewController(animated: true)
-        //loadingView.stopAnimating()
-        //textView.resignFirstResponder()
     }
     
     func updateTextView(notification: Notification){

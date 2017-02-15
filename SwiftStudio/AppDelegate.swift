@@ -32,13 +32,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
          놓은 상태에서 아래 코드와 같이 하면 됩니다.
          */
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.makeKeyAndVisible();
+        window?.makeKeyAndVisible()
         
 
-        let loginViewController = LoginViewController()
-        //let mainViewController = MainViewController(collectionViewLayout: UICollectionViewFlowLayout())
+        //let loginViewController = LoginViewController()
+        let mainViewController = MainViewController(collectionViewLayout: UICollectionViewFlowLayout())
         
-        window?.rootViewController = loginViewController
+        window?.rootViewController = mainViewController
                 
         return true
     }
