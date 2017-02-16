@@ -20,6 +20,7 @@ protocol TestCellDelegate {
 class TestCell: UITableViewCell {
  
     var key : String! = nil
+    var time : String! = nil
     
     var delegate : TestCellDelegate? = nil
     
@@ -64,9 +65,10 @@ class TestCell: UITableViewCell {
 
 }
 
+
 class TestViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TestCellDelegate{
     
-    var ref : FIRDatabaseReference!
+    var ref : FIRDatabaseReference! = FIRDatabase.database().reference()
     let cellId = "cell"
     var dataList : Array<Any>? = []
     
@@ -77,6 +79,7 @@ class TestViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewWillAppear(animated)
         
         eventTestDatas()
+
         
         //User 가 인증되지 않았을경우 처음으로 돌아간다. ( 테스트를 위해 삭제 )
 //        guard (FIRAuth.auth()?.currentUser) != nil else{
@@ -85,13 +88,13 @@ class TestViewController: UIViewController, UITableViewDelegate, UITableViewData
 //        }
     }
     
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.view.backgroundColor = .white
         
-        self.ref = FIRDatabase.database().reference()
-        
+        //기본뷰 생성을 위한것
         createView()
         
     }
@@ -111,7 +114,7 @@ class TestViewController: UIViewController, UITableViewDelegate, UITableViewData
             guard snapshot.value != nil else {
                 return
             }
-            
+            print(snapshot.value!)
             self.reloadTestData()
 
         })
@@ -142,6 +145,7 @@ class TestViewController: UIViewController, UITableViewDelegate, UITableViewData
             while let rest = enumerate.nextObject()  as? FIRDataSnapshot {
                 var dic : [String : Any] = rest.value as! [String : Any]
                 dic["key"] = rest.key
+                dic["time"] = NSDate(timeIntervalSince1970: dic["time"] as! Double / 1000.0).toString()
                 self.dataList?.append(dic)
             }
             
@@ -183,6 +187,7 @@ class TestViewController: UIViewController, UITableViewDelegate, UITableViewData
     //등록버튼 이벤트
     func addClick(){
         
+        
         let key = ref.child("TestDatas").childByAutoId().key
         
         let addControlelr = UIAlertController(title: "내용추가", message: "텍스트를 입력해주세요", preferredStyle: .alert)
@@ -195,13 +200,15 @@ class TestViewController: UIViewController, UITableViewDelegate, UITableViewData
         let confrimAction = UIAlertAction(title: "전송", style: .default, handler: { (action) in
             //
             let test : UITextField! = addControlelr.textFields?[0]
-            self.ref.child("TestDatas").child(key).setValue(["text":test.text])
+
+            self.ref.child("TestDatas").child(key).setValue(["text":test.text!, "time":FIRServerValue.timestamp()])
             
         })
         
         //취소버튼 이벤트
         let cancelAction = UIAlertAction(title: "취소", style: .destructive) { (action) in
             print("취소되었습니다")
+
         }
         
         addControlelr.addAction(confrimAction)
@@ -236,6 +243,7 @@ class TestViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.key = dict?["key"] as! String
             cell.textLabel?.text = dict?["text"] as? String
             cell.textLabel?.textColor = .black
+            cell.time = dict?["time"] as! String
         }
         
         cell.delegate = self //델리게이트 연결
@@ -245,8 +253,7 @@ class TestViewController: UIViewController, UITableViewDelegate, UITableViewData
     //로우 선택시 해당 키를 보여준다.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! TestCell
-        let key = cell.key
-        Toast(text:key).show()
+        Toast(text:cell.time).show()
     }
     
     //MARK - TestCell Delegate
@@ -268,5 +275,4 @@ class TestViewController: UIViewController, UITableViewDelegate, UITableViewData
             index = index + 1
         }
     }
-
 }

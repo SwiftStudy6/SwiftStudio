@@ -22,6 +22,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         createView()
         
+    #if DEBUG
+        self.emailTextField.text = "wajl1004@gmail.com"
+        self.passwdTextField.text = "11111111"
+    #endif
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -35,7 +40,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         //View Background color
         self.view.backgroundColor = UIColor.white
         
-        let pinkshRed = UIColor(red: 233/255, green: 29/255, blue: 41/255, alpha: 1.0)
+        let pinkshRed = UIColor(red: 233, green: 29, blue: 41, alpha: 1.0)
         
         
         //Label
@@ -220,13 +225,27 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 }
                 
                 print("SIGN IN :\n \(user!)")
+//
+//                let storyBoardName = "Tabbar"
+//                
+//                let storyBoard = UIStoryboard(name: storyBoardName, bundle: nil)
+//                
+//                let resultController = storyBoard.instantiateInitialViewController()!
+//                
+//                self.present(resultController, animated: true, completion: nil)
+//                
                 
-                let stroyBoard = UIStoryboard(name: "Board", bundle: nil)
+                let storyBoardName = "Board"
+                let identifier = "CustomTabBarController"
                 
-                if let resultController = stroyBoard.instantiateViewController(withIdentifier: "CustomTabBarController") as? CustomTabBarController {
-                    self.view.window?.rootViewController?.present(resultController, animated: true, completion: nil)
+                let stroyBoard = UIStoryboard(name: storyBoardName, bundle: nil)
+                
+                if let resultController = stroyBoard.instantiateViewController(withIdentifier: identifier) as? CustomTabBarController {
                     
-                    //self.present(resultController, animated: true, completion: nil)
+                    let singleton = CustomTabBarController.sharedInstance
+                    singleton.titleStr = "Swift Study"
+                    
+                    self.view.window?.rootViewController?.present(resultController, animated: true, completion: nil)
                 }
 
             })
@@ -274,7 +293,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         return
                     }
                     
-                    print("SIGN UP :\n (user!)")
+                    print("SIGN UP :\n \(user!)")
                     
                     let ref = FIRDatabase.database().reference()
                     ref.child("users").child((user?.uid)!).setValue(["username":name.text])
