@@ -22,6 +22,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         createView()
         
+    #if DEBUG
+        self.emailTextField.text = "wajl1004@gmail.com"
+        self.passwdTextField.text = "11111111"
+    #endif
+        
     }
 
     override func didReceiveMemoryWarning() {

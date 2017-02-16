@@ -515,15 +515,56 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         showViewController(vc, true)
     }
     
+
     func returnHome(){
         closeViewController(true)
     }
     
+
+    func fetchBoardList(enumerator: NSEnumerator){
+        
+        for item in enumerator {
+            if let item = item as? FIRDataSnapshot {
+                
+                let dict = item.value as! [String : Any]
+                let author = dict["author"] as! [String: String]
+                
+                let bObj : BoardObject! = BoardObject()
+                
+                bObj.boradKey = item.key
+                bObj.authorId = author["uid"]
+                bObj.authorName = author["userName"]
+                bObj.bodyText = dict["text"] as? String
+                
+                if let time = dict["recordTime"] as? Int {
+                    bObj.editTime = NSDate(timeIntervalSince1970: Double(time/1000)).toString()
+                }
+                
+                self.boardList.append(bObj)
+            }
+        }
+        
+        
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
+    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+
         loadEvent()
+
+//        boardRef.observeSingleEvent(of: .value, with: { (snapshot) in    
+//            let enumerator = snapshot.children
+//            self.fetchBoardList(enumerator: enumerator)
+//            
+//        }){ (err) in
+//            print(err.localizedDescription)
+//        }
+
         
 //        if(self.boardList.count == 0){
 //            let bObj : BoardObject! = BoardObject()
@@ -535,6 +576,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
 //            bObj.editTime = "2017년 01월 24일 오후 02:30"
 //            self.boardList.append(bObj)
 //        }
+
         
         let customController = CustomTabBarController.sharedInstance
         
@@ -1006,16 +1048,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     //Reply Button
     func replyButtonEvent(sender: UIButton, cell : BoardCell) {
-        let boardDetailController = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
+        let vc = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
+        vc.boardData = cell.dataObject
         
-        boardDetailController.boardData = cell.dataObject
+        //let rootViwController = CustomTabBarController()
+        //rootViwController.pushViewController(boardDetailController,true)
         
-//        let navigationController = UINavigationController(rootViewController: boardDetailController)
-//        
-//        self.view.window?.rootViewController?.present(navigationController, animated: true, completion: nil)
-        
-        let rootViwController = CustomTabBarController()
-        rootViwController.pushViewController(boardDetailController,true)
+        present(vc, animated: true, completion: nil)
     }
     
     //Share Button
