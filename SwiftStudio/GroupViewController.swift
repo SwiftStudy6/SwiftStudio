@@ -57,7 +57,11 @@ class GroupHeaderView: UICollectionReusableView {
 private let reuseIdentifier = "GroupCell"
 private let reuseIdentifier2 = "AddCell"
 
+private let groupPosts = "Group"
+
 class GroupViewController: UICollectionViewController {
+    
+    var groupRef : FIRDatabaseReference! = FIRDatabase.database().reference()
 
     override func viewDidLoad() {
         super.viewDidLoad()

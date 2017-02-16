@@ -26,12 +26,27 @@ class BoardObject : NSObject {
         self.authorName = authorName
         self.profileImgUrl = profileImgUrl
         
-        if !profileImgUrl.isEmpty {
-            let imageView = UIImageView()
-            imageView.sd_setImage(with: URL(string: profileImgUrl))
-            
-            self.profileImg = imageView.image
-        }
+//        if !profileImgUrl.isEmpty {
+//            let imageView : UIImageView? = UIImageView()
+//            
+//            imageView?.sd_setImage(with: URL(string: profileImgUrl), placeholderImage: UIImage(named: "User"), options: .retryFailed, completed: { (image, error, cachedType, url) in
+//                
+//                //이미지캐싱이 안되있을경우에 대한 애니메이션 셋팅_imageView.alpha = 1;
+//                if imageView != nil, cachedType == .none {
+//                   
+//                    imageView?.alpha = 0
+//                    
+//                    UIView.animate(withDuration: 0.2, animations: {
+//                        imageView?.alpha = 1
+//                    }, completion: { (finished) in
+//                        imageView?.alpha = 1
+//                    })
+//                }
+//            })
+//            
+//            self.profileImg = imageView?.image
+//            
+//        }
         
         self.bodyText = bodyText
         self.editTime = editTime
@@ -66,3 +81,39 @@ class BoardObject : NSObject {
     
     
 }
+extension BoardObject{
+    @nonobjc
+    func isEqual(_ obj : BoardObject) -> Bool {
+        guard !obj.isKind(of: BoardObject.self) else {
+            return false
+        }
+        
+        
+        if (self.boradKey != obj.boradKey) {
+            return false
+        }
+        if(self.authorId != obj.authorId){
+            return false
+        }
+        if(self.authorName != obj.authorName) {
+            
+        }
+        if(self.profileImgUrl != obj.profileImgUrl) {
+            return false
+        }
+        if(self.profileImg != obj.profileImg) {
+            return false
+        }
+        
+        if(self.bodyText != obj.bodyText) {
+            return false
+        }
+        
+        if(self.editTime != obj.editTime) {
+            return false
+        }
+        
+        return true
+    }
+}
+
