@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="g2e-Jn-GdE">
-                                <rect key="frame" x="0.0" y="64" width="375" height="543"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="553"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
@@ -32,10 +32,32 @@
                                 </connections>
                             </textView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8wt-Jq-miM" userLabel="toolbarView">
-                                <rect key="frame" x="0.0" y="607" width="375" height="60"/>
-                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VBo-y1-bbt" userLabel="line">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="3DY-nF-BaD"/>
+                                        </constraints>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ZS-ov-FLe">
+                                        <rect key="frame" x="8" y="10" width="46" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <state key="normal" title="사진첨부">
+                                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="addPhotoHandle:" destination="EGt-EK-dej" eventType="touchUpInside" id="u0g-1w-adX"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="MXS-o5-1pl"/>
+                                    <constraint firstAttribute="trailing" secondItem="VBo-y1-bbt" secondAttribute="trailing" id="AZz-1S-vYj"/>
+                                    <constraint firstItem="VBo-y1-bbt" firstAttribute="top" secondItem="8wt-Jq-miM" secondAttribute="top" id="KsU-w5-sxF"/>
+                                    <constraint firstAttribute="height" constant="50" id="MXS-o5-1pl"/>
+                                    <constraint firstItem="VBo-y1-bbt" firstAttribute="leading" secondItem="8wt-Jq-miM" secondAttribute="leading" id="qhO-Wv-DO2"/>
                                 </constraints>
                             </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZeX-Br-m5W">
@@ -66,6 +88,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="addPhotoButton" destination="4ZS-ov-FLe" id="oyn-yf-xFx"/>
                         <outlet property="navBar" destination="ZeX-Br-m5W" id="Qg1-yU-Uyv"/>
                         <outlet property="textView" destination="g2e-Jn-GdE" id="baD-46-gWi"/>
                         <outlet property="toolbarView" destination="8wt-Jq-miM" id="f1L-HD-3Qv"/>
