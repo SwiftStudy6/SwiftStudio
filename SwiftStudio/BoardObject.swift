@@ -19,6 +19,9 @@ class BoardObject : NSObject {
     var bodyText        : String?       //Board Body Text
     var editTime        : String?       //Board Edited Time yyyy/MM/dd hh:mm
     
+    var likeCount       : Int = 0
+    var likes           : Dictionary<String, Bool>?
+    
     //init each
     init(_ boardNum: String, _ authorId: String, _ authorName: String, _ profileImgUrl: String, _ bodyText : String, _ editTime : String){
         self.boradKey = boardNum
