@@ -1051,10 +1051,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         let vc = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
         vc.boardData = cell.dataObject
         
-        //let rootViwController = CustomTabBarController()
-        //rootViwController.pushViewController(boardDetailController,true)
-        
-        present(vc, animated: true, completion: nil)
+        showViewController(vc, true)
     }
     
     //Share Button

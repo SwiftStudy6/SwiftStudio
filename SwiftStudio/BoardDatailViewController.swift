@@ -84,7 +84,6 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         
         setupData()
         
-        
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 45
         tableView.tableFooterView = UIView()
