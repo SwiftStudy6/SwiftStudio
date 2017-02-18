@@ -512,7 +512,41 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         let vc = UIStoryboard(name: "BoardCreate", bundle: nil).instantiateInitialViewController() as! BoardCreateViewController
     
-        showViewController(vc, true)
+        showViewController(vc, true,{() in
+            self.boardRef.observe(.childAdded, with: { (snapshot) in
+                guard snapshot.exists() else {
+                    return
+                }
+                
+                let key = snapshot.key
+                let dict = snapshot.value as! [String : Any]
+                let user = dict["author"] as! [String : Any]
+                
+                var time : String?
+                
+                if dict["editTIme"] != nil {
+                    time = NSDate(timeIntervalSince1970: (dict["editTime"] as! Double) / 1000).toString()
+                }else if dict["recordTime"] != nil {
+                    time = NSDate(timeIntervalSince1970: (dict["recordTime"] as! Double) / 1000).toString()
+                }
+                
+                
+                print(snapshot)
+                //init(_ boardNum: String, _ authorId: String, _ authorName: String, _ profileImgUrl: String, _ bodyText : String, _ editTime : String){
+                let obj = BoardObject(key,
+                                      user["uid"] as! String,
+                                      user["userName"] as! String,
+                                      user["profile_url"] as! String,
+                                      dict["text"] as! String,
+                                      time!)
+                
+                self.boardList.append(obj)
+                
+                
+                
+            })
+        
+        })
     }
     
 
