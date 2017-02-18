@@ -8,8 +8,8 @@
 
 import UIKit
 import Firebase
-import SwiftyJSON
 import SDWebImage
+import Toaster
 
 protocol BoardCellDelegate  {
     func editButtonEvent(sender:UIButton, cell : BoardCell)
@@ -20,7 +20,7 @@ protocol BoardCellDelegate  {
 
 //Board Cell Definition
 class BoardCell : UICollectionViewCell {
-    
+
     
     var key          : String! = nil                  //Board Key
     var authorId     : String! = nil                //Board Writer Id(User Id)
@@ -104,7 +104,6 @@ class BoardCell : UICollectionViewCell {
         
         //settting userImage
         self.userImage = UIImageView()
-        self.userImage.image = UIImage(named: "User")
         self.userImage.translatesAutoresizingMaskIntoConstraints = false
         self.userImage.layer.masksToBounds = true;
         self.userImage.layer.cornerRadius = 18
@@ -315,12 +314,14 @@ class NoticeCell : UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        self.contentView.backgroundColor = .white
+        
         textLabel = {
             let _label = UILabel()
             _label.isUserInteractionEnabled = false
             _label.translatesAutoresizingMaskIntoConstraints = false
             _label.textColor = .black
-            _label.font = .boldSystemFont(ofSize: 11)
+            _label.font = .boldSystemFont(ofSize: 20)
             
             return _label
         }()
@@ -329,8 +330,8 @@ class NoticeCell : UICollectionViewCell {
         
         self.contentView.addSubview(textLabel!)
         
-        textLabel?.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
-        textLabel?.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
+        textLabel?.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 15).isActive = true
+        textLabel?.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -15).isActive = true
         textLabel?.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
         textLabel?.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
         
@@ -368,6 +369,12 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     private var refreshController : UIRefreshControl!
     
+    lazy var homeBarButtonItem: UIBarButtonItem = {
+        let button = UIBarButtonItem(image: UIImage(named: "Home"), style: .plain, target: self, action: #selector(self.returnHome))
+        
+        return button
+    }()
+    
     lazy var composeBarButtonItem: UIBarButtonItem = {
         let button = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.navToWriteHandle))
         
@@ -386,27 +393,37 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     //불러운 포스트 개수를 배열에 추가한다. (100 * x)
     func loadOfPosts(_ pageCount : UInt){
+        
         boardRef.queryLimited(toFirst: rangeOfPosts * pageCount).observeSingleEvent(of: .value, with: {(snapshot) in
-            guard !snapshot.exists() else {
+            guard snapshot.exists() else {
                 return
             }
             
-            var tempList : Array<Any>! = nil
+            var tempList : Array<Any>! = [] //초기화
             
             let enumerate = snapshot.children
             while let rest = enumerate.nextObject()  as? FIRDataSnapshot {
                 var dict = rest.value as! [String : Any]
                 var obj: BoardObject! = BoardObject()
                 obj.boradKey = rest.key
-                obj.bodyText = dict["bodyText"] as! String?
+                obj.bodyText = dict["text"] as! String?
                 
-                let userObj = dict["author"] as! [String : Any]
+                var userObj = dict["author"] as? [String : Any]
+                
+                var time : NSDate?
+                
+                if let editTIme = dict["editTime"]{
+                    time = NSDate(timeIntervalSince1970: editTIme as! Double / 1000)
+                }else if let recordTiem = dict["recordTime"] {
+                    time = NSDate(timeIntervalSince1970: recordTiem as! Double / 1000)
+                }
+
                 obj = BoardObject(rest.key,
-                                  userObj["uid"] as! String,
-                                  userObj["name"] as! String,
-                                  userObj["imgUrl"] as! String,
-                                  dict["bodyText"] as! String,
-                                  dict["editTime"] as! String)
+                                  userObj?["uid"] as! String,
+                                  userObj?["userName"] as! String,
+                                  userObj?["profile_url"] as! String,
+                                  dict["text"] as! String,
+                                  (time?.toString())!)
                 
                 
                 tempList.append(obj)
@@ -423,6 +440,8 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 }
             }
             
+            self.boardList = tempList
+            
             if(self.boardList.count > 0){
                 DispatchQueue.main.async {
                     self.collectionView?.reloadData()
@@ -438,39 +457,45 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         //공지사항을 불러온다
         noticeRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            guard !snapshot.exists() else{
+            guard snapshot.exists() else{
                 return
             }
             
             var tempList : Array<Any>! = []
             let enumerator = snapshot.children
             while let rest = enumerator.nextObject() as? FIRDataSnapshot {
-                let key = rest.key
+                let noticeKey = rest.key
                 let dict = rest.value as! [String :Any]
                 
+                let user = dict["author"] as! [String : Any]
                 
-                let notiObj: NoticeObject! = NoticeObject()
-                notiObj.noticeKey = key
-                notiObj.authorId = dict["authorId"] as! String
-                notiObj.noticeText = dict["text"] as! String
-                let time : Double = dict["editTime"] as! Double
-                notiObj.editTime = NSDate(timeIntervalSince1970: time/1000.0).toString()
+                
+                let notiObj: NoticeObject! = NoticeObject(noticeKey,
+                                                          dict["boardKey"] as! String,
+                                                          user["uid"] as! String,
+                                                          dict["text"] as! String,
+                                                          dict["editTime"] as! Double)
+//                notiObj.boardKey = dict["boardKey"] as! String
+//                notiObj.noticeKey = key
+//                notiObj.authorId = user["uid"] as! String
+//                notiObj.noticeText = dict["text"] as! String
+//                let time : Double = dict["editTime"] as! Double
+//                notiObj.editTime = NSDate(timeIntervalSince1970: time/1000.0).toString()
+                
                 
                 tempList.append(notiObj)
             }
             
             if(self.noticeList.count > 0){
                 var i = 0
-                var j = 0
                 
                 for idx in self.noticeList {
                     for temp in tempList {
                         if (idx as! NoticeObject).isEqual(temp as? NoticeObject){
-                            tempList.remove(at: j)
+                            tempList.remove(at: i)
                         }
-                        j = j + 1
+                        i = i + 1
                     }
-                    i = i + 1
                 }
             }
             
@@ -490,6 +515,12 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         showViewController(vc, true)
     }
     
+
+    func returnHome(){
+        closeViewController(true)
+    }
+    
+
     func fetchBoardList(enumerator: NSEnumerator){
         
         for item in enumerator {
@@ -518,17 +549,22 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             self.collectionView?.reloadData()
         }
     }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        boardRef.observeSingleEvent(of: .value, with: { (snapshot) in    
-            let enumerator = snapshot.children
-            self.fetchBoardList(enumerator: enumerator)
-            
-        }){ (err) in
-            print(err.localizedDescription)
-        }
+
+        loadEvent()
+
+//        boardRef.observeSingleEvent(of: .value, with: { (snapshot) in    
+//            let enumerator = snapshot.children
+//            self.fetchBoardList(enumerator: enumerator)
+//            
+//        }){ (err) in
+//            print(err.localizedDescription)
+//        }
+
         
 //        if(self.boardList.count == 0){
 //            let bObj : BoardObject! = BoardObject()
@@ -540,23 +576,32 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
 //            bObj.editTime = "2017년 01월 24일 오후 02:30"
 //            self.boardList.append(bObj)
 //        }
+
         
-        if(self.titleString == nil){
-            self.titleString = "메인"
+        let customController = CustomTabBarController.sharedInstance
+        
+        self.titleString = "메인"
+        
+        if let title = customController.titleStr {
+            self.titleString = title
         }
         
-        
-        
+              
         navigationItem.title = self.titleString
         navigationItem.rightBarButtonItem = composeBarButtonItem
+        navigationItem.leftBarButtonItem = homeBarButtonItem
+        
+        //self.navigationController?.navigationBar.items = [self.navigationItem]
         
         // 네비게이션 바를 추가한다.
         let naviBar = UINavigationBar()
-        naviBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 70)
+        naviBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 64)
         naviBar.items = [navigationItem]
         naviBar.barTintColor = .white
         
         self.view.addSubview(naviBar)
+        
+        self.collectionView?.frame = CGRect(x: 0, y: 64, width: self.view.frame.width, height: (self.collectionView?.frame.height)!-64)
         
         
         //RefreshController Setting
@@ -565,13 +610,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         // Register cell classes
         self.collectionView!.register(BoardCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier2)
+        self.collectionView!.register(NoticeCell.self, forCellWithReuseIdentifier: reuseIdentifier2)
         
         //Setting View
         self.view.backgroundColor = .white
         self.collectionView?.backgroundColor = UIColor.gray.withAlphaComponent(0.25)
         
-        self.collectionView?.frame = CGRect(x: 0, y: 70, width: self.view.frame.width, height: (self.collectionView?.frame.height)!-70)
+        
        
     }
     
@@ -623,10 +668,26 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             
             cell.dataObject = boardObj
             
+            cell.userImage.sd_setImage(with: URL(string:boardObj.profileImgUrl!), placeholderImage: UIImage(named:"User"), options: .retryFailed, completed: { (image, error, cachedType, url) in
+                
+                
+                //이미지캐싱이 안되있을경우에 대한 애니메이션 셋팅_imageView.alpha = 1;
+                if cell.userImage != nil, cachedType == .none {
+                    
+                    cell.userImage?.alpha = 0
+                    
+                    UIView.animate(withDuration: 0.2, animations: {
+                        cell.userImage?.alpha = 1
+                    }, completion: { (finished) in
+                        cell.userImage?.alpha = 1
+                    })
+                }
+            })
+        
             cell.indexPath = indexPath
-            
+        
             cell.delegate = self
-            
+        
             return cell
         }
     }
@@ -662,18 +723,80 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
 
         if(indexPath.section == 0){
-            return
+            let noticeObj = self.noticeList[indexPath.row] as! NoticeObject
+            
+            let actionController = UIAlertController(title: "확인창", message: "해당 공지사항을 내리겠습니까?", preferredStyle: .alert)
+            
+            let deleteAction = UIAlertAction(title: "삭제", style: .destructive, handler: { (Void) in
+                
+                self.noticeRef.child(noticeObj.noticeKey).removeValue(completionBlock: { (error, ref) in
+                    guard error == nil else {
+                        return
+                    }
+                    let key = ref.key
+                    
+                    var idx = 0
+                    
+                    for obj in self.noticeList {
+                        if(obj as! NoticeObject).noticeKey == key {
+                            self.noticeList.remove(at: idx)
+                            self.collectionView?.deleteItems(at: [IndexPath(row: idx, section: 0)])
+                        }
+                        idx = idx + 1
+                    }
+
+                    
+                })
+                
+                //왜 안되는지 모르겠다
+                self.noticeRef.observeSingleEvent(of: .childRemoved, with: { (snapshot) in
+                    
+                    guard snapshot.exists() else {
+                        return
+                    }
+                    
+                    let key = snapshot.key 
+                    
+                    var idx = 0
+                    
+                    for obj in self.noticeList {
+                        if(obj as! NoticeObject).noticeKey == key {
+                            self.noticeList.remove(at: idx)
+                            self.collectionView?.deleteItems(at: [IndexPath(row: idx, section: 0)])
+                        }
+                        idx = idx + 1
+                    }
+                    
+                })
+                
+            })
+            
+            let cancelAction = UIAlertAction(title: "취소", style: .default, handler: nil)
+            
+            
+            actionController.addAction(deleteAction)
+            actionController.addAction(cancelAction)
+            
+            if(FIRAuth.auth()?.currentUser?.uid == noticeObj.authorId){
+                self.present(actionController, animated: true, completion: nil)
+            }
+            
+        }else{
+        
+            collectionView.deselectItem(at: indexPath, animated: true)
+            
+            let boardDetailController = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
+            boardDetailController.boardData = self.boardList[indexPath.row] as? BoardObject
+            
+            let navigationController = UINavigationController(rootViewController: boardDetailController)
+            
+            //navigationController.isNavigationBarHidden = true
+            navigationController.isNavigationBarHidden = false
+            
+            showViewController(navigationController, true)
+            
+            //        self.navigationController?.pushViewController(boardDetailController, animated: true)
         }
-        
-        collectionView.deselectItem(at: indexPath, animated: true)
-        
-        let boardDetailController = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
-        boardDetailController.boardData = self.boardList[indexPath.row] as? BoardObject
-        
-        let navigationController = UINavigationController(rootViewController: boardDetailController)
-        navigationController.isNavigationBarHidden = false
-        
-        showViewController(navigationController, true)
     }
 
     
@@ -689,33 +812,112 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         
         
-        
         let alertController = UIAlertController(title: "게시물 수정", message: nil, preferredStyle: .actionSheet)
      
         //공지 추가 액션
         let addNoticeAction = UIAlertAction(title: "공지사항 등록", style: .default) { (Void) in
             
             let noticeKey = boardKey!
-            let data : [String : Any] = ["authorId":authorId!,
+            let data : [String : Any] = ["boardKey":boardKey!,
+                                         "author": ["uid":authorId!],
                                          "text": cell.textRecorded!.text,
-                                         "time": FIRServerValue.timestamp()]
-            
-            self.noticeRef.setValue(["\(noticeKey)":data])
+                                         "recordTime": FIRServerValue.timestamp(),
+                                         "editTime": FIRServerValue.timestamp()]
+            if(self.noticeList.count >= 2){
+                Toast(text:"공지사항은 2개 이상 등록 할수 없습니다.").show()
+                return
+            }else{
+                self.noticeRef.child(noticeKey).setValue(data, withCompletionBlock: { (error, ref) in
+                    guard error == nil else {
+                        return
+                    }
+                    
+                    ref.observe(.value, with: { (snapshot) in
+                        guard snapshot.exists() else {
+                            return
+                        }
+                        
+                        let count = self.noticeList.count
+                        
+                        let dict = snapshot.value as! [String : Any]
+                        
+                        let user = dict["author"] as? [String : Any]
+                        
+                        //NoticeObject(_ noticeKey: String, _ boardKey: String, _ authorId: String, _ noticeText: String, _ editTime: Double){
+                        let obj = NoticeObject(snapshot.key,
+                                               dict["boardKey"] as! String,
+                                               user?["uid"] as! String,
+                                               dict["text"] as! String,
+                                               dict["editTime"] as! Double)
+                        var idx = -1
+                        for obj in self.noticeList {
+                            if (obj as! NoticeObject).noticeKey == snapshot.key{
+                                idx = idx + 1
+                            }
+                        }
+                        
+                        
+                        if(idx == -1 || self.noticeList.count == 0) {
+                            self.noticeList.append(obj)
+                        }
+                        
+                        if(count < self.noticeList.count){
+                            self.collectionView?.insertItems(at: [IndexPath(row:self.noticeList.count-1, section: 0)])
+                            self.collectionView?.reloadItems(at: [IndexPath(row:self.noticeList.count-1, section: 0)])
+                        }else{
+                            
+                        }
+                    })
+                    
+                    
+                })
+            }
         }
         
         //공지삭제 액션
         let delNoticeAction = UIAlertAction(title: "공지사항 내리기", style: .default) { (Void) in
-            self.noticeRef.child(boardKey!).removeValue()
             
-            self.noticeRef.observeSingleEvent(of: .childRemoved, with: { (snapshot) in
-                guard !snapshot.exists() else{
+            var noticeKey : String?
+            var indexPath : IndexPath?
+            var i = 0
+            for idx in self.noticeList {
+                if(cell.key == (idx as! NoticeObject).boardKey){
+                    indexPath = IndexPath(row: i, section: 0)
+                    
+                    noticeKey = (idx as! NoticeObject).noticeKey
+                }
+                i = i + 1
+            }
+            
+            self.noticeRef.child(noticeKey!).removeValue(completionBlock: { (error, ref) in
+                guard error == nil else {
                     return
                 }
                 
-                let deleteKey = snapshot.key
-                if(boardKey == deleteKey){
-                    self.collectionView?.deleteItems(at: [cell.indexPath])
-                    self.noticeList.remove(at: cell.indexPath.row)
+                let key = ref.key
+                
+                var i = 0
+                
+                for obj in self.noticeList {
+                    if(obj as! NoticeObject).noticeKey == key {
+                        self.noticeList.remove(at: i)
+                        self.collectionView?.deleteItems(at: [IndexPath(row: i, section: 0)])
+                    }
+                    i = i + 1
+                }
+                
+            })
+            
+            self.noticeRef.observeSingleEvent(of: .childRemoved, with: { (snapshot) in
+                guard snapshot.exists() else{
+                    return
+                }
+                
+                let dict = snapshot.value as! [String : Any]
+                
+                if(boardKey == dict["boardKey"] as? String){
+                    self.collectionView?.deleteItems(at: [indexPath!])
+                    self.noticeList.remove(at: (indexPath?.row)!)
                 }
             })
             
@@ -738,35 +940,60 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         //삭제 약션
         let delAction = UIAlertAction(title: "글 삭제", style: .destructive) { (Void) in
            
-            if(user?.uid == authorId){
-                self.boardRef.child(cell.key).removeValue()
-                
-                self.boardRef.observeSingleEvent(of: .childRemoved, with: { (snapshot) in
-                    guard !snapshot.exists() else{
-                        return
-                    }
-                    
-                    self.collectionView?.deleteItems(at: [cell.indexPath])
-                    self.boardList.remove(at: cell.indexPath.row)
-                    
-                    
-                    var idx = 0
-                    for board in self.boardList {
-                        if(board as! BoardObject).boradKey == snapshot.key {
-                            self.boardList.remove(at: idx)
+            let confirmControlelr = UIAlertController(title: "확인창", message: "정말로 게시물을 삭제 하실껍니까?\n(복구 안됩니다)", preferredStyle: .alert)
+            
+            let deleteAction = UIAlertAction(title: "삭제", style: .destructive, handler: { (Void) in
+                if(user?.uid == authorId){
+                    self.boardRef.child(cell.key).removeValue(completionBlock: { (error, ref) in
+                        guard error == nil else {
+                            return
                         }
-                        idx = idx + 1
-                    }
+                        
+                        let key = ref.key
+                        let obj = self.boardList[cell.indexPath.row] as! BoardObject
+                        
+                        if obj.boradKey == key{
+                            self.boardList.remove(at: cell.indexPath.row)
+                            
+                            self.collectionView?.deleteItems(at: [cell.indexPath])
+                            
+                        }
+                    })
                     
-//                    DispatchQueue.main.async(execute: { 
-//                        self.collectionView?.reloadData()
+                    //작동이 안된다.
+//                    self.boardRef.observeSingleEvent(of: .childRemoved, with: { (snapshot) in
+//                        guard !snapshot.exists() else{
+//                            return
+//                        }
+//                        
+//                        self.collectionView?.deleteItems(at: [cell.indexPath])
+//                        self.boardList.remove(at: cell.indexPath.row)
+//                        
+//                        
+//                        var idx = 0
+//                        for board in self.boardList {
+//                            if(board as! BoardObject).boradKey == snapshot.key {
+//                                self.boardList.remove(at: idx)
+//                            }
+//                            idx = idx + 1
+//                        }
+//                        
+//                        //                    DispatchQueue.main.async(execute: {
+//                        //                        self.collectionView?.reloadData()
+//                        //                    })
+//                        
 //                    })
                     
-                    
-                })
-                
-            }
+                }
+            })
             
+            let cancelAtion = UIAlertAction(title: "취소", style: .default, handler:nil)
+            
+            confirmControlelr.addAction(deleteAction)
+            confirmControlelr.addAction(cancelAtion)
+            
+            
+            self.present(confirmControlelr, animated: true, completion: nil)
         }
         
         let cancelAtion = UIAlertAction(title: "취소", style: .cancel, handler:nil)
@@ -788,13 +1015,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     //Like Button
     func likeButtonEvent(sender: UIButton, cell : BoardCell) {
-        //code
-        print("press like button : \(cell.indexPath.row)")
-        boardRef.runTransactionBlock({ (currentData) -> FIRTransactionResult in
+        //code 
+        //print("press like button : \(cell.indexPath.row)")
+        boardRef.child(cell.key).runTransactionBlock({ (currentData) -> FIRTransactionResult in
             if var post = currentData.value as? [String : AnyObject], let uid = FIRAuth.auth()?.currentUser?.uid {
                 var likes: Dictionary<String, Bool>
-                likes = post["stars"] as? [String : Bool] ?? [:]
-                var likeCount = post["starCount"] as? Int ?? 0
+                likes = post["like"] as? [String : Bool] ?? [:]
+                var likeCount = post["likeCount"] as? Int ?? 0
                 if let _ = likes[uid] {
                     // Unlike the post and remove self from likes
                     likeCount -= 1
@@ -805,7 +1032,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                     likes[uid] = true
                 }
                 post["likeCount"] = likeCount as AnyObject?
-                post["likes"] = likes as AnyObject?
+                post["like"] = likes as AnyObject?
                 
                 // Set value and report transaction success
                 currentData.value = post
@@ -853,14 +1080,38 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         var activateController = UIApplication.shared.keyWindow?.rootViewController
         
         if(activateController?.isKind(of: UINavigationController.self))!{
+            print("showViewController - Navigation")
+            activateController = (activateController as! UINavigationController).visibleViewController
+            
+            activateController?.present(viewController, animated: animated, completion: completion)
+
+        }else if((activateController?.presentedViewController) != nil){
+            print("showViewController - Nomal")
+            activateController = activateController?.presentedViewController
+            if(activateController?.isKind(of: UINavigationController.self))!{
+                print("showViewController - Nomal - Navigation")
+                activateController?.navigationController?.isNavigationBarHidden = true
+                //(activateController as! UINavigationController).pushViewController(viewController, animated: true)
+            }
+            activateController?.present(viewController, animated: animated, completion: completion)
+        }
+        
+//        activateController?.present(viewController, animated: animated, completion: completion)
+
+    }
+    
+    
+    func closeViewController(_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+        var activateController = UIApplication.shared.keyWindow?.rootViewController
+        
+        if(activateController?.isKind(of: UINavigationController.self))!{
             activateController = (activateController as! UINavigationController).visibleViewController
         }else if((activateController?.presentedViewController) != nil){
             activateController = activateController?.presentedViewController
         }
         
-        activateController?.present(viewController, animated: animated, completion: completion)
+        activateController?.dismiss(animated: animated, completion: completion)
     }
-
 }
 
 extension NSDate {

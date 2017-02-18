@@ -34,11 +34,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         
-
-        //let loginViewController = LoginViewController()
-        let mainViewController = MainViewController(collectionViewLayout: UICollectionViewFlowLayout())
-        
-        window?.rootViewController = mainViewController
+        //여기 부분 바꾸지 말것 (loginview에서 if debug flag 추가했음) by June
+        let loginViewController = LoginViewController()
+        window?.rootViewController = loginViewController
                 
         return true
     }

@@ -96,11 +96,21 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         
         navigationItem.title = "게시글 생성"
         navigationController?.navigationBar.isTranslucent = false
-        
+
         //David June Kang  -----------------------------------------------------------------------------------------------------
         
         //17.01.26 - 백버튼 추가
         //17.02.01 - 백버튼 커스터마이징
+        //17.02.14 - 네비바 사이즈 70 -> 64로 변경
+        self.navigationController?.isNavigationBarHidden = true
+        
+        let statusOffset : CGFloat = 20.0;
+        let heightOffset : CGFloat = 44.0;
+        let naviBarOffset : CGFloat = statusOffset + heightOffset;
+        
+        
+        //위에서 70포인트를 내린다 ( 20 (상태바) + 44 (네비바) )
+        self.tableView.frame = CGRect(x: 0, y: naviBarOffset, width: self.view.frame.width, height: self.tableView.frame.height-naviBarOffset)
         
         self.view.backgroundColor = .white //배경색을 하얀색으로 둔다.(필수)
         
@@ -109,7 +119,7 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         let defaultColor2 = UIColor(red: 0, green: 112, blue: 225, alpha: 0.25)
         
         //뒤로가기버튼
-        let backButton = UIButton(frame: CGRect(x: 0, y: 10, width: 60, height: 30))
+        let backButton = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: heightOffset))
         backButton.addTarget(self, action: #selector(backHandler), for: .touchUpInside)
         backButton.setTitle("< Back", for: .normal)
         backButton.titleLabel?.textAlignment = .left
@@ -121,15 +131,14 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         navigationItem.leftBarButtonItem = leftBarButtonItem
 
         //네비바를 강제로 넣는다.
-        let naviBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 70))
+        let naviBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: naviBarOffset))
         naviBar.items = [navigationItem]
         naviBar.barTintColor = .white
         self.view.addSubview(naviBar)
         
-        //위에서 70포인트를 내린다 ( 20 (상태바) + 50 (네비바) )
-        self.tableView.frame = CGRect(x: 0, y: 70, width: self.view.frame.width, height: self.tableView.frame.height-70)
+
         
-        
+
         //---------------------------------------------------------------------------------------------------------------------
 
         
