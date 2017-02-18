@@ -88,7 +88,6 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 45
         tableView.tableFooterView = UIView()
-        //tableView.keyboardDismissMode = .interactive
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
@@ -194,11 +193,6 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         })
     }
     
-    func createReply(){
-        //let reply = Reply()
-        
-    }
-    
     func hideKeyboard(){
         toolbarTextView.resignFirstResponder()
     }
@@ -293,6 +287,44 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         return cell
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        let reply = replys[indexPath.row]
+        if reply.user.uid == "test" {
+            return true
+        }
+        
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete {
+            
+            
+            let key = replys[indexPath.row].replyKey
+            replyRef.child(key!).removeValue(completionBlock: { (err, ref) in
+                if err != nil {
+                    debugPrint("failed to remove reply")
+                    return
+                }
+                
+                tableView.beginUpdates()
+                self.replys.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                tableView.endUpdates()
+            })
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        let reply = replys[indexPath.row]
+        if reply.user.uid == "test" {
+            return "삭제"
+        }
+        
+        return ""
+    }
+    
     @IBAction func sendAction(_ sender: UIButton) {
         guard let boardKey = boardData?.boradKey else {return}
         
@@ -319,7 +351,7 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
                 
                 let user = User()
                 user.userName = "song"
-                user.uid = "uid"
+                user.uid = "test"
                 user.profile_url = "usl"
                 
                 let reply = Reply()
