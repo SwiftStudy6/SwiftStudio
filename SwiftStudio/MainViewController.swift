@@ -11,6 +11,7 @@ import Firebase
 import SDWebImage
 import Toaster
 
+
 protocol BoardCellDelegate  {
     func editButtonEvent(sender:UIButton, cell : BoardCell)
     func likeButtonEvent(sender:UIButton, cell : BoardCell)

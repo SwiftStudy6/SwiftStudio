@@ -573,6 +573,7 @@
 		02FC4C8D1E166B1B00E1EF61 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -622,6 +623,7 @@
 		02FC4C8E1E166B1B00E1EF61 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -665,7 +667,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7E001633EDC68637FE8613D3 /* Pods-SwiftStudio.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SwiftStudio/Info.plist;
@@ -682,7 +684,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 00886F2C53CE8FE7124D7783 /* Pods-SwiftStudio.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SwiftStudio/Info.plist;
