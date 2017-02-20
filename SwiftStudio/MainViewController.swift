@@ -22,12 +22,14 @@ protocol BoardCellDelegate  {
 class BoardCell : UICollectionViewCell {
 
     
-    var key          : String! = nil                  //Board Key
+    var key          : String! = nil                //Board Key
     var authorId     : String! = nil                //Board Writer Id(User Id)
     var userImage    : UIImageView! = nil           //Profile image
     var authorName   : UILabel? = nil               //Username
     var editTime     : UILabel? = nil               //Edited time
     var textRecorded : UITextView? = nil            //Text
+    
+    var likeButton   : UIButton?                    //likeButton
     
     var delegate     : BoardCellDelegate? = nil     //BoardCellDelegate Object
     
@@ -205,11 +207,14 @@ class BoardCell : UICollectionViewCell {
         let offsetWidth = self.contentView.frame.width - 30
         
         //add like button
+        let defaultColor = UIColor(red: 0, green: 112, blue: 225, alpha: 1.0)   //Apple Default Color
+        
         let likeButton = UIButton()
         likeButton.translatesAutoresizingMaskIntoConstraints = false
         likeButton.setTitle("좋아요", for: .normal)
         likeButton.setTitleColor(.black, for: .normal)
         likeButton.setTitleColor(.gray, for: .highlighted)
+        likeButton.setTitleColor(defaultColor, for: .selected)
         likeButton.titleLabel?.font = .systemFont(ofSize: 12)
         likeButton.addTarget(self, action: #selector(likeButtonTouchUpInside(_:)), for: .touchUpInside)
         likeButton.contentVerticalAlignment = .center
@@ -223,6 +228,8 @@ class BoardCell : UICollectionViewCell {
         likeButton.topAnchor.constraint(equalTo: lineView.topAnchor).isActive = true
         likeButton.widthAnchor.constraint(equalToConstant: offsetWidth/3).isActive = true
         likeButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        self.likeButton = likeButton
         
         
         //add reply button
@@ -410,22 +417,33 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 
                 var userObj = dict["author"] as? [String : Any]
                 
-                var time : NSDate?
+                var timeString : String? = ""
                 
+                //수정된 사항이
                 if let editTIme = dict["editTime"]{
-                    time = NSDate(timeIntervalSince1970: editTIme as! Double / 1000)
+                    timeString = NSDate(timeIntervalSince1970: editTIme as! Double / 1000).toString()
+                    timeString = timeString?.appending(" 수정됨")
                 }else if let recordTiem = dict["recordTime"] {
-                    time = NSDate(timeIntervalSince1970: recordTiem as! Double / 1000)
+                    timeString = NSDate(timeIntervalSince1970: recordTiem as! Double / 1000).toString()
                 }
-
+                
+                
+                //BoardObject에 넣는다.
                 obj = BoardObject(rest.key,
                                   userObj?["uid"] as! String,
                                   userObj?["userName"] as! String,
                                   userObj?["profile_url"] as! String,
                                   dict["text"] as! String,
-                                  (time?.toString())!)
+                                  (timeString)!)
                 
-                
+                //like 있을경우에만 parsing
+                if let like = dict["like"], let likeCount = dict["likeCount"]{
+                    
+                    obj.likes = like as? Dictionary<String, Bool>
+                    obj.likeCount = likeCount as! Int
+                   
+                }
+
                 tempList.append(obj)
             }
             
@@ -475,13 +493,6 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                                                           user["uid"] as! String,
                                                           dict["text"] as! String,
                                                           dict["editTime"] as! Double)
-//                notiObj.boardKey = dict["boardKey"] as! String
-//                notiObj.noticeKey = key
-//                notiObj.authorId = user["uid"] as! String
-//                notiObj.noticeText = dict["text"] as! String
-//                let time : Double = dict["editTime"] as! Double
-//                notiObj.editTime = NSDate(timeIntervalSince1970: time/1000.0).toString()
-                
                 
                 tempList.append(notiObj)
             }
@@ -512,7 +523,53 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         let vc = UIStoryboard(name: "BoardCreate", bundle: nil).instantiateInitialViewController() as! BoardCreateViewController
     
-        showViewController(vc, true)
+        showViewController(vc, true,{() in
+            self.boardRef.observe(.childAdded, with: { (snapshot) in
+                guard snapshot.exists() else {
+                    return
+                }
+                
+                let key = snapshot.key
+                let dict = snapshot.value as! [String : Any]
+                let user = dict["author"] as! [String : Any]
+                
+                var time : String?
+                
+                if dict["editTIme"] != nil {
+                    time = NSDate(timeIntervalSince1970: (dict["editTime"] as! Double) / 1000).toString()
+                    time = time?.appending(" 수정됨")
+                }else if dict["recordTime"] != nil {
+                    time = NSDate(timeIntervalSince1970: (dict["recordTime"] as! Double) / 1000).toString()
+                }
+                
+                
+                print(snapshot)
+                //init(_ boardNum: String, _ authorId: String, _ authorName: String, _ profileImgUrl: String, _ bodyText : String, _ editTime : String){
+                let obj = BoardObject(key,
+                                      user["uid"] as! String,
+                                      user["userName"] as! String,
+                                      user["profile_url"] as! String,
+                                      dict["text"] as! String,
+                                      time!)
+                
+                //like 있을경우에만 parsing
+                if let like = dict["like"], let likeCount = dict["likeCount"]{
+                    
+                    obj.likes = like as? Dictionary<String, Bool>
+                    obj.likeCount = likeCount as! Int
+                    
+                }
+
+                
+                
+                self.boardList.append(obj)
+                
+                let newIndexPath = IndexPath(row:self.boardList.count-1, section:1)
+                self.collectionView?.insertItems(at: [newIndexPath])
+                
+            })
+        
+        })
     }
     
 
@@ -668,6 +725,17 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             
             cell.dataObject = boardObj
             
+            cell.likeButton?.isSelected = false
+            
+            if let like = boardObj.likes {
+                if let _ = like[(FIRAuth.auth()?.currentUser?.uid)!] {
+                    cell.likeButton?.isSelected = true
+                }else{
+                    cell.likeButton?.isSelected = false
+                }
+            }
+            
+            
             cell.userImage.sd_setImage(with: URL(string:boardObj.profileImgUrl!), placeholderImage: UIImage(named:"User"), options: .retryFailed, completed: { (image, error, cachedType, url) in
                 
                 
@@ -719,6 +787,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         return true
     }
     
+    //셀선택시
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
 
@@ -1016,7 +1085,8 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     //Like Button
     func likeButtonEvent(sender: UIButton, cell : BoardCell) {
         //code 
-        //print("press like button : \(cell.indexPath.row)")
+        var flag = false    //flag for select
+        
         boardRef.child(cell.key).runTransactionBlock({ (currentData) -> FIRTransactionResult in
             if var post = currentData.value as? [String : AnyObject], let uid = FIRAuth.auth()?.currentUser?.uid {
                 var likes: Dictionary<String, Bool>
@@ -1026,10 +1096,12 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                     // Unlike the post and remove self from likes
                     likeCount -= 1
                     likes.removeValue(forKey: uid)
+                    flag = false
                 } else {
                     // Like the post and add self to likes
                     likeCount += 1
                     likes[uid] = true
+                    flag = true
                 }
                 post["likeCount"] = likeCount as AnyObject?
                 post["like"] = likes as AnyObject?
@@ -1040,9 +1112,11 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             }
             return FIRTransactionResult.success(withValue: currentData)
         }, andCompletionBlock: { (error, sucess, snapshot) in
-            guard error != nil else{
+            guard error == nil else{
                 return
             }
+            
+            cell.likeButton?.isSelected = flag
         })
     }
     
