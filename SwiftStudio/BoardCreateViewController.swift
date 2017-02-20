@@ -16,6 +16,7 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
     
     @IBOutlet weak var addPhotoButton: UIButton!
     
+    var boardData: BoardObject!
     var delegate: MainViewController?
     
     private var ref : FIRDatabaseReference! = FIRDatabase.database().reference()
