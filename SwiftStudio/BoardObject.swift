@@ -87,10 +87,9 @@ class BoardObject : NSObject {
 extension BoardObject{
     @nonobjc
     func isEqual(_ obj : BoardObject) -> Bool {
-        guard !obj.isKind(of: BoardObject.self) else {
+        guard obj.isKind(of: BoardObject.self) else {
             return false
         }
-        
         
         if (self.boradKey != obj.boradKey) {
             return false
@@ -117,6 +116,37 @@ extension BoardObject{
         }
         
         return true
+    }
+    
+    @nonobjc
+    func isEqaulContexts(_ object : BoardObject) -> Bool{
+        guard object.isKind(of: BoardObject.self) else {
+            fatalError("해당 BoardObject Class가 아닙니다.")
+            return false
+        }
+        
+        var result = true
+        
+        if(self.bodyText != object.bodyText){
+            result = false
+        }
+        
+        if(self.editTime == nil && object.editTime != nil){
+            result =  false
+        }
+        
+        
+        
+        for (key1,value1) in self.likes! {
+            for(key2,value2) in object.likes! {
+                if key1 != key2 {
+                    result = false
+                }
+            }
+        }
+        
+        return result
+        
     }
 }
 

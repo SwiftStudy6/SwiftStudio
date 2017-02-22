@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import SDWebImage
 import Toaster
+import PullToRefresh
 
 
 protocol BoardCellDelegate  {
@@ -372,8 +373,8 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     private var boardRef : FIRDatabaseReference! = FIRDatabase.database().reference().child(boardPostChildName)
     private var noticeRef : FIRDatabaseReference! = FIRDatabase.database().reference().child(noticePostChildName)
     
-    private let rangeOfPosts : UInt = 100
-    private var pageOfPosts  : UInt = 1
+    let rangeOfPosts : UInt = 3
+    var pageOfPosts  : UInt = 1
     
     private var refreshController : UIRefreshControl!
     
@@ -399,8 +400,10 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     var rootController : CustomTabBarController?
     
     
-    //불러운 포스트 개수를 배열에 추가한다. (100 * x)
-    func loadOfPosts(_ pageCount : UInt){
+    //게시판 내용을 블러온다 (모두)
+    func loadOfPosts(_ pageCount : UInt, _ isTrue : Bool = false){
+        
+        self.boardList.removeAll() //초기화
         
         boardRef.queryLimited(toFirst: rangeOfPosts * pageCount).observeSingleEvent(of: .value, with: {(snapshot) in
             guard snapshot.exists() else {
@@ -448,26 +451,109 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 tempList.append(obj)
             }
             
-            //기존 대상과 비교하여 있는 경우 해당 부분을 삭제
-            var j = 0
-            for board in self.boardList {
-                for temp in tempList {
-                    if (board as! BoardObject).isEqual(temp as! BoardObject) {
-                        tempList.remove(at: j)
-                    }
-                    j = j + 1
-                }
-            }
+//            //기존 대상과 비교하여 있는 경우 해당 부분을 삭제
+//            var j = 0
+//            for board in self.boardList {
+//                for temp in tempList {
+//                    if (board as! BoardObject).isEqual(temp as! BoardObject) {
+//                        tempList.remove(at: j)
+//                    }
+//                    j = j + 1
+//                }
+//            }
             
             self.boardList = tempList
             
             if(self.boardList.count > 0){
                 DispatchQueue.main.async {
-                    self.collectionView?.reloadData()
+                    if isTrue {
+                        self.collectionView?.reloadData()
+                        self.collectionView?.endRefreshing(at: .top)
+                    }
                 }
+            }
+            
+            
+        })
+    }
+    
+    //가장 불러온 최근의 값중 100개를 가져온다.
+    func appendingOfPosts(_ pageCount : UInt){
+        
+//        let startKey = (self.boardList[self.boardList.count-1] as! BoardObject).boradKey
+        let beforeCount = self.boardList.count
+        
+        boardRef.queryLimited(toFirst: rangeOfPosts * pageCount).observeSingleEvent(of: .value, with: {(snapshot) in
+            guard snapshot.exists() else {
+                return
+            }
+            
+            var tempList : Array<Any>! = [] //초기화
+            
+            let enumerate = snapshot.children
+            while let rest = enumerate.nextObject()  as? FIRDataSnapshot {
+                var dict = rest.value as! [String : Any]
+                var obj: BoardObject! = BoardObject()
+                obj.boradKey = rest.key
+                obj.bodyText = dict["text"] as! String?
+                
+                var userObj = dict["author"] as? [String : Any]
+                
+                var timeString : String? = ""
+                
+                //수정된 사항이
+                if let editTIme = dict["editTime"]{
+                    timeString = NSDate(timeIntervalSince1970: editTIme as! Double / 1000).toString()
+                    timeString = timeString?.appending(" 수정됨")
+                }else if let recordTiem = dict["recordTime"] {
+                    timeString = NSDate(timeIntervalSince1970: recordTiem as! Double / 1000).toString()
+                }
+                
+                
+                //BoardObject에 넣는다.
+                obj = BoardObject(rest.key,
+                                  userObj?["uid"] as! String,
+                                  userObj?["userName"] as! String,
+                                  userObj?["profile_url"] as! String,
+                                  dict["text"] as! String,
+                                  (timeString)!)
+                
+                //like 있을경우에만 parsing
+                if let like = dict["like"], let likeCount = dict["likeCount"]{
+                    
+                    obj.likes = like as? Dictionary<String, Bool>
+                    obj.likeCount = likeCount as! Int
+                    
+                }
+                
+                tempList.append(obj)
+            }
+            
+            //기존 대상과 비교하여 있는 경우 해당 부분을 삭제
+            for board in self.boardList {
+                for (idx,temp) in tempList.enumerated() {
+                    if (board as! BoardObject).isEqual(temp as! BoardObject) {
+                        tempList.remove(at: idx)
+                    }
+                }
+            }
+            
+            self.boardList.append(contentsOf: tempList)
+            
+            if(self.boardList.count > beforeCount){
+                DispatchQueue.main.async {
+                    self.collectionView?.reloadData()
+                    self.collectionView?.scrollToItem(at: IndexPath(row:beforeCount-1, section:1), at: .bottom, animated: false)
+                    self.collectionView?.endRefreshing(at: .bottom)
+                }
+            }else{
+                self.pageOfPosts = self.pageOfPosts - 1
+                self.collectionView?.endRefreshing(at: .bottom)
             }
         })
     }
+
+    
     
     //초기 불러오기 이벤트
     func loadEvent(){
@@ -499,20 +585,18 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             }
             
             if(self.noticeList.count > 0){
-                var i = 0
-                
                 for idx in self.noticeList {
-                    for temp in tempList {
+                    for (i,temp) in tempList.enumerated() {
                         if (idx as! NoticeObject).isEqual(temp as? NoticeObject){
                             tempList.remove(at: i)
                         }
-                        i = i + 1
                     }
                 }
             }
             
             if(tempList.count > 0){
                 self.noticeList.append(contentsOf: tempList)
+                self.collectionView?.reloadData()
             }
             
         })
@@ -614,15 +698,6 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
 
         loadEvent()
-
-//        boardRef.observeSingleEvent(of: .value, with: { (snapshot) in    
-//            let enumerator = snapshot.children
-//            self.fetchBoardList(enumerator: enumerator)
-//            
-//        }){ (err) in
-//            print(err.localizedDescription)
-//        }
-
         
 //        if(self.boardList.count == 0){
 //            let bObj : BoardObject! = BoardObject()
@@ -674,7 +749,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         self.view.backgroundColor = .white
         self.collectionView?.backgroundColor = UIColor.gray.withAlphaComponent(0.25)
         
-        
+        setupPullToRefresh()
        
     }
     
@@ -781,17 +856,12 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     // Uncomment this method to specify if the specified item should be selected
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        
-        
-        
-        
         return true
     }
     
     //셀선택시
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-
         if(indexPath.section == 0){
             let noticeObj = self.noticeList[indexPath.row] as! NoticeObject
             
@@ -868,8 +938,16 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             //        self.navigationController?.pushViewController(boardDetailController, animated: true)
         }
     }
-
     
+    // MARK : FlowlayoutDelegate
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        if section == 0 {
+            return 1
+        }else{
+            return 8
+        }
+    }
     
     // MARK : BoardCellDelegate
     //Edit Button
@@ -1004,7 +1082,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
 //            vc.authorName = cell.authorName
 //        
 //            navigationController?.pushViewController(vc, animated: true)
+            let boardEditViewController = UIStoryboard(name: "BoaradCreate", bundle: nil).instantiateInitialViewController() as! BoardCreateViewController
             
+//            BoardCreateViewController.object = cell.dataObject
+            
+            self.showViewController(boardEditViewController, true, {(Void) in } {
+                self.appendingOfPosts(self.pageOfPosts)
+            })
             
         }
         //삭제 약션
@@ -1148,7 +1232,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     //view hierarchy 오류로 인해서 방법을 바꿈
     //원인 : CustomTabbarController안에 뷰어를 인식하지 못하는것 같음
     //원래 self.view.window.rootViewController로 가능했으나 구조상의 문제로 방법을 바꿈
-    func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+    override func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
         var activateController = UIApplication.shared.keyWindow?.rootViewController
         
         if(activateController?.isKind(of: UINavigationController.self))!{
@@ -1257,3 +1341,47 @@ extension UIColor {
         self.init(red:(netHex >> 16) & 0xff, green:(netHex >> 8) & 0xff, blue:netHex & 0xff)
     }
 }
+
+
+private extension MainViewController {
+    
+    func setupPullToRefresh() {
+        collectionView?.addPullToRefresh(PullToRefresh()) { [weak self] in
+            let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
+                print("top reload")
+                self?.loadOfPosts((self?.pageOfPosts)!,true)
+            }
+        }
+        
+        collectionView?.addPullToRefresh(PullToRefresh(position: .bottom)) { [weak self] in
+            let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
+                print("botton reload")
+                self?.pageOfPosts = (self?.pageOfPosts)! + 1
+                
+                self?.appendingOfPosts((self?.pageOfPosts)!)
+            }
+        }
+    }
+}
+
+extension UIViewController {
+    func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+        var activateController = UIApplication.shared.keyWindow?.rootViewController
+        
+        if(activateController?.isKind(of: UINavigationController.self))!{
+            activateController = (activateController as! UINavigationController).visibleViewController
+        }else if((activateController?.presentedViewController) != nil){
+            activateController = activateController?.presentedViewController
+            
+            if(activateController?.isKind(of: UINavigationController.self))!{
+                activateController?.navigationController?.isNavigationBarHidden = true
+            }
+        }
+        
+      activateController?.present(viewController, animated: animated, completion: completion)
+        
+    }
+}
+
