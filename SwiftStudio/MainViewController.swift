@@ -1084,12 +1084,18 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
 //            navigationController?.pushViewController(vc, animated: true)
             let boardEditViewController = UIStoryboard(name: "BoaradCreate", bundle: nil).instantiateInitialViewController() as! BoardCreateViewController
             
-//            BoardCreateViewController.object = cell.dataObject
-            
-            self.showViewController(boardEditViewController, true, {(Void) in } {
-                self.appendingOfPosts(self.pageOfPosts)
+//            BoardCreateViewController.boardData = cell.dataObject
+            self.showViewController(boardEditViewController, true, {(Void) in
+                boardRef.child(cell.key).observeSingleEvent(of: .childChanged, with: { (snapshot) in
+                    guard snapshot.exists() else{
+                        return
+                    }
+                    
+                    print(snapshot)
+                    
+                    
+                })
             })
-            
         }
         //삭제 약션
         let delAction = UIAlertAction(title: "글 삭제", style: .destructive) { (Void) in
