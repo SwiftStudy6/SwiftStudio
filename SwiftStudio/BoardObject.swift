@@ -11,66 +11,45 @@ import UIKit
 //Define Model Of Board
 class BoardObject : NSObject {
     
-    var boradKey        : String?       //Board uique Key
-    var authorId        : String?       //Author Id(userId)
-    var authorName      : String?       //Author Name
-    var profileImgUrl   : String?       //Author Profile Url by string
-    var profileImg      : UIImage?      //Author Profile Image
-    var bodyText        : String?       //Board Body Text
-    var editTime        : String?       //Board Edited Time yyyy/MM/dd hh:mm
+    var boradKey         : String?       //Board uique Key
+    var authorId         : String?       //Author Id(userId)
+    var authorName       : String?       //Author Name
+    var profileImgUrl    : String?       //Author Profile Url by string
+    var bodyText         :  String?       //Board Body Text
+    var recordTime       : String?       //Board Record Time by String
+    var editTime         : String?       //Board Edited Time by String
     
-    var likeCount       : Int = 0
-    var likes           : Dictionary<String, Bool>?
+    var recordTimeDouble : Double?       //Board Record Time by milesecond
+    var editTimeDouble   : Double?       //Board Edited Time by Milesecond
     
-    //init each
-    init(_ boardNum: String, _ authorId: String, _ authorName: String, _ profileImgUrl: String, _ bodyText : String, _ editTime : String){
-        self.boradKey = boardNum
+    var likeCount        : Int = 0
+    var like             : Dictionary<String, Bool>?
+    
+    //init
+    init(_ boardKey: String, _ authorId: String, _ authorName: String, _ profileImgUrl: String, _ bodyText : String,_ recordTime : Double, _ editTime : Double){
+        self.boradKey = boardKey
         self.authorId = authorId
         self.authorName = authorName
         self.profileImgUrl = profileImgUrl
-        
-//        if !profileImgUrl.isEmpty {
-//            let imageView : UIImageView? = UIImageView()
-//            
-//            imageView?.sd_setImage(with: URL(string: profileImgUrl), placeholderImage: UIImage(named: "User"), options: .retryFailed, completed: { (image, error, cachedType, url) in
-//                
-//                //이미지캐싱이 안되있을경우에 대한 애니메이션 셋팅_imageView.alpha = 1;
-//                if imageView != nil, cachedType == .none {
-//                   
-//                    imageView?.alpha = 0
-//                    
-//                    UIView.animate(withDuration: 0.2, animations: {
-//                        imageView?.alpha = 1
-//                    }, completion: { (finished) in
-//                        imageView?.alpha = 1
-//                    })
-//                }
-//            })
-//            
-//            self.profileImg = imageView?.image
-//            
-//        }
-        
         self.bodyText = bodyText
-        self.editTime = editTime
-    }
-    
-    
-    //init each
-    init(_ boardNum: String, _ authorId: String, _ authorName: String, _ profileImgUrl: String, _ profileImg: UIImage, _ bodyText : String, _ editTime : String){
-        self.boradKey = boardNum
-        self.authorId = authorId
-        self.authorName = authorName
-        self.profileImg = profileImg
-        self.profileImgUrl = profileImgUrl
-        self.bodyText = bodyText
-        self.editTime = editTime
+        
+        self.recordTimeDouble = recordTime
+        self.editTimeDouble = editTime
+        
+        self.recordTime = NSDate(timeIntervalSince1970: recordTime/1000).toString()
+        
+        self.editTime = ""
+        
+        if(recordTime < editTime){
+            self.editTime = NSDate(timeIntervalSince1970: editTime/1000).toString().appending(" 수정됨")
+        }else{
+            self.editTime = NSDate(timeIntervalSince1970: editTime/1000).toString()
+        }
     }
     
     
     convenience override init(){
-        let replaceHolderImg = UIImage(named: "user.png")
-        self.init("", "", "", "" , replaceHolderImg!, "" , "")
+        self.init("", "", "", "" , "", 0, 0)
     }
     
     func objectToNSDic() -> NSDictionary {
@@ -103,9 +82,6 @@ extension BoardObject{
         if(self.profileImgUrl != obj.profileImgUrl) {
             return false
         }
-        if(self.profileImg != obj.profileImg) {
-            return false
-        }
         
         if(self.bodyText != obj.bodyText) {
             return false
@@ -120,11 +96,7 @@ extension BoardObject{
     
     @nonobjc
     func isEqaulContexts(_ object : BoardObject) -> Bool{
-        guard object.isKind(of: BoardObject.self) else {
-            fatalError("해당 BoardObject Class가 아닙니다.")
-            return false
-        }
-        
+
         var result = true
         
         if(self.bodyText != object.bodyText){
@@ -136,9 +108,8 @@ extension BoardObject{
         }
         
         
-        
-        for (key1,value1) in self.likes! {
-            for(key2,value2) in object.likes! {
+        for (key1,_) in self.like! {
+            for(key2,_) in object.like! {
                 if key1 != key2 {
                     result = false
                 }

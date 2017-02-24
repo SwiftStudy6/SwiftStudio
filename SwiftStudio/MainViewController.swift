@@ -13,346 +13,6 @@ import Toaster
 import PullToRefresh
 
 
-protocol BoardCellDelegate  {
-    func editButtonEvent(sender:UIButton, cell : BoardCell)
-    func likeButtonEvent(sender:UIButton, cell : BoardCell)
-    func replyButtonEvent(sender:UIButton, cell : BoardCell)
-    func shareButtonEvent(sender:UIButton, cell : BoardCell)
-}
-
-//Board Cell Definition
-class BoardCell : UICollectionViewCell {
-
-    
-    var key          : String! = nil                //Board Key
-    var authorId     : String! = nil                //Board Writer Id(User Id)
-    var userImage    : UIImageView! = nil           //Profile image
-    var authorName   : UILabel? = nil               //Username
-    var editTime     : UILabel? = nil               //Edited time
-    var textRecorded : UITextView? = nil            //Text
-    
-    var likeButton   : UIButton?                    //likeButton
-    
-    var delegate     : BoardCellDelegate? = nil     //BoardCellDelegate Object
-    
-    var dataObject   : BoardObject! {
-       
-        set(newValue){
-            self.key = newValue.boradKey
-            self.authorName?.text = newValue.authorName
-            self.authorId = newValue.authorId
-            self.userImage.image = newValue.profileImg
-            self.textRecorded?.text = newValue.bodyText
-            self.editTime?.text = newValue.editTime
-        }
-        
-        get{
-            let returnVal = BoardObject()
-            
-            returnVal.boradKey   = self.key
-            returnVal.authorId   = self.authorId
-            returnVal.authorName = self.authorName?.text
-            returnVal.bodyText   = self.textRecorded?.text
-            returnVal.profileImg = self.userImage.image
-            returnVal.editTime   = self.editTime?.text
-            
-            return returnVal
-        }
-    }
-    
-    var indexPath : IndexPath!
-    
-        override init(frame: CGRect){
-        super.init(frame:frame)
-        
-     
-            
-        setSetting()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    //View setting
-    func setSetting(){
-        self.contentView.backgroundColor = .white
-        
-        
-        let innerView = UIView(frame:CGRect.zero)
-        innerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        //innerView.backgroundColor = .gray
-        
-        self.contentView.addSubview(innerView)
-        
-        innerView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 15).isActive = true
-        innerView.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
-        innerView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, constant: -30).isActive = true
-        innerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
-        
-        
-        
-        //Userinfo
-        let userInfoView = UIView()
-        userInfoView.backgroundColor = .white
-        userInfoView.translatesAutoresizingMaskIntoConstraints = false
-        
-        innerView.addSubview(userInfoView)
-        
-        userInfoView.leftAnchor.constraint(equalTo: innerView.leftAnchor).isActive = true
-        userInfoView.topAnchor.constraint(equalTo: innerView.topAnchor).isActive = true
-        userInfoView.widthAnchor.constraint(equalTo: innerView.widthAnchor).isActive = true
-        userInfoView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        
-        //settting userImage
-        self.userImage = UIImageView()
-        self.userImage.translatesAutoresizingMaskIntoConstraints = false
-        self.userImage.layer.masksToBounds = true;
-        self.userImage.layer.cornerRadius = 18
-        self.userImage.layer.borderWidth = 2
-        self.userImage.layer.borderColor = UIColor.black.cgColor
-        
-        
-        userInfoView.addSubview(self.userImage)
-        
-        self.userImage.leftAnchor.constraint(equalTo: userInfoView.leftAnchor).isActive = true
-        self.userImage.topAnchor.constraint(equalTo: userInfoView.topAnchor, constant: 10).isActive = true
-        self.userImage.widthAnchor.constraint(equalToConstant: 38).isActive = true
-        self.userImage.heightAnchor.constraint(equalToConstant: 38).isActive = true
-        
-        
-        //setting editButton
-        let editButton = UIButton()
-        
-        editButton.setImage(UIImage(named: "More"), for: .normal)
-        editButton.translatesAutoresizingMaskIntoConstraints = false
-        editButton.addTarget(self, action: #selector(editButtonTouchUpinside), for: .touchUpInside)
-        
-        userInfoView.addSubview(editButton)
-        
-        editButton.rightAnchor.constraint(equalTo: userInfoView.rightAnchor).isActive = true
-        editButton.topAnchor.constraint(equalTo: userInfoView.topAnchor, constant: 12).isActive = true
-        editButton.widthAnchor.constraint(equalToConstant: 11).isActive = true
-        editButton.heightAnchor.constraint(equalToConstant: 26).isActive = true
-
-
-        //setting UserName
-        self.authorName = UILabel()
-        self.authorName?.textAlignment = .left
-        self.authorName?.font = UIFont.boldSystemFont(ofSize: 14)
-        self.authorName?.textColor = .black
-        
-        userInfoView.addSubview(self.authorName!)
-        
-        self.authorName?.translatesAutoresizingMaskIntoConstraints = false
-        self.authorName?.leftAnchor.constraint(equalTo: (self.userImage?.rightAnchor)!, constant: 8.5).isActive = true
-        self.authorName?.topAnchor.constraint(equalTo: userInfoView.topAnchor, constant: 11).isActive = true
-        self.authorName?.rightAnchor.constraint(equalTo: editButton.leftAnchor, constant: -8.5).isActive = true
-        self.authorName?.heightAnchor.constraint(equalToConstant: 17).isActive = true
-      
-        
-        
-        //settting editTime (yyyy년 MM월 dd일 hh시 mm분
-        self.editTime = UILabel()
-        self.editTime?.textAlignment = .left
-        self.editTime?.font = UIFont.systemFont(ofSize: 11)
-        self.authorName?.textColor = .black
-
-        userInfoView.addSubview(self.editTime!)
-        
-        self.editTime?.translatesAutoresizingMaskIntoConstraints = false
-        self.editTime?.leftAnchor.constraint(equalTo: (self.userImage?.rightAnchor)!, constant: 8.5).isActive = true
-        self.editTime?.topAnchor.constraint(equalTo: (self.authorName?.bottomAnchor)!, constant: 2.3).isActive = true
-        self.editTime?.rightAnchor.constraint(equalTo: editButton.leftAnchor, constant: -8.5).isActive = true
-        self.editTime?.heightAnchor.constraint(equalToConstant: 17).isActive = true
-        
-        
-        //setting body Text Area
-        self.textRecorded = UITextView()
-        self.textRecorded?.font = UIFont.systemFont(ofSize: 13)
-        self.textRecorded?.isUserInteractionEnabled = false
-        self.contentView.addSubview(self.textRecorded!)
-        
-        self.textRecorded?.translatesAutoresizingMaskIntoConstraints = false
-        self.textRecorded?.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 12).isActive = true
-        self.textRecorded?.topAnchor.constraint(equalTo: userInfoView.bottomAnchor, constant: 4).isActive = true
-        self.textRecorded?.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -12).isActive = true
-        self.textRecorded?.heightAnchor.constraint(equalToConstant: 164).isActive = true
-        
-        //setting bottom view
-        let bottomView = UIView()
-        //bottomView.backgroundColor = .gra
-        bottomView.translatesAutoresizingMaskIntoConstraints = false
-        
-        innerView.addSubview(bottomView)
-        
-        bottomView.leftAnchor.constraint(equalTo: innerView.leftAnchor).isActive = true
-        bottomView.topAnchor.constraint(equalTo: (self.textRecorded?.bottomAnchor)!, constant: 3).isActive = true
-        bottomView.widthAnchor.constraint(equalTo: innerView.widthAnchor).isActive = true
-        bottomView.heightAnchor.constraint(equalToConstant: 31).isActive = true
-        
-        //lineView
-        let lineView = UIView()
-        let color = UIColor.darkGray.withAlphaComponent(0.3)
-        lineView.backgroundColor = color
-        lineView.translatesAutoresizingMaskIntoConstraints = false
-        
-        bottomView.addSubview(lineView)
-        
-        lineView.topAnchor.constraint(equalTo: bottomView.topAnchor).isActive = true
-        lineView.leftAnchor.constraint(equalTo: bottomView.leftAnchor).isActive = true
-        lineView.widthAnchor.constraint(equalTo: bottomView.widthAnchor).isActive = true
-        lineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        
-        let offsetWidth = self.contentView.frame.width - 30
-        
-        //add like button
-        let defaultColor = UIColor(red: 0, green: 112, blue: 225, alpha: 1.0)   //Apple Default Color
-        
-        let likeButton = UIButton()
-        likeButton.translatesAutoresizingMaskIntoConstraints = false
-        likeButton.setTitle("좋아요", for: .normal)
-        likeButton.setTitleColor(.black, for: .normal)
-        likeButton.setTitleColor(.gray, for: .highlighted)
-        likeButton.setTitleColor(defaultColor, for: .selected)
-        likeButton.titleLabel?.font = .systemFont(ofSize: 12)
-        likeButton.addTarget(self, action: #selector(likeButtonTouchUpInside(_:)), for: .touchUpInside)
-        likeButton.contentVerticalAlignment = .center
-        likeButton.contentHorizontalAlignment = .center
-        
-//        likeButton.backgroundColor = .blue
-  
-        bottomView.addSubview(likeButton)
-        
-        likeButton.leftAnchor.constraint(equalTo: bottomView.leftAnchor).isActive = true
-        likeButton.topAnchor.constraint(equalTo: lineView.topAnchor).isActive = true
-        likeButton.widthAnchor.constraint(equalToConstant: offsetWidth/3).isActive = true
-        likeButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
-        self.likeButton = likeButton
-        
-        
-        //add reply button
-        let replyButton = UIButton()
-        replyButton.setTitle("댓글달기", for: .normal)
-        replyButton.setTitleColor(.black, for: .normal)
-        replyButton.setTitleColor(.gray, for: .highlighted)
-        replyButton.titleLabel?.font = .systemFont(ofSize: 12)
-        replyButton.translatesAutoresizingMaskIntoConstraints = false
-        replyButton.addTarget(self, action: #selector(replyButtonTouchUpInside(_:)), for: .touchUpInside)
-        replyButton.contentVerticalAlignment = .center
-        replyButton.contentHorizontalAlignment = .center
-    
-//        replyButton.backgroundColor = .red
-        
-        bottomView.addSubview(replyButton)
-        
-        replyButton.leftAnchor.constraint(equalTo: likeButton.rightAnchor).isActive = true
-        replyButton.topAnchor.constraint(equalTo: bottomView.topAnchor).isActive = true
-        replyButton.widthAnchor.constraint(equalToConstant: offsetWidth/3).isActive = true
-        replyButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
-        
-        //add reply button
-        let shareButton = UIButton()
-        shareButton.setTitle("공유하기", for: .normal)
-        shareButton.setTitleColor(.black, for: .normal)
-        shareButton.setTitleColor(.gray, for: .highlighted)
-        shareButton.titleLabel?.font = .systemFont(ofSize: 12)
-        shareButton.translatesAutoresizingMaskIntoConstraints = false
-        shareButton.addTarget(self, action: #selector(shareButtonTouchUpInside(_:)), for: .touchUpInside)
-        shareButton.contentVerticalAlignment = .center
-        shareButton.contentHorizontalAlignment = .center
-//        shareButton.backgroundColor = .green
-        
-        bottomView.addSubview(shareButton)
-        
-        shareButton.leftAnchor.constraint(equalTo: replyButton.rightAnchor).isActive = true
-        shareButton.topAnchor.constraint(equalTo: bottomView.topAnchor).isActive = true
-        shareButton.widthAnchor.constraint(equalToConstant: offsetWidth/3).isActive = true
-        shareButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
-
-        
-    }
-    
-    
-    //Button Delegate Fucniton
-    @IBAction func editButtonTouchUpinside(_ sender:UIButton){
-        self.delegate?.editButtonEvent(sender:sender, cell: self)
-    }
-    
-    @IBAction func likeButtonTouchUpInside(_ sender:UIButton){
-        self.delegate?.likeButtonEvent(sender: sender, cell: self)
-    }
-    
-    @IBAction func replyButtonTouchUpInside(_ sender:UIButton){
-        self.delegate?.replyButtonEvent(sender:sender, cell: self)
-    }
-    
-    @IBAction func shareButtonTouchUpInside(_ sender:UIButton){
-        self.delegate?.shareButtonEvent(sender: sender, cell: self)
-    }
-    
-}
-
-//NoticeCell Class Definition
-class NoticeCell : UICollectionViewCell {
-    var key             : String!       //Notice-Posts Unique Key
-    var indexPath       : IndexPath?    //Notice indexPath
-    var authorId        : String?       //Notice Author
-    var textLabel       : UILabel?      //Text
-    private var object  : NoticeObject? //NoticeObject
-    
-    var dataObject      : NoticeObject {
-        set(newValue){
-            self.key = newValue.noticeKey
-            self.textLabel?.text = newValue.noticeText
-            self.authorId = newValue.authorId
-            
-            self.object = newValue
-        }
-        
-        get{
-            return self.object!
-        }
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        self.contentView.backgroundColor = .white
-        
-        textLabel = {
-            let _label = UILabel()
-            _label.isUserInteractionEnabled = false
-            _label.translatesAutoresizingMaskIntoConstraints = false
-            _label.textColor = .black
-            _label.font = .boldSystemFont(ofSize: 20)
-            
-            return _label
-        }()
-        
-        textLabel?.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.contentView.addSubview(textLabel!)
-        
-        textLabel?.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 15).isActive = true
-        textLabel?.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -15).isActive = true
-        textLabel?.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
-        textLabel?.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
-        
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("NoticeCell init(coder:) has not been implemented")
-    }
-}
-
-
-
 /*************************************************************************************
  * MainViewController Start
  *************************************************************************************/
@@ -397,13 +57,18 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     var boardList : Array<Any>! = []
     var noticeList : Array<Any>! = []
     
-    var rootController : CustomTabBarController?
-    
+    //뱅글이를 위한 것
+    var indicator : UIActivityIndicatorView?
+    var indicView : UIView?
     
     //게시판 내용을 블러온다 (모두)
-    func loadOfPosts(_ pageCount : UInt, _ isTrue : Bool = false){
+    func loadOfPosts(_ pageCount : UInt, _ isTrue : Bool = false, startBlock : (() -> Swift.Void)? = nil, endBlock:(() -> Swift.Void)? = nil){
         
         self.boardList.removeAll() //초기화
+        
+        if !isTrue {
+            startBlock!()
+        }
         
         boardRef.queryLimited(toFirst: rangeOfPosts * pageCount).observeSingleEvent(of: .value, with: {(snapshot) in
             guard snapshot.exists() else {
@@ -421,14 +86,14 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 
                 var userObj = dict["author"] as? [String : Any]
                 
-                var timeString : String? = ""
+                
+                var time : Double = 0
                 
                 //수정된 사항이
                 if let editTIme = dict["editTime"]{
-                    timeString = NSDate(timeIntervalSince1970: editTIme as! Double / 1000).toString()
-                    timeString = timeString?.appending(" 수정됨")
-                }else if let recordTiem = dict["recordTime"] {
-                    timeString = NSDate(timeIntervalSince1970: recordTiem as! Double / 1000).toString()
+                    time = editTIme as! Double
+                }else if let recordTime = dict["recordTime"] {
+                    time = recordTime as! Double
                 }
                 
                 
@@ -438,12 +103,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                                   userObj?["userName"] as! String,
                                   userObj?["profile_url"] as! String,
                                   dict["text"] as! String,
-                                  (timeString)!)
+                                  dict["recordTime"] as! Double,
+                                  time)
                 
                 //like 있을경우에만 parsing
                 if let like = dict["like"], let likeCount = dict["likeCount"]{
                     
-                    obj.likes = like as? Dictionary<String, Bool>
+                    obj.like = like as? Dictionary<String, Bool>
                     obj.likeCount = likeCount as! Int
                    
                 }
@@ -451,24 +117,15 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 tempList.append(obj)
             }
             
-//            //기존 대상과 비교하여 있는 경우 해당 부분을 삭제
-//            var j = 0
-//            for board in self.boardList {
-//                for temp in tempList {
-//                    if (board as! BoardObject).isEqual(temp as! BoardObject) {
-//                        tempList.remove(at: j)
-//                    }
-//                    j = j + 1
-//                }
-//            }
-            
             self.boardList = tempList
             
             if(self.boardList.count > 0){
                 DispatchQueue.main.async {
+                    self.collectionView?.reloadData()
                     if isTrue {
-                        self.collectionView?.reloadData()
                         self.collectionView?.endRefreshing(at: .top)
+                    }else{
+                        endBlock!()
                     }
                 }
             }
@@ -480,7 +137,6 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     //가장 불러온 최근의 값중 100개를 가져온다.
     func appendingOfPosts(_ pageCount : UInt){
         
-//        let startKey = (self.boardList[self.boardList.count-1] as! BoardObject).boradKey
         let beforeCount = self.boardList.count
         
         boardRef.queryLimited(toFirst: rangeOfPosts * pageCount).observeSingleEvent(of: .value, with: {(snapshot) in
@@ -499,14 +155,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 
                 var userObj = dict["author"] as? [String : Any]
                 
-                var timeString : String? = ""
+                var time : Double = 0
                 
                 //수정된 사항이
                 if let editTIme = dict["editTime"]{
-                    timeString = NSDate(timeIntervalSince1970: editTIme as! Double / 1000).toString()
-                    timeString = timeString?.appending(" 수정됨")
-                }else if let recordTiem = dict["recordTime"] {
-                    timeString = NSDate(timeIntervalSince1970: recordTiem as! Double / 1000).toString()
+                    time = editTIme as! Double
+                }else if let recordTime = dict["recordTime"] {
+                    time = recordTime as! Double
                 }
                 
                 
@@ -516,12 +171,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                                   userObj?["userName"] as! String,
                                   userObj?["profile_url"] as! String,
                                   dict["text"] as! String,
-                                  (timeString)!)
+                                  dict["recordTime"] as! Double,
+                                  time)
                 
                 //like 있을경우에만 parsing
                 if let like = dict["like"], let likeCount = dict["likeCount"]{
                     
-                    obj.likes = like as? Dictionary<String, Bool>
+                    obj.like = like as? Dictionary<String, Bool>
                     obj.likeCount = likeCount as! Int
                     
                 }
@@ -558,7 +214,15 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     //초기 불러오기 이벤트
     func loadEvent(){
         //게시판 내용 불러오기
-        loadOfPosts(self.pageOfPosts)
+        loadOfPosts(self.pageOfPosts, false, startBlock: {
+            let tup = self.showActivityIndicatory(uiView: self.view)
+            self.indicator = tup.1
+            self.indicView = tup.0
+            self.indicView?.isHidden = false
+        }) { 
+            self.indicator?.stopAnimating()
+            self.indicView?.isHidden = true
+        }
         
         //공지사항을 불러온다
         noticeRef.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -574,12 +238,19 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 
                 let user = dict["author"] as! [String : Any]
                 
+                var time :Double = 0
+                
+                if let _ = dict["editTime"] {
+                    time = dict["editTime"] as! Double
+                }else {
+                    time = dict["recordTime"] as! Double
+                }
                 
                 let notiObj: NoticeObject! = NoticeObject(noticeKey,
-                                                          dict["boardKey"] as! String,
                                                           user["uid"] as! String,
                                                           dict["text"] as! String,
-                                                          dict["editTime"] as! Double)
+                                                          dict["recordTime"] as! Double,
+                                                          time)
                 
                 tempList.append(notiObj)
             }
@@ -616,31 +287,31 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 
                 let key = snapshot.key
                 let dict = snapshot.value as! [String : Any]
-                let user = dict["author"] as! [String : Any]
+                let userObj = dict["author"] as? [String : Any]
                 
-                var time : String?
+                var time : Double = 0
                 
-                if dict["editTIme"] != nil {
-                    time = NSDate(timeIntervalSince1970: (dict["editTime"] as! Double) / 1000).toString()
-                    time = time?.appending(" 수정됨")
-                }else if dict["recordTime"] != nil {
-                    time = NSDate(timeIntervalSince1970: (dict["recordTime"] as! Double) / 1000).toString()
+                //수정된 사항이
+                if let editTIme = dict["editTime"]{
+                    time = editTIme as! Double
+                }else if let recordTime = dict["recordTime"] {
+                    time = recordTime as! Double
                 }
                 
                 
-                print(snapshot)
-                //init(_ boardNum: String, _ authorId: String, _ authorName: String, _ profileImgUrl: String, _ bodyText : String, _ editTime : String){
+                //BoardObject에 넣는다.
                 let obj = BoardObject(key,
-                                      user["uid"] as! String,
-                                      user["userName"] as! String,
-                                      user["profile_url"] as! String,
-                                      dict["text"] as! String,
-                                      time!)
+                                  userObj?["uid"] as! String,
+                                  userObj?["userName"] as! String,
+                                  userObj?["profile_url"] as! String,
+                                  dict["text"] as! String,
+                                  dict["recordTime"] as! Double,
+                                  time)
                 
                 //like 있을경우에만 parsing
                 if let like = dict["like"], let likeCount = dict["likeCount"]{
                     
-                    obj.likes = like as? Dictionary<String, Bool>
+                    obj.like = like as? Dictionary<String, Bool>
                     obj.likeCount = likeCount as! Int
                     
                 }
@@ -698,7 +369,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
 
         loadEvent()
-        
+//      //테스터 더미
 //        if(self.boardList.count == 0){
 //            let bObj : BoardObject! = BoardObject()
 //            
@@ -724,8 +395,6 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         navigationItem.rightBarButtonItem = composeBarButtonItem
         navigationItem.leftBarButtonItem = homeBarButtonItem
         
-        //self.navigationController?.navigationBar.items = [self.navigationItem]
-        
         // 네비게이션 바를 추가한다.
         let naviBar = UINavigationBar()
         naviBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 64)
@@ -749,11 +418,11 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         self.view.backgroundColor = .white
         self.collectionView?.backgroundColor = UIColor.gray.withAlphaComponent(0.25)
         
+        //Pull to Refresth Setting
         setupPullToRefresh()
        
     }
     
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
@@ -762,8 +431,17 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     // MARK: UICollectionViewDataSource
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         
+        //내용이 없을 경우 보여준다.
+        collectionView.backgroundView = nil
+    
+        if (self.boardList.count == 0), (self.noticeList.count == 0) {
+            let noDataLabel = UILabel(frame: CGRect(x: 0, y: 0, width: collectionView.frame.size.width, height: collectionView.frame.size.height))
+            noDataLabel.text = "결과가 없거나 조회중입니다. 잠시만 기다려주세요"
+            noDataLabel.textColor = .black
+            noDataLabel.textAlignment = .center
+            collectionView.backgroundView = noDataLabel
+        }
         
         return 2
     }
@@ -803,7 +481,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             
             cell.likeButton?.isSelected = false
             
-            if let like = boardObj.likes {
+            if let like = boardObj.like {
                 if let _ = like[(FIRAuth.auth()?.currentUser?.uid)!] {
                     cell.likeButton?.isSelected = true
                 }else{
@@ -811,7 +489,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 }
             }
             
-            
+            //프로필 이미지 처리
             cell.userImage.sd_setImage(with: URL(string:boardObj.profileImgUrl!), placeholderImage: UIImage(named:"User"), options: .retryFailed, completed: { (image, error, cachedType, url) in
                 
                 
@@ -850,6 +528,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         }
     }
     
+    //셀 내부 유격
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
     }
@@ -866,7 +545,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             let noticeObj = self.noticeList[indexPath.row] as! NoticeObject
             
             let actionController = UIAlertController(title: "확인창", message: "해당 공지사항을 내리겠습니까?", preferredStyle: .alert)
-            
+            //공지사항 삭제
             let deleteAction = UIAlertAction(title: "삭제", style: .destructive, handler: { (Void) in
                 
                 self.noticeRef.child(noticeObj.noticeKey).removeValue(completionBlock: { (error, ref) in
@@ -875,37 +554,14 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                     }
                     let key = ref.key
                     
-                    var idx = 0
                     
-                    for obj in self.noticeList {
+                    for (idx,obj) in self.noticeList.enumerated() {
                         if(obj as! NoticeObject).noticeKey == key {
                             self.noticeList.remove(at: idx)
                             self.collectionView?.deleteItems(at: [IndexPath(row: idx, section: 0)])
                         }
-                        idx = idx + 1
                     }
 
-                    
-                })
-                
-                //왜 안되는지 모르겠다
-                self.noticeRef.observeSingleEvent(of: .childRemoved, with: { (snapshot) in
-                    
-                    guard snapshot.exists() else {
-                        return
-                    }
-                    
-                    let key = snapshot.key 
-                    
-                    var idx = 0
-                    
-                    for obj in self.noticeList {
-                        if(obj as! NoticeObject).noticeKey == key {
-                            self.noticeList.remove(at: idx)
-                            self.collectionView?.deleteItems(at: [IndexPath(row: idx, section: 0)])
-                        }
-                        idx = idx + 1
-                    }
                     
                 })
                 
@@ -930,12 +586,10 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             
             let navigationController = UINavigationController(rootViewController: boardDetailController)
             
-            //navigationController.isNavigationBarHidden = true
             navigationController.isNavigationBarHidden = false
             
             showViewController(navigationController, true)
             
-            //        self.navigationController?.pushViewController(boardDetailController, animated: true)
         }
     }
     
@@ -991,12 +645,21 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                         
                         let user = dict["author"] as? [String : Any]
                         
+                        var time : Double = 0
+                        
+                        if let _ = dict["editTime"] {
+                            time = dict["editTime"] as! Double
+                        }else {
+                            time = dict["recordTime"] as! Double
+                        }
+                        
+                        
                         //NoticeObject(_ noticeKey: String, _ boardKey: String, _ authorId: String, _ noticeText: String, _ editTime: Double){
                         let obj = NoticeObject(snapshot.key,
-                                               dict["boardKey"] as! String,
                                                user?["uid"] as! String,
                                                dict["text"] as! String,
-                                               dict["editTime"] as! Double)
+                                               dict["recordTime"] as! Double,
+                                               time)
                         var idx = -1
                         for obj in self.noticeList {
                             if (obj as! NoticeObject).noticeKey == snapshot.key{
@@ -1012,29 +675,24 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                         if(count < self.noticeList.count){
                             self.collectionView?.insertItems(at: [IndexPath(row:self.noticeList.count-1, section: 0)])
                             self.collectionView?.reloadItems(at: [IndexPath(row:self.noticeList.count-1, section: 0)])
-                        }else{
-                            
                         }
                     })
-                    
-                    
                 })
             }
         }
         
-        //공지삭제 액션
+        //공지 삭제 액션
         let delNoticeAction = UIAlertAction(title: "공지사항 내리기", style: .default) { (Void) in
             
             var noticeKey : String?
             var indexPath : IndexPath?
-            var i = 0
-            for idx in self.noticeList {
-                if(cell.key == (idx as! NoticeObject).boardKey){
-                    indexPath = IndexPath(row: i, section: 0)
+
+            for (idx,val) in self.noticeList.enumerated() {
+                if(cell.key == (val as! NoticeObject).noticeKey){
+                    indexPath = IndexPath(row: idx, section: 0)
                     
-                    noticeKey = (idx as! NoticeObject).noticeKey
+                    noticeKey = (val as! NoticeObject).noticeKey
                 }
-                i = i + 1
             }
             
             self.noticeRef.child(noticeKey!).removeValue(completionBlock: { (error, ref) in
@@ -1044,14 +702,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 
                 let key = ref.key
                 
-                var i = 0
                 
-                for obj in self.noticeList {
+                
+                for (i,obj) in self.noticeList.enumerated() {
                     if(obj as! NoticeObject).noticeKey == key {
                         self.noticeList.remove(at: i)
                         self.collectionView?.deleteItems(at: [IndexPath(row: i, section: 0)])
                     }
-                    i = i + 1
                 }
                 
             })
@@ -1071,33 +728,21 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             
         }
         
-        //수정액션
+        //글 수정 액션
         let editAction = UIAlertAction(title: "글 수정", style: .default) { (Void) in
             
-//            let vc = UIStoryboard(name: "BoardCreate", bundle: nil).instantiateInitialViewController() as! BoardCreateViewController
-//            
-//            vc.key = cell.key
-//            vc.text = cell.textRecorded?.text
-//            vc.authorId = cell.authorId
-//            vc.authorName = cell.authorName
-//        
-//            navigationController?.pushViewController(vc, animated: true)
-            let boardEditViewController = UIStoryboard(name: "BoaradCreate", bundle: nil).instantiateInitialViewController() as! BoardCreateViewController
+
+            let boardEditViewController = UIStoryboard(name: "BoardCreate", bundle: nil).instantiateInitialViewController() as! BoardCreateViewController
             
-//            BoardCreateViewController.boardData = cell.dataObject
-            self.showViewController(boardEditViewController, true, {(Void) in
-                boardRef.child(cell.key).observeSingleEvent(of: .childChanged, with: { (snapshot) in
-                    guard snapshot.exists() else{
-                        return
-                    }
-                    
-                    print(snapshot)
-                    
-                    
-                })
-            })
+            boardEditViewController.boardData = cell.dataObject //데이터 오브젝트를 보댄다
+            boardEditViewController.cellDelegate = cell         //현제 셀의 정보를 넘긴다.
+            
+            boardEditViewController.delegate = self             //수정후 처리를 위한 델리게이트르 넘긴다.
+        
+            self.showViewController(boardEditViewController, true)
         }
-        //삭제 약션
+        
+        //글 삭제 약션
         let delAction = UIAlertAction(title: "글 삭제", style: .destructive) { (Void) in
            
             let confirmControlelr = UIAlertController(title: "확인창", message: "정말로 게시물을 삭제 하실껍니까?\n(복구 안됩니다)", preferredStyle: .alert)
@@ -1119,31 +764,6 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                             
                         }
                     })
-                    
-                    //작동이 안된다.
-//                    self.boardRef.observeSingleEvent(of: .childRemoved, with: { (snapshot) in
-//                        guard !snapshot.exists() else{
-//                            return
-//                        }
-//                        
-//                        self.collectionView?.deleteItems(at: [cell.indexPath])
-//                        self.boardList.remove(at: cell.indexPath.row)
-//                        
-//                        
-//                        var idx = 0
-//                        for board in self.boardList {
-//                            if(board as! BoardObject).boradKey == snapshot.key {
-//                                self.boardList.remove(at: idx)
-//                            }
-//                            idx = idx + 1
-//                        }
-//                        
-//                        //                    DispatchQueue.main.async(execute: {
-//                        //                        self.collectionView?.reloadData()
-//                        //                    })
-//                        
-//                    })
-                    
                 }
             })
             
@@ -1175,7 +795,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     //Like Button
     func likeButtonEvent(sender: UIButton, cell : BoardCell) {
-        //code 
+        
         var flag = false    //flag for select
         
         boardRef.child(cell.key).runTransactionBlock({ (currentData) -> FIRTransactionResult in
@@ -1207,8 +827,14 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 return
             }
             
+            let dict = snapshot?.value as! [String:Any]
+            let obj = self.boardList[cell.indexPath.row] as! BoardObject
+            
             cell.likeButton?.isSelected = flag
-        })
+            obj.like = dict["like"] as! Dictionary<String, Bool>?
+            obj.likeCount = dict["likeCount"] as! Int
+            
+            self.collectionView?.reloadItems(at: [cell.indexPath])        })
     }
     
     //Reply Button
@@ -1238,14 +864,14 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     //view hierarchy 오류로 인해서 방법을 바꿈
     //원인 : CustomTabbarController안에 뷰어를 인식하지 못하는것 같음
     //원래 self.view.window.rootViewController로 가능했으나 구조상의 문제로 방법을 바꿈
-    override func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+    func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
         var activateController = UIApplication.shared.keyWindow?.rootViewController
         
         if(activateController?.isKind(of: UINavigationController.self))!{
             print("showViewController - Navigation")
             activateController = (activateController as! UINavigationController).visibleViewController
             
-            activateController?.present(viewController, animated: animated, completion: completion)
+            
 
         }else if((activateController?.presentedViewController) != nil){
             print("showViewController - Nomal")
@@ -1253,16 +879,16 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             if(activateController?.isKind(of: UINavigationController.self))!{
                 print("showViewController - Nomal - Navigation")
                 activateController?.navigationController?.isNavigationBarHidden = true
-                //(activateController as! UINavigationController).pushViewController(viewController, animated: true)
+              
             }
-            activateController?.present(viewController, animated: animated, completion: completion)
+            
         }
         
-//        activateController?.present(viewController, animated: animated, completion: completion)
+        activateController?.present(viewController, animated: animated, completion: completion)
 
     }
     
-    
+    //현재 띄워진 뷰어를 닫는다. (잘 생각하고 쓰세요)
     func closeViewController(_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
         var activateController = UIApplication.shared.keyWindow?.rootViewController
         
@@ -1274,7 +900,81 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         activateController?.dismiss(animated: animated, completion: completion)
     }
-}
+    
+    //indicator
+    //최초 로딩시에 인디케이터를 불러온다.
+    func showActivityIndicatory(uiView: UIView) -> (UIView,UIActivityIndicatorView){
+        let container: UIView = UIView()
+        container.frame = uiView.frame
+        container.center = uiView.center
+        container.backgroundColor = UIColor(netHex:0xffffff, alpha: 0.3)
+        
+        let loadingView: UIView = UIView()
+        loadingView.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
+        loadingView.center = uiView.center
+        loadingView.backgroundColor = UIColor(netHex:0x444444, alpha: 0.7)
+        loadingView.clipsToBounds = true
+        loadingView.layer.cornerRadius = 10
+        
+        let actInd: UIActivityIndicatorView = UIActivityIndicatorView()
+        actInd.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        actInd.activityIndicatorViewStyle = .whiteLarge
+        actInd.center = CGPoint(x: loadingView.frame.size.width / 2, y: loadingView.frame.size.height / 2)
+        loadingView.addSubview(actInd)
+        container.addSubview(loadingView)
+        uiView.addSubview(container)
+        actInd.startAnimating()
+        
+        return (container, actInd)
+    }
+    
+    //수정후 로직
+    func afterEdit(ref : FIRDatabaseReference, cell : BoardCell?) {
+        
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            guard snapshot.exists() else {
+                return
+            }
+            
+            let value = snapshot.value as! [String : Any]
+            
+            let bObj = self.boardList[(cell?.indexPath.row)!] as! BoardObject
+            
+            var nObj : NoticeObject?
+            var index = -1
+            for (idx, value) in self.noticeList.enumerated() {
+                if (value as! NoticeObject).noticeKey == snapshot.key {
+                    nObj = self.noticeList[idx] as? NoticeObject
+                    index = idx
+                }
+            }
+            
+            bObj.bodyText = value["text"] as? String
+            bObj.editTimeDouble = value["editTime"] as? Double
+            bObj.editTime = NSDate(timeIntervalSince1970: (value["editTime"] as? Double)! / 1000).toString().appending(" 수정됨")
+            
+            
+            //self.boardList[(cell?.indexPath.row)!]  = bObj
+            var indexPaths : Array<IndexPath> = []
+            
+            if(index > -1){
+                nObj?.text = value["text"] as! String
+                nObj?.editTime = value["editTime"] as! Double
+                
+                //self.noticeList[index] = nObj!
+                
+                indexPaths.append(IndexPath(row: index, section: 0))
+            }
+            
+            indexPaths.append((cell?.indexPath)!)
+            
+            
+            self.collectionView?.reloadItems(at: indexPaths)
+            
+        })
+    }
+} //End of MaincViewController
+
 
 extension NSDate {
     
@@ -1312,8 +1012,6 @@ extension UIView {
             viewsDictionary[key] = view
             view.translatesAutoresizingMaskIntoConstraints = false
         }
-
-        
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
     }
 }
@@ -1346,6 +1044,10 @@ extension UIColor {
     convenience init(netHex:Int) {
         self.init(red:(netHex >> 16) & 0xff, green:(netHex >> 8) & 0xff, blue:netHex & 0xff)
     }
+    
+    convenience init(netHex:Int, alpha:Float) {
+        self.init(red:(netHex >> 16) & 0xff, green:(netHex >> 8) & 0xff, blue:netHex & 0xff, alpha : alpha)
+    }
 }
 
 
@@ -1369,25 +1071,6 @@ private extension MainViewController {
                 self?.appendingOfPosts((self?.pageOfPosts)!)
             }
         }
-    }
-}
-
-extension UIViewController {
-    func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
-        var activateController = UIApplication.shared.keyWindow?.rootViewController
-        
-        if(activateController?.isKind(of: UINavigationController.self))!{
-            activateController = (activateController as! UINavigationController).visibleViewController
-        }else if((activateController?.presentedViewController) != nil){
-            activateController = activateController?.presentedViewController
-            
-            if(activateController?.isKind(of: UINavigationController.self))!{
-                activateController?.navigationController?.isNavigationBarHidden = true
-            }
-        }
-        
-      activateController?.present(viewController, animated: animated, completion: completion)
-        
     }
 }
 
