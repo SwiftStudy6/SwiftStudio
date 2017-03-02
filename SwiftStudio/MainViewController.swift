@@ -179,6 +179,20 @@ class BoardCell : UICollectionViewCell {
         self.textRecorded?.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -12).isActive = true
         self.textRecorded?.heightAnchor.constraint(equalToConstant: 164).isActive = true
         
+        
+        //setting images collecion view
+//        let layout = UICollectionViewFlowLayout()
+//        let imagesContainerView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+//        imagesContainerView.translatesAutoresizingMaskIntoConstraints = false
+//        innerView.addSubview(imagesContainerView)
+//        
+//        imagesContainerView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
+//        imagesContainerView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
+//        imagesContainerView.topAnchor.constraint(equalTo: (self.textRecorded?.bottomAnchor)!, constant: 0).isActive = true
+//        imagesContainerView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        
+        
+        
         //setting bottom view
         let bottomView = UIView()
         //bottomView.backgroundColor = .gra
@@ -401,7 +415,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     //불러운 포스트 개수를 배열에 추가한다. (100 * x)
     func loadOfPosts(_ pageCount : UInt){
         
-        boardRef.queryLimited(toFirst: rangeOfPosts * pageCount).observeSingleEvent(of: .value, with: {(snapshot) in
+        boardRef.queryOrderedByKey().queryLimited(toFirst: rangeOfPosts * pageCount).observeSingleEvent(of: .value, with: {(snapshot) in
             guard snapshot.exists() else {
                 return
             }
@@ -427,6 +441,12 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                     timeString = NSDate(timeIntervalSince1970: recordTiem as! Double / 1000).toString()
                 }
                 
+                var attachments = [String]()
+                
+                if let attach = dict["attachments"] as? [String] {
+                    attachments = attach
+                }
+                
                 
                 //BoardObject에 넣는다.
                 obj = BoardObject(rest.key,
@@ -434,7 +454,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                                   userObj?["userName"] as! String,
                                   userObj?["profile_url"] as! String,
                                   dict["text"] as! String,
-                                  (timeString)!)
+                                  (timeString)!, attachments)
                 
                 //like 있을경우에만 parsing
                 if let like = dict["like"], let likeCount = dict["likeCount"]{
@@ -474,6 +494,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         loadOfPosts(self.pageOfPosts)
         
         //공지사항을 불러온다
+        /*
         noticeRef.observeSingleEvent(of: .value, with: { (snapshot) in
             guard snapshot.exists() else{
                 return
@@ -515,6 +536,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             }
             
         })
+        */
     }
     
     //네비게이션바 새로운 글
@@ -524,51 +546,51 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         let vc = UIStoryboard(name: "BoardCreate", bundle: nil).instantiateInitialViewController() as! BoardCreateViewController
     
         showViewController(vc, true,{() in
-            self.boardRef.observe(.childAdded, with: { (snapshot) in
-                guard snapshot.exists() else {
-                    return
-                }
-                
-                let key = snapshot.key
-                let dict = snapshot.value as! [String : Any]
-                let user = dict["author"] as! [String : Any]
-                
-                var time : String?
-                
-                if dict["editTIme"] != nil {
-                    time = NSDate(timeIntervalSince1970: (dict["editTime"] as! Double) / 1000).toString()
-                    time = time?.appending(" 수정됨")
-                }else if dict["recordTime"] != nil {
-                    time = NSDate(timeIntervalSince1970: (dict["recordTime"] as! Double) / 1000).toString()
-                }
-                
-                
-                print(snapshot)
-                //init(_ boardNum: String, _ authorId: String, _ authorName: String, _ profileImgUrl: String, _ bodyText : String, _ editTime : String){
-                let obj = BoardObject(key,
-                                      user["uid"] as! String,
-                                      user["userName"] as! String,
-                                      user["profile_url"] as! String,
-                                      dict["text"] as! String,
-                                      time!)
-                
-                //like 있을경우에만 parsing
-                if let like = dict["like"], let likeCount = dict["likeCount"]{
-                    
-                    obj.likes = like as? Dictionary<String, Bool>
-                    obj.likeCount = likeCount as! Int
-                    
-                }
-
-                
-                
-                self.boardList.append(obj)
-                
-                let newIndexPath = IndexPath(row:self.boardList.count-1, section:1)
-                self.collectionView?.insertItems(at: [newIndexPath])
-                
-            })
-        
+//            self.boardRef.observe(.childAdded, with: { (snapshot) in
+//                guard snapshot.exists() else {
+//                    return
+//                }
+//                
+//                let key = snapshot.key
+//                let dict = snapshot.value as! [String : Any]
+//                let user = dict["author"] as! [String : Any]
+//                
+//                var time : String?
+//                
+//                if dict["editTIme"] != nil {
+//                    time = NSDate(timeIntervalSince1970: (dict["editTime"] as! Double) / 1000).toString()
+//                    time = time?.appending(" 수정됨")
+//                }else if dict["recordTime"] != nil {
+//                    time = NSDate(timeIntervalSince1970: (dict["recordTime"] as! Double) / 1000).toString()
+//                }
+//                
+//                
+//                print(snapshot)
+//                //init(_ boardNum: String, _ authorId: String, _ authorName: String, _ profileImgUrl: String, _ bodyText : String, _ editTime : String){
+//                let obj = BoardObject(key,
+//                                      user["uid"] as! String,
+//                                      user["userName"] as! String,
+//                                      user["profile_url"] as! String,
+//                                      dict["text"] as! String,
+//                                      time!)
+//                
+//                //like 있을경우에만 parsing
+//                if let like = dict["like"], let likeCount = dict["likeCount"]{
+//                    
+//                    obj.likes = like as? Dictionary<String, Bool>
+//                    obj.likeCount = likeCount as! Int
+//                    
+//                }
+//
+//                
+//                
+//                self.boardList.append(obj)
+//                
+//                let newIndexPath = IndexPath(row:self.boardList.count-1, section:1)
+//                self.collectionView?.insertItems(at: [newIndexPath])
+//                
+//            })
+//        
         })
     }
     

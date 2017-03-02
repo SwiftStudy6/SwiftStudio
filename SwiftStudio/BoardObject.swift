@@ -18,16 +18,18 @@ class BoardObject : NSObject {
     var profileImg      : UIImage?      //Author Profile Image
     var bodyText        : String?       //Board Body Text
     var editTime        : String?       //Board Edited Time yyyy/MM/dd hh:mm
+    var attachments     : [String]?
     
     var likeCount       : Int = 0
     var likes           : Dictionary<String, Bool>?
     
     //init each
-    init(_ boardNum: String, _ authorId: String, _ authorName: String, _ profileImgUrl: String, _ bodyText : String, _ editTime : String){
+    init(_ boardNum: String, _ authorId: String, _ authorName: String, _ profileImgUrl: String, _ bodyText : String, _ editTime : String, _ attachments: [String]){
         self.boradKey = boardNum
         self.authorId = authorId
         self.authorName = authorName
         self.profileImgUrl = profileImgUrl
+        self.attachments = attachments
         
 //        if !profileImgUrl.isEmpty {
 //            let imageView : UIImageView? = UIImageView()
@@ -57,7 +59,7 @@ class BoardObject : NSObject {
     
     
     //init each
-    init(_ boardNum: String, _ authorId: String, _ authorName: String, _ profileImgUrl: String, _ profileImg: UIImage, _ bodyText : String, _ editTime : String){
+    init(_ boardNum: String, _ authorId: String, _ authorName: String, _ profileImgUrl: String, _ profileImg: UIImage, _ bodyText : String, _ editTime : String, _ attachments: [String]){
         self.boradKey = boardNum
         self.authorId = authorId
         self.authorName = authorName
@@ -65,12 +67,13 @@ class BoardObject : NSObject {
         self.profileImgUrl = profileImgUrl
         self.bodyText = bodyText
         self.editTime = editTime
+        self.attachments = attachments
     }
     
     
     convenience override init(){
         let replaceHolderImg = UIImage(named: "user.png")
-        self.init("", "", "", "" , replaceHolderImg!, "" , "")
+        self.init("", "", "", "" , replaceHolderImg!, "" , "", [""])
     }
     
     func objectToNSDic() -> NSDictionary {

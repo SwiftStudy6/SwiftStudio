@@ -22,44 +22,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="g2e-Jn-GdE">
-                                <rect key="frame" x="0.0" y="64" width="375" height="553"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
-                                <connections>
-                                    <outlet property="delegate" destination="EGt-EK-dej" id="OxV-uo-6Ve"/>
-                                </connections>
-                            </textView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8wt-Jq-miM" userLabel="toolbarView">
-                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VBo-y1-bbt" userLabel="line">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
-                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="3DY-nF-BaD"/>
-                                        </constraints>
-                                    </view>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ZS-ov-FLe">
-                                        <rect key="frame" x="8" y="10" width="46" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <state key="normal" title="사진첨부">
-                                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="addPhotoHandle:" destination="EGt-EK-dej" eventType="touchUpInside" id="u0g-1w-adX"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="VBo-y1-bbt" secondAttribute="trailing" id="AZz-1S-vYj"/>
-                                    <constraint firstItem="VBo-y1-bbt" firstAttribute="top" secondItem="8wt-Jq-miM" secondAttribute="top" id="KsU-w5-sxF"/>
-                                    <constraint firstAttribute="height" constant="50" id="MXS-o5-1pl"/>
-                                    <constraint firstItem="VBo-y1-bbt" firstAttribute="leading" secondItem="8wt-Jq-miM" secondAttribute="leading" id="qhO-Wv-DO2"/>
-                                </constraints>
-                            </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZeX-Br-m5W">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <constraints>
@@ -72,6 +34,75 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="g2e-Jn-GdE">
+                                <rect key="frame" x="0.0" y="64" width="375" height="503"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
+                                <connections>
+                                    <outlet property="delegate" destination="EGt-EK-dej" id="OxV-uo-6Ve"/>
+                                </connections>
+                            </textView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8wt-Jq-miM" userLabel="toolbarView">
+                                <rect key="frame" x="0.0" y="567" width="375" height="100"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VBo-y1-bbt" userLabel="line">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="3DY-nF-BaD"/>
+                                        </constraints>
+                                    </view>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="G4W-gR-tJb">
+                                        <rect key="frame" x="10" y="1" width="355" height="99"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="yOL-6k-1nM">
+                                            <size key="itemSize" width="50" height="50"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cellId" id="NXS-9p-v0j" customClass="CustomImageCell" customModule="SwiftStudio" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="25" width="50" height="50"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Fp0-b7-X0T">
+                                                            <rect key="frame" x="8" y="8" width="34" height="34"/>
+                                                        </imageView>
+                                                    </subviews>
+                                                </view>
+                                                <constraints>
+                                                    <constraint firstAttribute="bottomMargin" secondItem="Fp0-b7-X0T" secondAttribute="bottom" id="3C3-Lp-4Px"/>
+                                                    <constraint firstAttribute="trailingMargin" secondItem="Fp0-b7-X0T" secondAttribute="trailing" id="5VG-TV-GJJ"/>
+                                                    <constraint firstItem="Fp0-b7-X0T" firstAttribute="top" secondItem="NXS-9p-v0j" secondAttribute="topMargin" id="rDw-UE-4Uf"/>
+                                                    <constraint firstItem="Fp0-b7-X0T" firstAttribute="leading" secondItem="NXS-9p-v0j" secondAttribute="leadingMargin" id="zSq-De-ZQ4"/>
+                                                </constraints>
+                                                <connections>
+                                                    <outlet property="imageView" destination="Fp0-b7-X0T" id="8dX-eM-kss"/>
+                                                </connections>
+                                            </collectionViewCell>
+                                        </cells>
+                                        <connections>
+                                            <outlet property="dataSource" destination="EGt-EK-dej" id="F9E-2R-uR2"/>
+                                            <outlet property="delegate" destination="EGt-EK-dej" id="3ds-Zi-Odr"/>
+                                        </connections>
+                                    </collectionView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="VBo-y1-bbt" secondAttribute="trailing" id="AZz-1S-vYj"/>
+                                    <constraint firstItem="VBo-y1-bbt" firstAttribute="top" secondItem="8wt-Jq-miM" secondAttribute="top" id="KsU-w5-sxF"/>
+                                    <constraint firstAttribute="height" constant="100" id="MXS-o5-1pl"/>
+                                    <constraint firstItem="G4W-gR-tJb" firstAttribute="top" secondItem="VBo-y1-bbt" secondAttribute="bottom" id="NFy-kQ-0U6"/>
+                                    <constraint firstItem="G4W-gR-tJb" firstAttribute="leading" secondItem="8wt-Jq-miM" secondAttribute="leading" constant="10" id="ZNX-AP-y0z"/>
+                                    <constraint firstAttribute="trailing" secondItem="G4W-gR-tJb" secondAttribute="trailing" constant="10" id="lrF-DX-aH2"/>
+                                    <constraint firstItem="VBo-y1-bbt" firstAttribute="leading" secondItem="8wt-Jq-miM" secondAttribute="leading" id="qhO-Wv-DO2"/>
+                                    <constraint firstAttribute="bottom" secondItem="G4W-gR-tJb" secondAttribute="bottom" id="tdn-nG-UIh"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -88,7 +119,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="addPhotoButton" destination="4ZS-ov-FLe" id="oyn-yf-xFx"/>
+                        <outlet property="collectionView" destination="G4W-gR-tJb" id="lzE-i5-NWf"/>
                         <outlet property="navBar" destination="ZeX-Br-m5W" id="Qg1-yU-Uyv"/>
                         <outlet property="textView" destination="g2e-Jn-GdE" id="baD-46-gWi"/>
                         <outlet property="toolbarView" destination="8wt-Jq-miM" id="f1L-HD-3Qv"/>
