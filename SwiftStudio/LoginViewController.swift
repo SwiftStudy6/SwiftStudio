@@ -21,7 +21,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         createView()
-        
+    //권한 생성으로 인해서 바꾸지 말아주세요 테스트용으로 냅둘겁니다 - June
     #if DEBUG
         self.emailTextField.text = "wajl1004@gmail.com"
         self.passwdTextField.text = "11111111"

@@ -6,7 +6,7 @@ private let boardPostChildName = "Board-Posts"
 private let noticePostChildName = "Notice-Posts"
 
 
-class BoardCreateViewController: UIViewController {
+class BoardCreateViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     
     @IBOutlet weak var navBar: UINavigationBar!
@@ -14,6 +14,9 @@ class BoardCreateViewController: UIViewController {
     @IBOutlet weak var toolbarView: UIView!
     @IBOutlet weak var toolbarViewBottomAnchor: NSLayoutConstraint!
     
+    @IBOutlet weak var addPhotoButton: UIButton!
+    
+    var boardData: BoardObject!
     var delegate: MainViewController?
     
     private var ref : FIRDatabaseReference! = FIRDatabase.database().reference()
@@ -60,6 +63,11 @@ class BoardCreateViewController: UIViewController {
     }
     
     func doneHandler(){
+        
+        debugPrint(textView.text)
+        debugPrint(textView.textStorage)
+        
+        
         navigationItem.rightBarButtonItem?.isEnabled = false
         if textView.text.characters.count > 0 {
             let value : [String : Any] = [
@@ -114,5 +122,39 @@ class BoardCreateViewController: UIViewController {
         }else{
             navigationItem.rightBarButtonItem?.isEnabled = false
         }
+    }
+    
+    @IBAction func addPhotoHandle(_ sender: UIButton) {
+        
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
+            
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+            imagePicker.allowsEditing = false
+            
+            present(imagePicker, animated: true, completion: nil)
+        }
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+        
+        let textAttachment = NSTextAttachment()
+        textAttachment.image = image
+        
+        let oldWidth = textAttachment.image!.size.width;
+        
+        let scaleFactor = oldWidth / (textView.frame.size.width - 20) //for the padding inside the textView
+        textAttachment.image = UIImage(cgImage: textAttachment.image!.cgImage!, scale: scaleFactor, orientation: .up)
+        
+        let attrStringWithImage = NSAttributedString(attachment: textAttachment)
+        //attributedString.replaceCharacters(in: NSMakeRange(6, 1), with: attrStringWithImage)
+        textView.attributedText = attrStringWithImage
+        
+        textView.font = UIFont.systemFont(ofSize: 18)
+        
+        dismiss(animated: true, completion: nil)
     }
 }
