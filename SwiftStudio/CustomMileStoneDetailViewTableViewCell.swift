@@ -13,7 +13,10 @@ class CustomMileStoneDetailViewTableViewCell: UITableViewCell {
    
     @IBOutlet weak var detailLabel1: UILabel!
     
+    @IBOutlet weak var usernamelabel: UILabel!
     @IBOutlet weak var detailImage: UIImageView!
+    
+    @IBOutlet weak var attendlabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

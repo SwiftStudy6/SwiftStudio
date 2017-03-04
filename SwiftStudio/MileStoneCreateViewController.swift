@@ -13,11 +13,13 @@ import Firebase
 class MileCreateData: NSObject {
     public var uid: UInt!
     var mileKey        : String?       //Board uique Key
-    var userID        : String?       //Author Id(userId)
-    var userName      : String?       //Author Name
+    var userID         : String?       //Author Id(userId)
+    var userName       : String?       //Author Name
     var profileImgUrl   : String?       //Author Profile Url by string
     var profileImg      : UIImage?      //Author Profile Image
-    var mileTitle        : String?       //Board Body Text
+    var mileTitle       : String?       //Board Body Text
+    //var attendCnt       : Int?         //MileStone attend count
+    //var attend          : String?      //MileStone attend
     var bodyText        : String?       //Board Body Text
     var editTime        : String?       //Board Edited Time yyyy/MM/dd hh:mm
     
@@ -134,6 +136,13 @@ class MileStoneCreateViewController: UIViewController {
         
         let ref = FIRDatabase.database().reference()
         
+        let uid = FIRAuth.auth()?.currentUser?.uid
+       // let user_id = FIRAuth.auth()?.currentUser?.value(forKey: "username")
+        print(uid)
+        someMileCreateData.instUserUid = uid
+        print("printf user uid!!!")
+        
+        
         let key = ref.child("milelist").childByAutoId().key
         let milelist = [
                     "uid": key ,
@@ -141,7 +150,8 @@ class MileStoneCreateViewController: UIViewController {
                     "username": someMileCreateData.userName!,
                     "mileTitle": someMileCreateData.mileTitle!,
                     "editTime": someMileCreateData.editTime!,
-                    "bodyText": someMileCreateData.bodyText!] as [String : Any]
+                    "bodyText": someMileCreateData.bodyText! ,
+                    "instUserUid": someMileCreateData.instUserUid! ]as [String : Any]
         let mileUpdates = ["/milelist/\(key)": milelist]
                          //   "/milelist/\(someMileCreateData.id)/\(key)/": milelist]
         ref.updateChildValues(mileUpdates)

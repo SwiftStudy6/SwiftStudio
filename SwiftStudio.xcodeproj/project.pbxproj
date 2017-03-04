@@ -39,6 +39,14 @@
 		8E68FC081E36737800AB058C /* BoardObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E68FC071E36737800AB058C /* BoardObject.swift */; };
 		8E7863B71E206BE2006062C7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8E7863B61E206BE2006062C7 /* GoogleService-Info.plist */; };
 		EAEC83430219D128C6F4DE90 /* Pods_SwiftStudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44CA5C99B5C87210A9C2FEE1 /* Pods_SwiftStudio.framework */; };
+		F63DF6571E5D6BF400095E27 /* MileCreate.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F63DF6561E5D6BF400095E27 /* MileCreate.storyboard */; };
+		F63DF6591E5D6BFA00095E27 /* MileDetail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F63DF6581E5D6BFA00095E27 /* MileDetail.storyboard */; };
+		F63DF65B1E5D6C0100095E27 /* MileObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63DF65A1E5D6C0100095E27 /* MileObject.swift */; };
+		F63DF65D1E5D6C0800095E27 /* MileStoneCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63DF65C1E5D6C0800095E27 /* MileStoneCreateViewController.swift */; };
+		F63DF65F1E5D6C0D00095E27 /* MileStoneDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63DF65E1E5D6C0D00095E27 /* MileStoneDetailViewController.swift */; };
+		F63DF6621E5D6C1B00095E27 /* CustomMileStoneDetailViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63DF6601E5D6C1B00095E27 /* CustomMileStoneDetailViewTableViewCell.swift */; };
+		F63DF6631E5D6C1B00095E27 /* CustomMileStoneViewControllerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63DF6611E5D6C1B00095E27 /* CustomMileStoneViewControllerTableViewCell.swift */; };
+		F63DF6651E5D6C4300095E27 /* testMileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63DF6641E5D6C4300095E27 /* testMileController.swift */; };
 		F6B2F9081E27537600E0A1BD /* MileStoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B2F9071E27537600E0A1BD /* MileStoneViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +87,14 @@
 		8E68FC031E333FAB00AB058C /* NoticeObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoticeObject.swift; sourceTree = "<group>"; };
 		8E68FC071E36737800AB058C /* BoardObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardObject.swift; sourceTree = "<group>"; };
 		8E7863B61E206BE2006062C7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F63DF6561E5D6BF400095E27 /* MileCreate.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MileCreate.storyboard; sourceTree = "<group>"; };
+		F63DF6581E5D6BFA00095E27 /* MileDetail.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MileDetail.storyboard; sourceTree = "<group>"; };
+		F63DF65A1E5D6C0100095E27 /* MileObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MileObject.swift; sourceTree = "<group>"; };
+		F63DF65C1E5D6C0800095E27 /* MileStoneCreateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MileStoneCreateViewController.swift; sourceTree = "<group>"; };
+		F63DF65E1E5D6C0D00095E27 /* MileStoneDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MileStoneDetailViewController.swift; sourceTree = "<group>"; };
+		F63DF6601E5D6C1B00095E27 /* CustomMileStoneDetailViewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMileStoneDetailViewTableViewCell.swift; sourceTree = "<group>"; };
+		F63DF6611E5D6C1B00095E27 /* CustomMileStoneViewControllerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMileStoneViewControllerTableViewCell.swift; sourceTree = "<group>"; };
+		F63DF6641E5D6C4300095E27 /* testMileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = testMileController.swift; sourceTree = "<group>"; };
 		F6B2F9071E27537600E0A1BD /* MileStoneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MileStoneViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -147,13 +163,15 @@
 			isa = PBXGroup;
 			children = (
 				8E408EFE1E1FD63F00A7B38C /* Board.storyboard */,
-				8E408EF11E1FD07A00A7B38C /* MileStone.storyboard */,
 				8E408EF21E1FD07A00A7B38C /* Setting.storyboard */,
 				8E408EF31E1FD07A00A7B38C /* UserList.storyboard */,
 				02FC4C891E166B1B00E1EF61 /* LaunchScreen.storyboard */,
-				02FC4C841E166B1B00E1EF61 /* Main.storyboard */,
 				809EC7FC1E305ECD00E3BC4F /* BoardDetail.storyboard */,
 				809EC8021E30644900E3BC4F /* BoardCreate.storyboard */,
+				02FC4C841E166B1B00E1EF61 /* Main.storyboard */,
+				8E408EF11E1FD07A00A7B38C /* MileStone.storyboard */,
+				F63DF6581E5D6BFA00095E27 /* MileDetail.storyboard */,
+				F63DF6561E5D6BF400095E27 /* MileCreate.storyboard */,
 			);
 			name = StoryBoard;
 			sourceTree = "<group>";
@@ -179,6 +197,8 @@
 				8E408EED1E1FD07A00A7B38C /* CustomButton.swift */,
 				8E408EEE1E1FD07A00A7B38C /* CustomNavigationSegue.swift */,
 				8E408EEF1E1FD07A00A7B38C /* CustomTabBarController.swift */,
+				F63DF6611E5D6C1B00095E27 /* CustomMileStoneViewControllerTableViewCell.swift */,
+				F63DF6601E5D6C1B00095E27 /* CustomMileStoneDetailViewTableViewCell.swift */,
 			);
 			name = Custom;
 			sourceTree = "<group>";
@@ -198,12 +218,15 @@
 			children = (
 				8E408F051E1FF2F100A7B38C /* LoginViewController.swift */,
 				02FC4C821E166B1B00E1EF61 /* ViewController.swift */,
-				8E408EF01E1FD07A00A7B38C /* MainViewController.swift */,
-				F6B2F9071E27537600E0A1BD /* MileStoneViewController.swift */,
 				8E3D54911E22372E00163BA0 /* ChatLogViewController.swift */,
 				8E68FC001E2FA63400AB058C /* TestViewController.swift */,
 				809EC7FE1E305F6400E3BC4F /* BoardDatailViewController.swift */,
 				809EC8001E30641B00E3BC4F /* BoardCreateViewController.swift */,
+				F63DF6641E5D6C4300095E27 /* testMileController.swift */,
+				8E408EF01E1FD07A00A7B38C /* MainViewController.swift */,
+				F6B2F9071E27537600E0A1BD /* MileStoneViewController.swift */,
+				F63DF65E1E5D6C0D00095E27 /* MileStoneDetailViewController.swift */,
+				F63DF65C1E5D6C0800095E27 /* MileStoneCreateViewController.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -221,6 +244,7 @@
 			children = (
 				8E68FC031E333FAB00AB058C /* NoticeObject.swift */,
 				8E68FC071E36737800AB058C /* BoardObject.swift */,
+				F63DF65A1E5D6C0100095E27 /* MileObject.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -300,6 +324,8 @@
 				8E408EFB1E1FD07A00A7B38C /* UserList.storyboard in Resources */,
 				02FC4C861E166B1B00E1EF61 /* Main.storyboard in Resources */,
 				8E408EF91E1FD07A00A7B38C /* MileStone.storyboard in Resources */,
+				F63DF6571E5D6BF400095E27 /* MileCreate.storyboard in Resources */,
+				F63DF6591E5D6BFA00095E27 /* MileDetail.storyboard in Resources */,
 				8E408F0E1E1FF8D900A7B38C /* List@3x.png in Resources */,
 				8E408F101E1FF8E900A7B38C /* Settings.png in Resources */,
 				8E408F0C1E1FF8C500A7B38C /* Checkmark@3x.png in Resources */,
@@ -362,15 +388,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F63DF6631E5D6C1B00095E27 /* CustomMileStoneViewControllerTableViewCell.swift in Sources */,
 				8E408EF81E1FD07A00A7B38C /* MainViewController.swift in Sources */,
 				8E408EF61E1FD07A00A7B38C /* CustomNavigationSegue.swift in Sources */,
 				8E68FC081E36737800AB058C /* BoardObject.swift in Sources */,
 				8E68FC011E2FA63400AB058C /* TestViewController.swift in Sources */,
+				F63DF6651E5D6C4300095E27 /* testMileController.swift in Sources */,
+				F63DF65D1E5D6C0800095E27 /* MileStoneCreateViewController.swift in Sources */,
 				F6B2F9081E27537600E0A1BD /* MileStoneViewController.swift in Sources */,
 				809EC7FF1E305F6400E3BC4F /* BoardDatailViewController.swift in Sources */,
 				8E408EF51E1FD07A00A7B38C /* CustomButton.swift in Sources */,
+				F63DF65F1E5D6C0D00095E27 /* MileStoneDetailViewController.swift in Sources */,
 				809EC8011E30641B00E3BC4F /* BoardCreateViewController.swift in Sources */,
 				8E408EF71E1FD07A00A7B38C /* CustomTabBarController.swift in Sources */,
+				F63DF65B1E5D6C0100095E27 /* MileObject.swift in Sources */,
+				F63DF6621E5D6C1B00095E27 /* CustomMileStoneDetailViewTableViewCell.swift in Sources */,
 				8E408F061E1FF2F100A7B38C /* LoginViewController.swift in Sources */,
 				02FC4C831E166B1B00E1EF61 /* ViewController.swift in Sources */,
 				8E3D54921E22372E00163BA0 /* ChatLogViewController.swift in Sources */,

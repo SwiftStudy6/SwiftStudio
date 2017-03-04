@@ -20,7 +20,7 @@ class MileObject : NSObject {
     var mileTitle        : String?       //Board Body Text
     var bodyText        : String?       //Board Body Text
     var editTime        : String?       //Board Edited Time yyyy/MM/dd hh:mm
-    
+    var instUserUid      : String?       //inst User Uid
     //init each
     
       override  init()
