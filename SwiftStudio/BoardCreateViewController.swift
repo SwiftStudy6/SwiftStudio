@@ -43,6 +43,7 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
     
     var boardData: BoardObject!
     var delegate: MainViewController?
+    var cellDelegate : BoardCell?
     
     let currentUser = FIRAuth.auth()?.currentUser
     
@@ -92,6 +93,24 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
         
         //네비게이션바 세팅
         navBar.items = [navigationItem]
+        
+        //2017.02.24
+        //수정할 값이 들어올경우 기본 텍스트에 표기
+        if boardData != nil {
+            self.textView.text = boardData.bodyText
+            
+            if let attachments = boardData.attachments {
+                for item in attachments {
+
+                    let data = NSData(contentsOf: URL(string: item)!)
+                    self.images.append( UIImage(data: data as! Data)! )
+                }
+                
+                
+                self.collectionView.reloadData()
+            }
+            
+        }
     }
     
     
@@ -169,8 +188,6 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
                 }
             }
         }
-        
-    
     }
     
     func doneHandler(){
@@ -182,11 +199,10 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
         }
         
         
-        
         navigationItem.rightBarButtonItem?.isEnabled = false
         
-        if textView.text.characters.count > 0 { //save content
-            //profile image upload
+        if textView.text.characters.count > 0 {
+            var key = boardRef.childByAutoId().key
             
             var value : [String : Any] = [
                 "text" : textView.text,
@@ -199,8 +215,8 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
                 "attachments" : []
             ]
             
-            
-            boardRef.childByAutoId().setValue(value) { error, ref in
+            //데이터가 있을경우 수정 없을경우 생성
+            boardRef.child(key).updateChildValues(value) { error, ref in
                 if let err = error {
                     debugPrint(err.localizedDescription)
                     Toast(text: "실패").show()
@@ -218,9 +234,17 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
                         Toast(text: "성공").show()
                     }
                     
+                    self.textView.resignFirstResponder()
+                    self.textView.text = nil
+                    Toast(text: "성공").show()
                     
+                    self.dismiss(animated: true, completion: {
+                        if self.boardData.like != nil{
+                            //수정후 처리
+                            self.delegate?.afterEdit(ref: ref, cell : self.cellDelegate!)
+                        }
+                    })
                 }
-                
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
             }
             
@@ -381,11 +405,14 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! CustomImageCell
         
+        if self.images.count - 1 >= indexPath.item {
+            let image = self.images[indexPath.item]
+            cell.imageView.image = image
+            
+        }
+        
         cell.imageView.backgroundColor = .red
         cell.delegate = self
-        
-        
-        
         
         return cell
     }
@@ -393,4 +420,6 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 100 - 8 - 8, height: 100 - 8 - 8)
     }
+    
+    
 }
