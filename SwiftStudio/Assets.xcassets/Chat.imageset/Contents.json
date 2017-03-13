@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "chatCompose@3x.png",
+      "filename" : "message [#1579]@1x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "chatCompose@3x-1.png",
+      "filename" : "message [#1579]-1.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "chatCompose@3x-2.png",
+      "filename" : "message [#1579]@3x.png",
       "scale" : "3x"
     }
   ],
