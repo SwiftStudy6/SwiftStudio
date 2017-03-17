@@ -10,6 +10,7 @@ import UIKit
 
 class CustomMileStoneViewControllerTableViewCell: UITableViewCell {
 
+  
     @IBOutlet weak var mainlabel: UILabel!
     @IBOutlet weak var detaillabel: UILabel!
     @IBOutlet weak var MileImage: UIImageView!
@@ -18,6 +19,7 @@ class CustomMileStoneViewControllerTableViewCell: UITableViewCell {
     @IBOutlet weak var textlabel: UILabel!
     @IBOutlet weak var accceptbutton: UIButton!
     @IBOutlet weak var rejectbutton: UIButton!
+    @IBOutlet weak var detailmorebutton: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -25,6 +27,7 @@ class CustomMileStoneViewControllerTableViewCell: UITableViewCell {
         
 
    // override init(frame: CGRect){
+    @IBOutlet weak var morebt: UIButton!
     //    super.init(frame:frame)
 
     

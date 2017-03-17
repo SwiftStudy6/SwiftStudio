@@ -21,6 +21,7 @@ class Mile: Equatable {
   //  var mileCount = 0
     var editTime = ""
     var bodyText = ""
+    var instUserUid = ""
     var ref:FIRDatabaseReference
 
     init(snapshot: FIRDataSnapshot)
@@ -34,6 +35,7 @@ class Mile: Equatable {
      //   mileCount = snapshotValue["mileCount"] as? Int ?? 0
         editTime = snapshotValue["editTime"] as? String ?? ""
         bodyText = snapshotValue["bodyText"] as? String ?? ""
+        instUserUid = snapshotValue["instUserUid"] as? String ?? ""
         ref = snapshot.ref
     }
 }
@@ -75,24 +77,44 @@ class USER {
     
     var userEmail : String
     var userName : String
+    var uid : String
     
   init()
   {
      self.userEmail = ""
      self.userName = ""
+     self.uid = ""
   }
    
 }
 
 
+
+
+
 class MileStoneViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
     
-    @IBOutlet weak var main_title_label: UILabel!
+    lazy var homeBarButtonItem: UIBarButtonItem = {
+        let button = UIBarButtonItem(image: UIImage(named: "Home"), style: .plain, target: self, action: #selector(self.returnHome))
+        
+        return button
+    }()
+    
+    lazy var composeBarButtonItem: UIBarButtonItem = {
+        let button = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.milenewbutton))
+        
+        return button
+    }()
+    
+    //메인 타이틀
+    var titleString : String! = nil
+    var textcontent : String! = nil
    
     @IBOutlet weak var tableView: UITableView!
     var miles = [Mile]()
     //  @IBOutlet weak var InputFiled: UITextField!
+    
     let user = USER()
     
     @IBOutlet weak var yesbt: UIButton!
@@ -106,6 +128,29 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
     let mile_list_title = ["스터디 1주차", "스터디 2주차", "스터디 3주차"]
     let mile_list_data = ["1월 11일 6시 ENI", "1월 17일 6시 ENI", "1월 23일 6시 ENI"]
     
+    var  MileTitleText :String = ""
+    var MildDetailText :String = ""
+    var selectedDateString :String = ""
+    var selectedDate :Date =  NSDate() as Date
+    
+    
+    func returnHome(){
+        closeViewController(true)
+    }
+    
+    
+    func closeViewController(_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+        var activateController = UIApplication.shared.keyWindow?.rootViewController
+        
+        if(activateController?.isKind(of: UINavigationController.self))!{
+            activateController = (activateController as! UINavigationController).visibleViewController
+        }else if((activateController?.presentedViewController) != nil){
+            activateController = activateController?.presentedViewController
+        }
+        
+        activateController?.dismiss(animated: animated, completion: completion)
+    }
+
     
     public func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -144,41 +189,51 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         cell.detaillabel.text = mile.editTime
         cell.userlabel.text = mile.userID
         cell.textlabel.text = mile.bodyText
-        cell.MileImage.image = UIImage(named: test_image[1]+".png")
+      //  cell.MileImage.image = UIImage(named: "30. User@3x"+".png")
+        
+        
+        let ref = FIRDatabase.database().reference()
+        ref.child("users").child(mile.instUserUid).child("profile_url").observe(.value, with: { (snapshot) in
+            self.textcontent = snapshot.value as? String
+            
+            print("mile.instUserUid is \(mile.instUserUid)")
+            print("textcontent is \(self.textcontent)")
+            
+            if let url = NSURL(string: self.textcontent!) {
+                if let data = NSData(contentsOf: url as URL) {
+                    cell.MileImage.image = UIImage(data: data as Data)
+                }
+            }
+        })
+        
+        
         
         
         cell.accceptbutton.tag = indexPath.row
         cell.rejectbutton.tag = indexPath.row
+        cell.detailmorebutton.tag = indexPath.row
+        cell.morebt.tag = indexPath.row
+        
+       
+        print(cell.morebt.tag)
+        print("morebt.tag")
+        
+        cell.morebt.setImage(UIImage(named: "menu_option [#1374]@2x.png"), for: UIControlState.normal)
+         cell.morebt.setTitle("", for: .normal)
+        
         
         
         NSLog("[%ld]", cell.accceptbutton.tag)
         
         cell.accceptbutton.setTitle("참석", for: .normal)
         cell.rejectbutton.setTitle("불참", for: .normal)
-        
+        cell.detailmorebutton.setTitle(nil, for: .normal)
       
  
         return (cell)
         
 
-        /*
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomMileStoneViewControllerTableViewCell
-      //  let mileObj = self.mileList[indexPath.row] as! MileObject
-        
-       // cell.dataObject = mileObj
-       // cell.indexPath = indexPath
-      //  cell.mainlabel.text =
-       
-        NSLog("[%s] !!!!!", self.mileList.count)
-        
-       
-     //  cell.mainlabel.text = cell.dataObject[indexPath.row]
-     //  cell.detaillabel.text = cell.dataObject[indexPath.row]
-        
-       // cell.delegate = self
-        
-        return cell
-         */
+    
     }
     
     
@@ -194,6 +249,10 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         
         let mile = miles[indexPath.row]
         vc.mile_detail_title = mile.mileTitle
+        vc.mile_time = mile.editTime
+        vc.mile_body = mile.bodyText
+        
+        
         vc.title_key = mile.uid
         
         /*
@@ -210,32 +269,28 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         
 
         
-       //self.present(vc, animated: true, completion: nil)
-        
-        //  let row = indexPath.row
-        
-     //    let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "MileStoneDetailViewController") as! MileStoneDetailViewController
-        
-       // self.navigationController?.pushViewController(MileStoneDetailViewController(), animated: false)
+          NSLog("Click")
 
         
-          NSLog("Click")
-      //    let detailViewController =  MileStoneDetailViewController()
-        //  self.navigationController?.pushViewController(detailViewController, animated: true)
-      //  self.present(detailViewController, animated: true, completion: nil)
-        
-        
-       // self.present(detailViewController, animated: false, completion: nil)
-           // 네비게이션 컨트롤러 없이 view 띄우기
-      //   let destination = MileStoneDetailViewController()
-      //  self.present(destination, animated: true, completion: nil)
-        
-        
-      //  navigationController?.pushViewController(destination, animated: true)
-        //  tableView.deselectRow(at: <#T##IndexPath#> as IndexPath, animated: true)
-        
+    }
+    
+    public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
+    {
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            miles.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
+            
+         if editingStyle == UITableViewCellEditingStyle.insert
+         {
+            
+        }
+            
+            
+        }
         
     }
+    
+    
     
     
     func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
@@ -250,8 +305,204 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         activateController?.present(viewController, animated: animated, completion: completion)
     }
   
+    // cell delete, modify
+    @IBAction func milemorebutton(_ sender:  UIButton) {
+        
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
+        
+        
+        //Create and an option action
+        let deleteAction: UIAlertAction = UIAlertAction(title: "삭제", style: .default) { action -> Void in
+        //Do some other stuff
+            let uid = FIRAuth.auth()?.currentUser?.uid
+            
+            if (uid != self.miles[sender.tag].instUserUid)
+            {
+                
+                let alertController: UIAlertController = UIAlertController(title: nil, message: "본인이 올리신 글만 삭제할수 있습니다.", preferredStyle: .alert)
+                
+                let cancelAction: UIAlertAction = UIAlertAction(title: "확인", style: .default) { action -> Void in
+                    //Do some stuff
+                }
+                
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
+
+          
+            else {
+            
+        NSLog("miles.row : %ld", sender.tag)
+            self.delete_miledata(childWantToRemove  :  self.miles[sender.tag].uid  )
+            
+            print(self.miles[sender.tag].uid  )
+            print("delete cell uid")
+                
+            }
+        }
+        actionSheetController.addAction(deleteAction)
+        
+        //Create and an option action
+        let modifyAction: UIAlertAction = UIAlertAction(title: "수정", style: .default) { action -> Void in
+            //Do some other stuff
+           
+      //      let indexPath = tableView.
+            
+               let uid = FIRAuth.auth()?.currentUser?.uid
+            
+            if (uid != self.miles[sender.tag].instUserUid)
+            {
+                
+                   let alertController: UIAlertController = UIAlertController(title: nil, message: "본인이 올리신 글만 수정할수 있습니다.", preferredStyle: .alert)
+                
+                
+                let cancelAction: UIAlertAction = UIAlertAction(title: "확인", style: .default) { action -> Void in
+                    //Do some stuff
+                }
+                
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true, completion: nil)
+                
+                
+            }
+            else
+            {
+            print("tag sender")
+            print(sender.tag)
+            print(self.miles)
+            
+            print(self.miles[sender.tag].uid )
+            
+            
+         
+              self.modify_milddata(childWantToModify  :  self.miles[sender.tag].uid  )
+            
+                
+            let vc = UIStoryboard(name: "MileCreate", bundle: nil).instantiateInitialViewController() as! MileStoneCreateViewController
+            
+            print("modify info")
+            print(self.MileTitleText)
+            print(self.MileTitleText)
+            print(self.selectedDate)
+            
+       //     vc.MileTitleText.text = self.MileTitleText
+      //      vc.MildDetailText.text = self.MildDetailText
+      //      vc.MileDateText.date = self.selectedDate
+            
+          // vc.mtitle = self.MileTitleText
+          //  vc.mtitle = "modify"
+        //    vc.mdetail = self.MildDetailText
+          //   vc.mdate = self.selectedDate
+            
+            
+            
+            vc.mtitle = self.miles[sender.tag].mileTitle
+            vc.mdetail = self.miles[sender.tag].bodyText
+            
+            let dateFormatter = DateFormatter()
+            
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+             let selectedDate  = dateFormatter.date(from: ( self.miles[sender.tag].editTime ) )
+            
+           vc.mdate = selectedDate
+           vc.moidfy_uid =  self.miles[sender.tag].uid
+            
+
+            self.showViewController(vc, true, nil)
+            }
+            
+        }
+        
+        actionSheetController.addAction(modifyAction)
+        
+        
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "취소", style: .default) { action -> Void in
+            //Do some stuff
+        }
+        
+        actionSheetController.addAction(cancelAction)
+        self.present(actionSheetController, animated: true, completion: nil)
+        
+        
+    }
+    
+    // delete mile list database
+    func delete_miledata(childWantToRemove: String)  {
+     
+        
+         //miles.remove(at: index)
+            let ref = FIRDatabase.database().reference()
+        
+        ref.child("milelist").child(childWantToRemove).removeValue { (error, ref) in
+            if error != nil {
+                print("error \(error)")
+          
+            }
+        }
+        
+        
+        
+    }
     
     
+    
+    // modify mile list database
+    func modify_milddata(childWantToModify: String) {
+        
+        let ref = FIRDatabase.database().reference()
+        
+        
+       print("modyfy11111111")
+      print(childWantToModify)
+
+        
+     //   ref.child("milelist").child(childWantToModify).observeSingleEvent(of: .value, with : { (snapshot) in
+
+        ref.child("milelist").child(childWantToModify).observeSingleEvent(of: .value,   with: { (snapshot) in
+           
+        
+             print("modyfy22222")
+            
+            print(snapshot.value)
+            
+        
+            
+            let snapshotValue = snapshot.value as! NSDictionary
+             let MileTitleText  = snapshotValue["mileTitle"] as? String ?? ""
+             let  MildDetailText  = snapshotValue["bodyText"] as? String ?? ""
+             let selectedDateString = snapshotValue["editTime"] as? String ?? ""
+    
+            let dateFormatter = DateFormatter()
+            
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+             let selectedDate  = dateFormatter.date(from: (selectedDateString))!
+            
+            
+            self.MileTitleText = MileTitleText
+            self.MildDetailText = MildDetailText
+            self.selectedDate = selectedDate
+            
+                 print("modyfy info list")
+                 print(self.MileTitleText)
+               print(self.MildDetailText)
+               print(self.selectedDateString)
+            //self.selectedDate = dateFormatter.string(from: NSDate() as Date)
+            
+            
+
+        })
+      
+        
+        
+      
+        
+      
+        
+        // 시작
+        
+        
+    }
 
     @IBAction func milenewbutton(_ sender: Any) {
         
@@ -336,6 +587,30 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         
     }
     
+    
+    @IBAction func detailbutton(_ sender: UIButton) {
+        
+         NSLog("miles.row : %ld", sender.tag)
+        let actionSheetController: UIAlertController = UIAlertController(title: "세부사항", message: self.miles[sender.tag].bodyText, preferredStyle: .alert)
+        
+    
+        //Create and an option action
+    
+        
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "확인", style: .default) { action -> Void in
+            //Do some stuff
+        }
+        
+        actionSheetController.addAction(cancelAction)
+        
+        self.present(actionSheetController, animated: true, completion: nil)
+        
+    
+    }
+    
+    
+    
     func viewChange()
     {
         NSLog("체인지")
@@ -353,7 +628,7 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
     
     func createView(){
         
-         self.main_title_label.text = "MileStoneList"
+      //   self.main_title_label.text = "MileStoneList"
  
  
     }
@@ -389,18 +664,31 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        self.main_title_label.text = "MileStone List"
+       // self.main_title_label.text = "MileStone List"
         
         let  mile_data = MileObject.init()
         
         print(mile_data.userName!)
         
         miles = [Mile]()
+        user_info()
         
         //loadTable()
         //tableView.reloadData()
         
        // loadOfPosts(1)
+        
+        //navigationItem.title = self.titleString
+        navigationItem.rightBarButtonItem = composeBarButtonItem
+        navigationItem.leftBarButtonItem = homeBarButtonItem
+        
+        // 네비게이션 바를 추가한다.
+        let naviBar = UINavigationBar()
+        naviBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 64)
+        naviBar.items = [navigationItem]
+        naviBar.barTintColor = .white
+        
+        self.view.addSubview(naviBar)
         
         DispatchQueue.main.async{
             self.loadTable()
@@ -409,6 +697,8 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         self.tableView.reloadData()
     }
     
+    
+    // user Attend Value insert
     func mileAttendInsert(rownum: Int, attendflag: String)
     {
         let someMileAttnendData = MILEATTEND()
@@ -442,51 +732,14 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         }
         
         
-        //    NSLog("[%s]", someMileCreateData.mileTitle)
-        //     NSLog("[%@]", someMileCreateData.editTime)
-        //     NSLog("[%@]", someMileCreateData.bodyText)
-        
-        //print(someMileAttnendData.mileTitle!)
-        //ref.child("milelist").queryOrdered(byChild: "mileTitle").queryEqual(toValue: mile_detail_title)
-        //ref.child("milelist").queryOrdered(byChild: "mileTitle").queryEqual(toValue: miles[rownum].mileTitle )
-        
-        /*
-        var uuid : String?
-        
-        let ref = FIRDatabase.database().reference()
-        
-        let milett = miles[rownum].mileTitle
-        print("miletitle")
-        print(milett)
-        
-        ref.child("milelist").queryOrdered(byChild: "mileTitle").queryEqual(toValue: milett).observe(.childAdded, with: {[weak self] snapshot in
-           
-            // mileat.userID = ref.child("mileattend").setValue(<#T##value: Any?##Any?#>, forKey: "userID")
-            //    mileat.userID = ref.child("mileattend").value(forKey: "userID") as! String?
-            let snapshotValue = snapshot.value as! NSDictionary
-            let uid  = snapshotValue["uid"] as? String ?? ""
-         
-            uuid = uid
-            print(uid)
-            NSLog("uid")
-
-            }
-        )
-        
-        //print(mileattends)
-        //print(query)
-    
-
-        
-            print(uuid)
-*/
         let ref = FIRDatabase.database().reference()
         
         let uid = FIRAuth.auth()?.currentUser?.uid
         
        // var userId : String
         
-       
+    
+        
       
 /*
         
@@ -568,58 +821,124 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
  */
         if(attendFlag == true)
         {
-            self.userinfo_ins(milelist_uid:  self.miles[rownum].uid, attendFlag:  1)
+            self.userinfo_ins(milelist_uid:  self.miles[rownum].uid, attendFlag:  "1", rownum: rownum)
         }
         else
         {
-            self.userinfo_ins(milelist_uid:  self.miles[rownum].uid, attendFlag: 0)
+            self.userinfo_ins(milelist_uid:  self.miles[rownum].uid, attendFlag: "0", rownum:  rownum)
         }
         
     }
 
-    func userinfo_ins(milelist_uid: String,  attendFlag: Int) {
+    func attend_cnt_ins(milelist_uid: String,  attendFlag: String) {
+        
+        // uid == uid
+        
+        //
+        
+        
+    }
+    
+    
+    
+    func userinfo_ins(milelist_uid: String,  attendFlag: String, rownum: Int) {
+        
+        
+        /*
+        let uid = FIRAuth.auth()?.currentUser?.uid
+        
+        let ref = FIRDatabase.database().reference().child("milelist").child(milelist_uid).child("mileAttend").child("mileCount")
+        
+     
+        ref.runTransactionBlock({  (resul) -> FIRTransactionResult in
+             let mileCount = resul.value as? Int {
+                
+                        if (attendFlag == "0" &&  mileCount < 1) {
+                        
+                        resul.value = 1
+                        
+                        }else{
+                        resul.value = 0
+                        }
+                
+                }
+            return FIRTransactionResult.success(withValue:  resul)
+        })
+        
+        
+        // let user_id = FIRAuth.auth()?.currentUser?.value(forKey: "username")
+        //print(uid)
+        //print("print user uid!!!")
+        
+      */
+         let ref1 = FIRDatabase.database().reference()
+
+        var key : String
+        
+        key   = self.user.uid
+       
+        let mileuser = [
+         
+            "userName": self.user.userName,
+            "userEmail": self.user.userEmail,
+            "uid": key,
+            "attendFlag": attendFlag ]as [String : Any]
+        let mileUpdates = ["/milelist/\(milelist_uid)/mileAttend/\(key)": mileuser]
+        //   "/milelist/\(someMileCreateData.id)/\(key)/": milelist]
+        ref1.updateChildValues(mileUpdates)
+        print("print user update!!!")
+
         
         
         
-          let uid = FIRAuth.auth()?.currentUser?.uid
-         var ref = FIRDatabase.database().reference()
-        ref.child("users").child(uid!).observe(.value, with: {[weak self] snapshot in
+        
+        let vc = UIStoryboard(name: "MileDetail", bundle: nil).instantiateInitialViewController() as! MileStoneDetailViewController
+        
+        
+        
+        let mile = miles[rownum]
+        vc.mile_detail_title = mile.mileTitle
+        vc.mile_time = mile.editTime
+        vc.mile_body = mile.bodyText
+        
+        
+        
+        vc.title_key = mile.uid
+        
+           // 시작
+        showViewController(vc, true, nil)
+        
+        
+        
+        
+    }
+    
+    func user_info() {
+        
+        
+        let ref = FIRDatabase.database().reference()
+        let uid = FIRAuth.auth()?.currentUser?.uid
+        
+        ref.child("users").child(uid!).observeSingleEvent(of: .value, with:  { (snapshot) in
             
             print("user value")
             print(snapshot.value)
             
             let snapshotValue = snapshot.value as! NSDictionary
-            self?.user.userEmail  = snapshotValue["email"] as? String ?? ""
-            self?.user.userName  = snapshotValue["username"] as? String ?? ""
-            
+            self.user.userEmail  = snapshotValue["email"] as? String ?? ""
+            self.user.userName  = snapshotValue["userName"] as? String ?? ""
+            self.user.uid  = uid!
             
             print("user value3333")
-            print(self?.user.userEmail)
-            print(self?.user.userName)
+            print(self.user.userEmail)
+            print(self.user.userName)
         })
         
-        ref = FIRDatabase.database().reference()
-      
-        // let user_id = FIRAuth.auth()?.currentUser?.value(forKey: "username")
-        print(uid)
-        print("print user uid!!!")
-        
-        var key : String
-        
-        key   = uid!
-       
-        let mileuser = [
-         
-            "username": user.userName,
-            "userEmail": user.userEmail,
-            "attendFlag": attendFlag ]as [String : Any]
-        let mileUpdates = ["/milelist/\(milelist_uid)/mileAttend/\(key)": mileuser]
-        //   "/milelist/\(someMileCreateData.id)/\(key)/": milelist]
-        ref.updateChildValues(mileUpdates)
-        print("print user update!!!")
-
         
     }
+
+    
+    
     
     
     func loadTable()
@@ -720,9 +1039,11 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
          self?.tableView.beginUpdates()
          self?.miles.remove(at:removetindex)
          self?.tableView.deleteRows(at: [IndexPath(row:removetindex, section: 0)], with:.left )            }
-         
+           self?.tableView.endUpdates()
+            
          DispatchQueue.main.async{
-         self?.tableView.endUpdates()
+       
+             self?.tableView.reloadData()
          }
             
          })

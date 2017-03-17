@@ -56,12 +56,22 @@ class USERATTEND {
 
 class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-  
+    lazy var homeBarButtonItem: UIBarButtonItem = {
+        let button = UIBarButtonItem(image: UIImage(named: "Home"), style: .plain, target: self, action: #selector(self.back))
+        
+        return button
+    }()
+    
+ 
+    
+    
     let  mile_detail_list = ["참석", "참석", "불참"]
     
     @IBOutlet weak var mainlabel: UILabel!
     
     @IBOutlet weak var acceptlabel: UILabel!
+    
+    @IBOutlet weak var nonattendlabel: UILabel!
     
     @IBOutlet weak var attend_count: UILabel!
     
@@ -70,6 +80,12 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
     
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var timelabel: UILabel!
+    
+    @IBOutlet weak var bodytext: UITextView!
+    
+    
+    @IBOutlet weak var scrollView: UIScrollView!
     
     var title_key :String?
     
@@ -78,8 +94,12 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
 
 
     var mile_detail_title: String!
+    var mile_time: String!
+    var mile_body:String!
     var mileattends = [MILEATTEND1]()
-    var attend : Int? = 0
+    var attend : Int = 0
+    var absent : Int = 0
+    var textcontent : String! = nil
     
     //var mile_user = [String : Bool]()
     
@@ -91,21 +111,37 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
         // Do any additional setup after loading the view, typically from a nib.
         //self.mainlabel.text = "MileDetail List"
         self.mainlabel.text = mile_detail_title
+        self.timelabel.text = mile_time
+        self.bodytext.text = mile_body
         
-        self.acceptlabel.text = "참석인원"
+        self.acceptlabel.text = "참석"
+        
+         self.nonattendlabel.text = "불참"
+     
         
         
-        navigationItem.title = "MileDetail List"
-        navigationController?.navigationBar.isTranslucent = false
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(back))
-        navigationItem.rightBarButtonItem?.isEnabled = false
+        
         
         
         
         NSLog("detail printing")
         
+        //navigationItem.title = self.titleString
+        //navigationItem.rightBarButtonItem = composeBarButtonItem
+        navigationItem.leftBarButtonItem = homeBarButtonItem
+        
+        // 네비게이션 바를 추가한다.
+        let naviBar = UINavigationBar()
+        naviBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 64)
+        naviBar.items = [navigationItem]
+        naviBar.barTintColor = .white
+        
+        self.view.addSubview(naviBar)
+        
         
         self.loadTable_1()
+        
+        
        // self.attend_count.text = String(self.attend!)
         //self.nonattend_count.text = String(mileattends.count - self.attend!)
         
@@ -113,8 +149,32 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
       //  print(attend)
         
         self.tableView.reloadData()
+      
+    }
+     func attendCnt()
+     {
+        /*
+        let ref = FIRDatabase.database().reference()
+        ref.child("milelist").child(self.mile_detail_title).child().chlid("attendFlag").observeSingleEvent(of: .value, with:  { (snapshot) in
+            
+            print("user value")
+            print(snapshot.value)
+            
+            let snapshotValue = snapshot.value as! NSDictionary
+            self.user.userEmail  = snapshotValue["email"] as? String ?? ""
+            self.user.userName  = snapshotValue["userName"] as? String ?? ""
+            self.user.uid  = uid!
+            
+            print("user value3333")
+            print(self.user.userEmail)
+            print(self.user.userName)
+        })
+*/
         
     }
+    
+    
+    
     
     let test_image = ["user", "user", "user"]
     
@@ -137,7 +197,7 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
         
        // let mileuser = mile_user[indexPath.row]
         
-        cell.detailImage.image = UIImage(named: "user"+".png")
+        //cell.detailImage.image = UIImage(named: "30. User@3x"+".png")
         
         //let celluserid = mileuser.
         //
@@ -158,8 +218,37 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
         
           cell.detailLabel1.text = mind.user_email
           cell.usernamelabel.text = mind.user_nm
-   
+        if(mind.attend_yn == "1")
+        {
+         cell.attendlabel.text = "참석"
+        }
+        else
+        {
+         cell.attendlabel.text = "불참"
+        }
         
+        
+        let ref = FIRDatabase.database().reference()
+        ref.child("users").child(mind.uid!).child("profile_url").observe(.value, with: { (snapshot) in
+            self.textcontent = snapshot.value as? String
+            
+            print("mile.instUserUid is \(mind.uid)")
+            print("textcontent is \(self.textcontent)")
+            
+            if let url = NSURL(string: self.textcontent!) {
+                if let data = NSData(contentsOf: url as URL) {
+                    cell.detailImage.image = UIImage(data: data as Data)
+                }
+            }
+        })
+
+        
+        
+        
+        print("user info!!")
+        print(mind.user_email)
+        print(mind.user_nm)
+        print(mind.attend_yn)
      //   let mileattend = mileattends[indexPath.row]
      //   cell.detailLabel1.text = mileattend.userId
       //  cell.usernamelabel.text = mileattend.userName
@@ -336,7 +425,30 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
                let  attendlists = USERATTEND()
              attendlists.user_email = snapshotValue["userEmail"] as? String ?? ""
              attendlists.user_nm = snapshotValue["userName"] as? String ?? ""
+            attendlists.uid = snapshotValue["uid"] as? String ?? ""
              attendlists.attend_yn = snapshotValue["attendFlag"] as? String ?? ""
+          
+            if( attendlists.attend_yn  == "0" )
+            {
+                self?.absent  +=  1
+                print("self?.absent ")
+                print(self?.absent )
+    
+            }
+            else
+            {
+                self?.attend   +=  1
+                print("self?.attend ")
+                print(self?.attend )
+            }
+            
+            
+          
+            
+            let attedString :String? = String( describing: self?.attend  )
+            let absentString :String? = String( describing: self?.absent  )
+
+            
         //     mileat.userId  = snapshotValue["userId"] as? String ?? ""
          //   mileat.userName  = snapshotValue["userName"] as? String ?? ""
           //  var mileAttend : Dictionary<String, Bool>
@@ -351,7 +463,11 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
            
             
              print("attendlists")
-      
+            var String1 :String
+            var String2 : String
+            
+  //          String1 = attedString
+       //     String2 = absentString
             
             
            self?.mile_user.append(attendlists)
@@ -360,6 +476,10 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
             DispatchQueue.main.async{
                 // self?.tableView.endUpdates()
                 self?.tableView.reloadData()
+                self?.attend_count.text = NSNumber(value: (self?.attend)!).stringValue
+                self?.nonattend_count.text = NSNumber(value: (self?.absent)!).stringValue
+                
+                
             }
         }
         )
