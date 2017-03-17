@@ -9,38 +9,29 @@
 import UIKit
 
 class NoticeObject: NSObject {
-    var noticeKey  :String!
-    var authorId   :String!
-    var noticeText :String!
-    var editTime   :String!
+    var noticeKey  :String! //Notice Unique Key
+    var authorId   :String! //Notice User Unique key
+    var text       :String! //Notice Contents
+    var recordTime :Double! //notice Record Time by milesecond
+    var editTime   :Double! //notice Edited Time by milesecond
+    
+    init(_ noticeKey: String, _ authorId: String, _ text: String,_ recordTime: Double, _ editTime: Double){
+        super.init()
+        self.noticeKey = noticeKey
+        self.authorId = authorId
+        self.text = text
+        self.recordTime = recordTime
+        self.editTime = editTime
+    }
     
     convenience override init() {
         self.init()
         self.noticeKey = ""
         self.authorId = ""
-        self.noticeText = ""
-        self.editTime = ""
-
+        self.text = ""
+        self.recordTime = 0
+        self.editTime = 0
     }
-    
-    
-    init(_ noticeKey: String, _ authorId: String, _ noticeText: String, _ editTime: String){
-        super.init()
-        self.noticeKey = noticeKey
-        self.authorId = authorId
-        self.noticeText = noticeText
-        self.editTime = editTime
-    }
-    
-    @nonobjc
-    init(_ noticeKey: String, _ authorId: String, _ noticeText: String, _ editTime: Double){
-        super.init()
-        self.noticeKey = noticeKey
-        self.authorId = authorId
-        self.noticeText = noticeText
-        self.editTime = NSDate(timeIntervalSince1970: editTime / 1000.0).toString()
-    }
-    
 }
 
 extension NoticeObject {
@@ -51,7 +42,7 @@ extension NoticeObject {
             return false
         }
         
-        guard self.noticeKey != obj.noticeKey, self.noticeText != obj.noticeText, self.editTime != obj.editTime else {
+        guard self.noticeKey != obj.noticeKey, self.text != obj.text, self.recordTime != obj.recordTime, self.editTime != obj.editTime else {
             return true
         }
         
@@ -60,38 +51,3 @@ extension NoticeObject {
 }
 
 
-extension BoardObject{
-    @nonobjc
-    func isEqual(_ obj : BoardObject) -> Bool {
-        guard !obj.isKind(of: BoardObject.self) else {
-            return false
-        }
-        
-        
-        if (self.boradKey != obj.boradKey) {
-            return false
-        }
-        if(self.authorId != obj.authorId){
-            return false
-        }
-        if(self.authorName != obj.authorName) {
-            
-        }
-        if(self.profileImgUrl != obj.profileImgUrl) {
-            return false
-        }
-        if(self.profileImg != obj.profileImg) {
-            return false
-        }
-        
-        if(self.bodyText != obj.bodyText) {
-            return false
-        }
-        
-        if(self.editTime != obj.editTime) {
-            return false
-        }
-        
-        return true
-    }
-}

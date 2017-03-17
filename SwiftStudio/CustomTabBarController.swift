@@ -9,7 +9,9 @@
 import UIKit
 
 class CustomTabBarController: UIViewController {
-
+    
+    static let sharedInstance = CustomTabBarController()
+    
     var currentViewController : UIViewController? = nil
     @IBOutlet weak var placeholderView  : UIView? = nil
     @IBOutlet var bottomView: UIView!
@@ -27,7 +29,7 @@ class CustomTabBarController: UIViewController {
     
     var titleStr: String! = nil
     
-    private let pinkshRed = UIColor(red: 233/255, green: 29/255, blue: 41/255, alpha: 1.0);
+    private let pinkshRed = UIColor(red: 233, green: 29, blue: 41, alpha: 1.0);
     
     
     enum TargetIdentifier : Int {
@@ -81,19 +83,13 @@ class CustomTabBarController: UIViewController {
         }
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         availableIdentifiers = ["Board", "Chat", "MileStone", "UserList", "Setting"]
         tabBarButtons = [self.boardButton, self.chatButton, self.milestoneButton, self.userListButton, self.settingButton]
         
-        //메인타이틀을 올려
-        if(self.titleStr == nil){
-            self.titleStr = "Swift Study"
-        }
-            
-        navigationItem.title = self.titleStr
+        
         
         tabbarSetting()
         
@@ -118,9 +114,11 @@ class CustomTabBarController: UIViewController {
         self.boardButton = {
             let _button = self.boardButton
             
-            let _image = _button!.resizeImage(image: UIImage.init(named: "List")!, targetSize: CGSize(width: 27 , height: 27))
+           // let _image = _button!.resizeImage(image: UIImage.init(named: "List")!, targetSize: CGSize(width: 27 , height: 27))
             
-            _button!.setImage(_image, for: .normal)
+            let _image = UIImage(named: "List")
+            
+            _button!.setImage(_image?.alpha(0.3), for: .normal)
             _button!.setImage(_image, for: .selected)
             _button!.setTitle("게시판", for: .normal)
             _button!.setTitleColor(.black, for: .normal)
@@ -137,9 +135,11 @@ class CustomTabBarController: UIViewController {
         self.chatButton = {
             let _button = self.chatButton
             
-            let _image = _button!.resizeImage(image: UIImage.init(named: "Chat")!, targetSize: CGSize(width: 27 , height: 27))
+//            let _image = _button!.resizeImage(image: UIImage.init(named: "Chat")!, targetSize: CGSize(width: 27 , height: 27))
             
-            _button!.setImage(_image, for: .normal)
+            let _image = UIImage(named: "Chat")
+            
+            _button!.setImage(_image?.alpha(0.3), for: .normal)
             _button!.setImage(_image, for: .selected)
             _button!.setTitle("대화방", for: .normal)
             _button!.setTitleColor(.black, for: .normal)
@@ -155,9 +155,11 @@ class CustomTabBarController: UIViewController {
         
         self.milestoneButton = {
             let _button = self.milestoneButton
-            let _image = _button!.resizeImage(image: UIImage.init(named: "CheckMark")!, targetSize: CGSize(width: 27 , height: 27))
+//            let _image = _button!.resizeImage(image: UIImage.init(named: "CheckMark")!, targetSize: CGSize(width: 27 , height: 27))
             
-            _button!.setImage(_image, for: .normal)
+            let _image = UIImage(named: "CheckMark")
+            
+            _button!.setImage(_image?.alpha(0.3), for: .normal)
             _button!.setImage(_image, for: .selected)
             _button!.setTitle("마일스톤", for: .normal)
             _button!.setTitleColor(.black, for: .normal)
@@ -174,9 +176,11 @@ class CustomTabBarController: UIViewController {
         self.userListButton = {
             let _button = self.userListButton
             
-            let _image = _button!.resizeImage(image: UIImage.init(named: "User")!, targetSize: CGSize(width: 27 , height: 27))
+//            let _image = _button!.resizeImage(image: UIImage.init(named: "Profile")!, targetSize: CGSize(width: 27 , height: 27))
             
-            _button!.setImage(_image, for: .normal)
+            let _image = UIImage(named: "Profile")
+            
+            _button!.setImage(_image?.alpha(0.3), for: .normal)
             _button!.setImage(_image, for: .selected)
             _button!.setTitle("사용자목록", for: .normal)
             _button!.setTitleColor(.black, for: .normal)
@@ -193,9 +197,11 @@ class CustomTabBarController: UIViewController {
         self.settingButton = {
             let _button = self.settingButton
             
-            let _image = _button!.resizeImage(image: UIImage.init(named: "Setting")!, targetSize: CGSize(width: 27 , height: 27))
+//            let _image = _button!.resizeImage(image: UIImage.init(named: "Setting")!, targetSize: CGSize(width: 27 , height: 27))
             
-            _button!.setImage(_image, for: .normal)
+            let _image = UIImage(named: "Setting")
+            
+            _button!.setImage(_image?.alpha(0.3), for: .normal)
             _button!.setImage(_image, for: .selected)
             _button!.setTitle("설정", for: .normal)
             _button!.setTitleColor(.black, for: .normal)
@@ -211,5 +217,16 @@ class CustomTabBarController: UIViewController {
         
     }
    
+}
 
+extension UIImage {
+    func alpha(_ value:CGFloat)->UIImage
+    {
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        draw(at: CGPoint.zero, blendMode: .normal, alpha: value)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage!
+        
+    }
 }

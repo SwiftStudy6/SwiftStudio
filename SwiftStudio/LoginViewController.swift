@@ -21,6 +21,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         createView()
+    //권한 생성으로 인해서 바꾸지 말아주세요 테스트용으로 냅둘겁니다
+    #if DEBUG
+        self.emailTextField.text = "wajl1004@gmail.com"
+        self.passwdTextField.text = "11111111"
+    #endif
         
     }
 
@@ -220,12 +225,27 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 }
                 
                 print("SIGN IN :\n \(user!)")
+//
+//                let storyBoardName = "Tabbar"
+//                
+//                let storyBoard = UIStoryboard(name: storyBoardName, bundle: nil)
+//                
+//                let resultController = storyBoard.instantiateInitialViewController()!
+//                
+//                self.present(resultController, animated: true, completion: nil)
+//                
                 
-                let stroyBoard = UIStoryboard(name: "Board", bundle: nil)
+                let storyBoardName = "Board"
+                let identifier = "CustomTabBarController"
                 
-                if let resultController = stroyBoard.instantiateViewController(withIdentifier: "CustomTabBarController") as? CustomTabBarController {
-                    self.view.window?.rootViewController?.present(resultController, animated: true, completion: nil)
+                let stroyBoard = UIStoryboard(name: storyBoardName, bundle: nil)
+                
+                if let resultController = stroyBoard.instantiateViewController(withIdentifier: identifier) as? CustomTabBarController {
                     
+                    let singleton = CustomTabBarController.sharedInstance
+                    singleton.titleStr = "Swift Study"
+                    
+                    self.view.window?.rootViewController?.present(resultController, animated: true, completion: nil)
                 }
 
             })
@@ -273,7 +293,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         return
                     }
                     
-                    print("SIGN UP :\n (user!)")
+                    print("SIGN UP :\n \(user!)")
                     
                     let ref = FIRDatabase.database().reference()
                     ref.child("users").child((user?.uid)!).setValue(["username":name.text])

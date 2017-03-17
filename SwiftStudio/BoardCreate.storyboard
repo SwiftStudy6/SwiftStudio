@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="EGt-EK-dej">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="EGt-EK-dej">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,6 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="g2e-Jn-GdE">
+                                <rect key="frame" x="0.0" y="64" width="375" height="553"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
@@ -28,32 +32,64 @@
                                 </connections>
                             </textView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8wt-Jq-miM" userLabel="toolbarView">
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VBo-y1-bbt" userLabel="line">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="3DY-nF-BaD"/>
+                                        </constraints>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ZS-ov-FLe">
+                                        <rect key="frame" x="8" y="10" width="46" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <state key="normal" title="사진첨부">
+                                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="addPhotoHandle:" destination="EGt-EK-dej" eventType="touchUpInside" id="u0g-1w-adX"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="MXS-o5-1pl"/>
+                                    <constraint firstAttribute="trailing" secondItem="VBo-y1-bbt" secondAttribute="trailing" id="AZz-1S-vYj"/>
+                                    <constraint firstItem="VBo-y1-bbt" firstAttribute="top" secondItem="8wt-Jq-miM" secondAttribute="top" id="KsU-w5-sxF"/>
+                                    <constraint firstAttribute="height" constant="50" id="MXS-o5-1pl"/>
+                                    <constraint firstItem="VBo-y1-bbt" firstAttribute="leading" secondItem="8wt-Jq-miM" secondAttribute="leading" id="qhO-Wv-DO2"/>
                                 </constraints>
                             </view>
-                            <activityIndicatorView hidden="YES" opaque="NO" alpha="0.40000000596046448" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="8db-o3-Dnh">
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                            </activityIndicatorView>
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZeX-Br-m5W">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="mzn-JF-LX4"/>
+                                </constraints>
+                                <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <items>
+                                    <navigationItem title="게시글 생성" id="2sq-qk-2ml">
+                                        <barButtonItem key="backBarButtonItem" title="메인" id="O1j-dE-tRK"/>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="g2e-Jn-GdE" firstAttribute="top" secondItem="d6z-6j-rI5" secondAttribute="bottom" id="Gyt-gR-eGo"/>
                             <constraint firstItem="kGU-ZF-EsX" firstAttribute="top" secondItem="8wt-Jq-miM" secondAttribute="bottom" id="Ij0-Nf-sYa"/>
+                            <constraint firstItem="g2e-Jn-GdE" firstAttribute="top" secondItem="ZeX-Br-m5W" secondAttribute="bottom" id="OmH-sx-zpe"/>
                             <constraint firstItem="8wt-Jq-miM" firstAttribute="top" secondItem="g2e-Jn-GdE" secondAttribute="bottom" id="RPQ-hX-Z1h"/>
-                            <constraint firstItem="8db-o3-Dnh" firstAttribute="top" secondItem="d6z-6j-rI5" secondAttribute="bottom" id="XTW-iY-Oxj"/>
+                            <constraint firstItem="ZeX-Br-m5W" firstAttribute="leading" secondItem="GEs-Fk-2Ct" secondAttribute="leadingMargin" constant="-16" id="WvC-Ux-iaf"/>
+                            <constraint firstItem="ZeX-Br-m5W" firstAttribute="top" secondItem="d6z-6j-rI5" secondAttribute="bottom" id="bZh-7C-o4O"/>
                             <constraint firstItem="8wt-Jq-miM" firstAttribute="leading" secondItem="GEs-Fk-2Ct" secondAttribute="leadingMargin" constant="-16" id="cmA-mr-aqr"/>
                             <constraint firstItem="g2e-Jn-GdE" firstAttribute="leading" secondItem="GEs-Fk-2Ct" secondAttribute="leadingMargin" constant="-16" id="fkB-6a-OHe"/>
-                            <constraint firstAttribute="trailing" secondItem="8db-o3-Dnh" secondAttribute="trailing" id="kAL-L4-r2a"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ZeX-Br-m5W" secondAttribute="trailing" constant="-16" id="gwF-gq-Ecb"/>
                             <constraint firstAttribute="trailingMargin" secondItem="8wt-Jq-miM" secondAttribute="trailing" constant="-16" id="kFq-Sv-wtl"/>
                             <constraint firstAttribute="trailingMargin" secondItem="g2e-Jn-GdE" secondAttribute="trailing" constant="-16" id="kUT-zq-lhy"/>
-                            <constraint firstItem="8db-o3-Dnh" firstAttribute="leading" secondItem="GEs-Fk-2Ct" secondAttribute="leading" id="w6I-Ie-dvu"/>
-                            <constraint firstItem="8wt-Jq-miM" firstAttribute="top" secondItem="8db-o3-Dnh" secondAttribute="bottom" id="zrA-Mb-I10"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="loadingView" destination="8db-o3-Dnh" id="rNr-bQ-4TZ"/>
+                        <outlet property="addPhotoButton" destination="4ZS-ov-FLe" id="oyn-yf-xFx"/>
+                        <outlet property="navBar" destination="ZeX-Br-m5W" id="Qg1-yU-Uyv"/>
                         <outlet property="textView" destination="g2e-Jn-GdE" id="baD-46-gWi"/>
                         <outlet property="toolbarView" destination="8wt-Jq-miM" id="f1L-HD-3Qv"/>
                         <outlet property="toolbarViewBottomAnchor" destination="Ij0-Nf-sYa" id="26T-pD-1Xw"/>
@@ -61,7 +97,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gne-Hg-8e1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1752.8" y="510.49475262368821"/>
+            <point key="canvasLocation" x="1142" y="448"/>
         </scene>
     </scenes>
 </document>

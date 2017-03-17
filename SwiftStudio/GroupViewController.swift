@@ -7,10 +7,58 @@
 //
 
 import UIKit
+import Firebase
 
-private let reuseIdentifier = "Cell"
+class GroupObject : NSObject {
+    let key: String! = nil      //Group Unique Key
+    let name : String! = nil    //Group Name
+    var owner : String! = nil   //Group Owner uid
+    var manager : Array<String>! = nil //Group ManagerList
+    var createTime : Double! = 0.0
+    var editTime   : Double! = 0.0
+}
+
+
+class GroupCell : UICollectionViewCell {
+    var groupObject : GroupObject!
+    
+    @IBOutlet var imageView: UIImageView!
+    @IBOutlet var textLabel: UILabel!
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class AddCell : UICollectionViewCell {}
+
+class GroupHeaderView: UICollectionReusableView {
+
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+private let reuseIdentifier = "GroupCell"
+private let reuseIdentifier2 = "AddCell"
+
+private let groupPosts = "Group"
 
 class GroupViewController: UICollectionViewController {
+    
+    var groupRef : FIRDatabaseReference! = FIRDatabase.database().reference()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,8 +68,7 @@ class GroupViewController: UICollectionViewController {
 
         // Register cell classes
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
-        // Do any additional setup after loading the view.
+        self.collectionView!.register(AddCell.self, forCellWithReuseIdentifier: reuseIdentifier2)
     }
 
     override func didReceiveMemoryWarning() {
@@ -61,34 +108,7 @@ class GroupViewController: UICollectionViewController {
     }
 
     // MARK: UICollectionViewDelegate
-
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
     }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-    
-    }
-    */
-
 }
