@@ -6,7 +6,7 @@ private let boardPostChildName = "Board-Posts"
 private let noticePostChildName = "Notice-Posts"
 
 
-class BoardCreateViewController: UIViewController {
+class BoardCreateViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     
     @IBOutlet weak var navBar: UINavigationBar!
@@ -14,7 +14,11 @@ class BoardCreateViewController: UIViewController {
     @IBOutlet weak var toolbarView: UIView!
     @IBOutlet weak var toolbarViewBottomAnchor: NSLayoutConstraint!
     
+    @IBOutlet weak var addPhotoButton: UIButton!
+    
+    var boardData: BoardObject!
     var delegate: MainViewController?
+    var cellDelegate : BoardCell?
     
     private var ref : FIRDatabaseReference! = FIRDatabase.database().reference()
     private var boardRef : FIRDatabaseReference! = FIRDatabase.database().reference().child(boardPostChildName)
@@ -52,6 +56,12 @@ class BoardCreateViewController: UIViewController {
         
         //네비게이션바 세팅
         navBar.items = [navigationItem]
+        
+        //2017.02.24
+        //수정할 값이 들어올경우 기본 텍스트에 표기
+        if boardData != nil {
+            self.textView.text = boardData.bodyText
+        }
     }
     
     
@@ -60,9 +70,16 @@ class BoardCreateViewController: UIViewController {
     }
     
     func doneHandler(){
+        
+        debugPrint(textView.text)
+        debugPrint(textView.textStorage)
+        
+        
         navigationItem.rightBarButtonItem?.isEnabled = false
         if textView.text.characters.count > 0 {
-            let value : [String : Any] = [
+            var key = boardRef.childByAutoId().key
+            
+            var value : [String : Any] = [
                 "text" : textView.text,
                 "recordTime" : FIRServerValue.timestamp(),
                 "author" : [
@@ -71,7 +88,30 @@ class BoardCreateViewController: UIViewController {
                     "userName" : "song"
                 ]
             ]
-            boardRef.childByAutoId().setValue(value) { error, ref in
+            
+            //June Kang - 2017.02.23 추가적인 수정 로직 만듬
+            if(boardData != nil){
+                
+                key = boardData.boradKey!
+                value["editTime"] = FIRServerValue.timestamp()
+                value["recordTime"] = boardData.recordTimeDouble
+                
+                var userObj = value["author"] as! [String : Any]
+                userObj["uid"] = boardData.authorId
+                userObj["userName"] = boardData.authorName
+                userObj["profile_url"] = boardData.profileImgUrl
+                
+                value["author"] = userObj
+                
+                if boardData.like != nil{
+                    value["like"] = boardData.like
+                    value["likeCount"] = boardData.likeCount
+                }
+                
+            }
+            
+            //데이터가 있을경우 수정 없을경우 생성
+            boardRef.child(key).updateChildValues(value) { error, ref in
                 if let err = error {
                     debugPrint(err.localizedDescription)
                     Toast(text: "실패").show()
@@ -79,8 +119,14 @@ class BoardCreateViewController: UIViewController {
                     self.textView.resignFirstResponder()
                     self.textView.text = nil
                     Toast(text: "성공").show()
+                    
+                    self.dismiss(animated: true, completion: {
+                        if self.boardData.like != nil{
+                            //수정후 처리
+                            self.delegate?.afterEdit(ref: ref, cell : self.cellDelegate!)
+                        }
+                    })
                 }
-                
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
             }
         }
@@ -114,5 +160,39 @@ class BoardCreateViewController: UIViewController {
         }else{
             navigationItem.rightBarButtonItem?.isEnabled = false
         }
+    }
+    
+    @IBAction func addPhotoHandle(_ sender: UIButton) {
+        
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
+            
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+            imagePicker.allowsEditing = false
+            
+            present(imagePicker, animated: true, completion: nil)
+        }
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+        
+        let textAttachment = NSTextAttachment()
+        textAttachment.image = image
+        
+        let oldWidth = textAttachment.image!.size.width;
+        
+        let scaleFactor = oldWidth / (textView.frame.size.width - 20) //for the padding inside the textView
+        textAttachment.image = UIImage(cgImage: textAttachment.image!.cgImage!, scale: scaleFactor, orientation: .up)
+        
+        let attrStringWithImage = NSAttributedString(attachment: textAttachment)
+        //attributedString.replaceCharacters(in: NSMakeRange(6, 1), with: attrStringWithImage)
+        textView.attributedText = attrStringWithImage
+        
+        textView.font = UIFont.systemFont(ofSize: 18)
+        
+        dismiss(animated: true, completion: nil)
     }
 }

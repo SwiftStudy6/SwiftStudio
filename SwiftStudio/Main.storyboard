@@ -104,17 +104,127 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" title="SwiftStudy" id="ZNl-LD-smV">
-                        <barButtonItem key="leftBarButtonItem" image="Search" id="fUj-k6-EtS"/>
-                        <barButtonItem key="rightBarButtonItem" tag="1" image="BigPlus" id="bW9-Vk-HPm"/>
+                        <barButtonItem key="leftBarButtonItem" image="Home" id="A7l-PZ-BIl"/>
+                        <barButtonItem key="rightBarButtonItem" tag="2" image="Search" id="fUj-k6-EtS"/>
                     </navigationItem>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Xz-2y-MYv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-416.80000000000001" y="-31.934032983508249"/>
+            <point key="canvasLocation" x="-399" y="-31"/>
+        </scene>
+        <!--Group Create View Controller-->
+        <scene sceneID="ETh-lZ-YbK">
+            <objects>
+                <viewController id="XZa-S7-PhX" customClass="GroupCreateViewController" customModule="SwiftStudio" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="iHZ-Wd-nF5"/>
+                        <viewControllerLayoutGuide type="bottom" id="WWD-pT-2Ha"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="I3w-0w-Tuz">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="모임공개설정여부" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FDF-6A-JCm">
+                                <rect key="frame" x="94" y="414" width="129" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="31" id="Sjo-FK-k4T"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="어떤 모임을 만드실껀가요?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VWs-qY-qHI">
+                                <rect key="frame" x="16" y="253" width="343" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="31" id="HBR-r9-uPr"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="모임개설" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vTC-T1-DdB">
+                                <rect key="frame" x="103" y="101" width="169" height="39"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0u5-Hd-Kbd">
+                                <rect key="frame" x="16" y="292" width="343" height="83"/>
+                            </pickerView>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4tB-Yx-Pzi">
+                                <rect key="frame" x="231" y="414" width="51" height="31"/>
+                            </switch>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CPu-1r-zsr">
+                                <rect key="frame" x="274" y="28" width="85" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="85" id="iJ7-0a-zxw"/>
+                                </constraints>
+                                <state key="normal" title="모임만들기"/>
+                                <connections>
+                                    <action selector="groupCreate:" destination="XZa-S7-PhX" eventType="touchUpInside" id="xXf-KK-rzF"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gq9-It-ZMM">
+                                <rect key="frame" x="16" y="28" width="51" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="51" id="xVF-sw-Aqk"/>
+                                </constraints>
+                                <state key="normal" title="취소"/>
+                                <connections>
+                                    <action selector="cancelToCreate:" destination="XZa-S7-PhX" eventType="touchUpInside" id="l0o-v5-Gd6"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="만드실 모임의 이름을 입력해주세요." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rCh-VE-Jio">
+                                <rect key="frame" x="16" y="171" width="343" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="B8z-Na-TP1"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="VWs-qY-qHI" firstAttribute="top" secondItem="rCh-VE-Jio" secondAttribute="bottom" constant="52" id="2ZP-fm-9ce"/>
+                            <constraint firstItem="4tB-Yx-Pzi" firstAttribute="leading" secondItem="FDF-6A-JCm" secondAttribute="trailing" constant="8" symbolic="YES" id="41I-FY-RB3"/>
+                            <constraint firstItem="Gq9-It-ZMM" firstAttribute="baseline" secondItem="CPu-1r-zsr" secondAttribute="baseline" id="4BZ-os-JPh"/>
+                            <constraint firstItem="rCh-VE-Jio" firstAttribute="trailing" secondItem="VWs-qY-qHI" secondAttribute="trailing" id="77X-G1-3MR"/>
+                            <constraint firstItem="Gq9-It-ZMM" firstAttribute="leading" secondItem="rCh-VE-Jio" secondAttribute="leading" id="DKG-Hb-IZb"/>
+                            <constraint firstItem="VWs-qY-qHI" firstAttribute="leading" secondItem="0u5-Hd-Kbd" secondAttribute="leading" id="HKD-br-DiN"/>
+                            <constraint firstItem="FDF-6A-JCm" firstAttribute="leading" secondItem="I3w-0w-Tuz" secondAttribute="leadingMargin" constant="78" id="HjA-c7-ynq"/>
+                            <constraint firstItem="0u5-Hd-Kbd" firstAttribute="top" secondItem="VWs-qY-qHI" secondAttribute="bottom" constant="8" symbolic="YES" id="ICz-SM-BhB"/>
+                            <constraint firstItem="FDF-6A-JCm" firstAttribute="top" secondItem="0u5-Hd-Kbd" secondAttribute="bottom" constant="39" id="MAq-KB-IRq"/>
+                            <constraint firstItem="0u5-Hd-Kbd" firstAttribute="centerY" secondItem="I3w-0w-Tuz" secondAttribute="centerY" id="MXo-ER-dcg"/>
+                            <constraint firstItem="VWs-qY-qHI" firstAttribute="trailing" secondItem="0u5-Hd-Kbd" secondAttribute="trailing" id="REk-8J-lQm"/>
+                            <constraint firstItem="Gq9-It-ZMM" firstAttribute="leading" secondItem="I3w-0w-Tuz" secondAttribute="leadingMargin" id="SWo-Qm-gU5"/>
+                            <constraint firstItem="WWD-pT-2Ha" firstAttribute="top" secondItem="FDF-6A-JCm" secondAttribute="bottom" constant="222" id="TEi-MF-cKd"/>
+                            <constraint firstItem="CPu-1r-zsr" firstAttribute="trailing" secondItem="I3w-0w-Tuz" secondAttribute="trailingMargin" id="WFs-0k-9G2"/>
+                            <constraint firstItem="CPu-1r-zsr" firstAttribute="trailing" secondItem="rCh-VE-Jio" secondAttribute="trailing" id="YwP-h5-RUr"/>
+                            <constraint firstItem="FDF-6A-JCm" firstAttribute="top" secondItem="4tB-Yx-Pzi" secondAttribute="top" id="gDK-KK-ENS"/>
+                            <constraint firstItem="vTC-T1-DdB" firstAttribute="top" secondItem="iHZ-Wd-nF5" secondAttribute="bottom" constant="81" id="gOo-FC-Vqz"/>
+                            <constraint firstItem="vTC-T1-DdB" firstAttribute="leading" secondItem="I3w-0w-Tuz" secondAttribute="leadingMargin" constant="87" id="gS7-c6-3B9"/>
+                            <constraint firstItem="rCh-VE-Jio" firstAttribute="top" secondItem="vTC-T1-DdB" secondAttribute="bottom" constant="31" id="kPJ-yH-kWl"/>
+                            <constraint firstItem="rCh-VE-Jio" firstAttribute="leading" secondItem="VWs-qY-qHI" secondAttribute="leading" id="oPM-fc-BwZ"/>
+                            <constraint firstItem="vTC-T1-DdB" firstAttribute="centerX" secondItem="rCh-VE-Jio" secondAttribute="centerX" id="sFP-3X-vmX"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4tB-Yx-Pzi" secondAttribute="trailing" constant="79" id="thE-ub-DXW"/>
+                            <constraint firstItem="Gq9-It-ZMM" firstAttribute="top" secondItem="iHZ-Wd-nF5" secondAttribute="bottom" constant="8" symbolic="YES" id="vcJ-kJ-WvL"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="groupName" destination="rCh-VE-Jio" id="M0a-GX-lfp"/>
+                        <outlet property="groupPurpose" destination="0u5-Hd-Kbd" id="r3E-5h-KUQ"/>
+                        <outlet property="groupVisible" destination="4tB-Yx-Pzi" id="BAo-dl-NA6"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="R6a-SY-ef0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="350" y="-31"/>
         </scene>
     </scenes>
     <resources>
         <image name="BigPlus" width="28" height="28"/>
+        <image name="Home" width="20" height="20"/>
         <image name="Search" width="28" height="30"/>
     </resources>
 </document>
