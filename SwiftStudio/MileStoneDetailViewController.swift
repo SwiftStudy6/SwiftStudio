@@ -26,6 +26,7 @@ class MILEATTEND1
     var attendFlag       : String?
     
     //init each
+    //abcd
     
     init(mileKey: String, userId: String, userName: String, profilelmgUrl:String , profileImg:String ,
          mileTitle:String )
