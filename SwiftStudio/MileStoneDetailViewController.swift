@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import Firebase
+import SDWebImage
 
 class MILEATTEND1
 {
@@ -37,7 +38,7 @@ class MILEATTEND1
         self.bodyText = "text test"
         self.mileAttend = [:]
         self.mileCount = 0
-
+        
     }
     
 }
@@ -49,7 +50,7 @@ class USERATTEND {
     var user_nm : String?
     var user_email :String?
     var attend_yn :String?
-    
+    var profile_url :String?
 }
 
 
@@ -228,7 +229,7 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
          cell.attendlabel.text = "불참"
         }
         
-        
+        /*
         let ref = FIRDatabase.database().reference()
         ref.child("users").child(mind.uid!).child("profile_url").observe(.value, with: { (snapshot) in
             self.textcontent = snapshot.value as? String
@@ -240,6 +241,24 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
                 if let data = NSData(contentsOf: url as URL) {
                     cell.detailImage.image = UIImage(data: data as Data)
                 }
+            }
+        })
+    */
+        
+        //프로필 이미지 처리
+        cell.detailImage.sd_setImage(with: URL(string:mind.profile_url!), placeholderImage: UIImage(named:"30. User@3x.png"), options: .retryFailed, completed: { (image, error, cachedType, url) in
+            
+            
+            //이미지캐싱이 안되있을경우에 대한 애니메이션 셋팅_imageView.alpha = 1;
+            if cell.detailImage != nil, cachedType == .none {
+                
+                cell.detailImage?.alpha = 0
+                
+                UIView.animate(withDuration: 0.2, animations: {
+                    cell.detailImage?.alpha = 1
+                }, completion: { (finished) in
+                    cell.detailImage?.alpha = 1
+                })
             }
         })
 
@@ -426,8 +445,10 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
                let  attendlists = USERATTEND()
              attendlists.user_email = snapshotValue["userEmail"] as? String ?? ""
              attendlists.user_nm = snapshotValue["userName"] as? String ?? ""
-            attendlists.uid = snapshotValue["uid"] as? String ?? ""
+             attendlists.uid = snapshotValue["uid"] as? String ?? ""
              attendlists.attend_yn = snapshotValue["attendFlag"] as? String ?? ""
+             attendlists.profile_url = snapshotValue["profile_url"] as? String ?? ""
+            
           
             if( attendlists.attend_yn  == "0" )
             {

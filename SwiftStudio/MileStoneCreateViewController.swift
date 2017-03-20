@@ -194,7 +194,7 @@ class MileStoneCreateViewController: UIViewController {
         
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y == 0{
-                self.view.frame.origin.y -= 150
+                self.view.frame.origin.y -= 100
             }
         }
         
@@ -203,7 +203,7 @@ class MileStoneCreateViewController: UIViewController {
     func keyboardWillHide(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y != 0{
-                self.view.frame.origin.y += 150
+                self.view.frame.origin.y += 100
             }
         }
     }

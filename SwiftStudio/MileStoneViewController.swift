@@ -8,7 +8,7 @@
 import Foundation
 import Firebase
 import UIKit
-
+import SDWebImage
 
 
 
@@ -22,6 +22,7 @@ class Mile: Equatable {
     var editTime = ""
     var bodyText = ""
     var instUserUid = ""
+    var instUserProfileUrl = ""
     var ref:FIRDatabaseReference
 
     init(snapshot: FIRDataSnapshot)
@@ -36,6 +37,7 @@ class Mile: Equatable {
         editTime = snapshotValue["editTime"] as? String ?? ""
         bodyText = snapshotValue["bodyText"] as? String ?? ""
         instUserUid = snapshotValue["instUserUid"] as? String ?? ""
+         instUserProfileUrl = snapshotValue["instUserProfileUrl"] as? String ?? ""
         ref = snapshot.ref
     }
 }
@@ -78,12 +80,14 @@ class USER {
     var userEmail : String
     var userName : String
     var uid : String
+    var profile_url :String
     
   init()
   {
      self.userEmail = ""
      self.userName = ""
      self.uid = ""
+     self.profile_url = ""
   }
    
 }
@@ -191,7 +195,7 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         cell.textlabel.text = mile.bodyText
       //  cell.MileImage.image = UIImage(named: "30. User@3x"+".png")
         
-        
+        /*
         let ref = FIRDatabase.database().reference()
         ref.child("users").child(mile.instUserUid).child("profile_url").observe(.value, with: { (snapshot) in
             self.textcontent = snapshot.value as? String
@@ -205,7 +209,24 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
                 }
             }
         })
+      */
         
+        //프로필 이미지 처리
+        cell.MileImage.sd_setImage(with: URL(string:mile.instUserProfileUrl), placeholderImage: UIImage(named:"30. User@3x.png"), options: .retryFailed, completed: { (image, error, cachedType, url) in
+            
+            
+            //이미지캐싱이 안되있을경우에 대한 애니메이션 셋팅_imageView.alpha = 1;
+            if cell.MileImage != nil, cachedType == .none {
+                
+                cell.MileImage?.alpha = 0
+                
+                UIView.animate(withDuration: 0.2, animations: {
+                    cell.MileImage?.alpha = 1
+                }, completion: { (finished) in
+                    cell.MileImage?.alpha = 1
+                })
+            }
+        })
         
         
         
@@ -882,7 +903,8 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
             "userName": self.user.userName,
             "userEmail": self.user.userEmail,
             "uid": key,
-            "attendFlag": attendFlag ]as [String : Any]
+            "attendFlag": attendFlag,
+            "profile_url": self.user.profile_url]as [String : Any]
         let mileUpdates = ["/milelist/\(milelist_uid)/mileAttend/\(key)": mileuser]
         //   "/milelist/\(someMileCreateData.id)/\(key)/": milelist]
         ref1.updateChildValues(mileUpdates)
@@ -927,6 +949,7 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
             let snapshotValue = snapshot.value as! NSDictionary
             self.user.userEmail  = snapshotValue["email"] as? String ?? ""
             self.user.userName  = snapshotValue["userName"] as? String ?? ""
+            self.user.profile_url  = snapshotValue["profile_url"] as? String ?? ""
             self.user.uid  = uid!
             
             print("user value3333")
