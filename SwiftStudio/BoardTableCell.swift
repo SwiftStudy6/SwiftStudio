@@ -53,8 +53,6 @@ class BoardTableCell: UITableViewCell, UITextViewDelegate {
             self.key = newValue.boradKey
             self.authorName?.text = newValue.authorName
             self.authorId = newValue.authorId
-//            self.textRecorded?.text = newValue.bodyText
-//            self.originalText = newValue.bodyText
             self.editTime?.text = newValue.editTime
         }
         
@@ -64,15 +62,14 @@ class BoardTableCell: UITableViewCell, UITextViewDelegate {
             returnVal.boradKey   = self.key
             returnVal.authorId   = self.authorId
             returnVal.authorName = self.authorName?.text
-            returnVal.bodyText   = self.originalText.isEmpty ? self.textRecorded?.text : self.originalText
+            returnVal.bodyText   = (self.originalText == nil || self.originalText.isEmpty) ? self.textRecorded?.text : self.originalText
             returnVal.editTime   = self.editTime?.text
             
             return returnVal
         }
     }
 
-    
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -99,11 +96,7 @@ class BoardTableCell: UITableViewCell, UITextViewDelegate {
             self.delegate?.shareButtonEvent(sender: sender, cell: self)
         }
     }
-    
-    private func menuButtonEvent(){
-        
-    }
-    
+
     // MARK : - UITextView Delegate
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         if !isExpend {
@@ -116,6 +109,4 @@ class BoardTableCell: UITableViewCell, UITextViewDelegate {
         
         return true
     }
-   
-
 }
