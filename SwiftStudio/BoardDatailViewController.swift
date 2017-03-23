@@ -1,6 +1,7 @@
 import UIKit
 import Firebase
 import Toaster
+import SDWebImage
 
 class User: NSObject {
     public var uid: String!
@@ -53,7 +54,33 @@ class BoardDetailCell: UITableViewCell {
     
 }
 
-class BoardDetailController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextViewDelegate {
+
+class BoardDetailImageCell: UICollectionViewCell {
+    
+    var delegate: BoardDetailController!
+    
+    @IBOutlet weak var imageView: UIImageView!
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showZoomInPhotoView))
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(tapGesture)
+    }
+    
+    func showZoomInPhotoView(){
+        delegate.showZoomInPhotoView(imageView: imageView, cell: self)
+    }
+}
+
+class BoardDetailController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     private let cellId = "cellId"
     private var page: UInt = 0
@@ -61,15 +88,22 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
     
     private var replyRef: FIRDatabaseReference! = FIRDatabase.database().reference().child("Board-Replys")
     
+    private var boardRef: FIRDatabaseReference = FIRDatabase.database().reference().child("Board-Posts")
+    
+    private var storageRef = FIRStorage.storage()
+    
     var delegate: MainViewController?
     var boardData: BoardObject?
     var replys = [Reply]()
+    var images = [String]()
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     
+    @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var toolbarView: UIView!
     @IBOutlet weak var toolbarAddButton: UIButton!
     @IBOutlet weak var toolbarTextView: UITextView!
@@ -78,17 +112,17 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var toolbarTextViewRightAnchor: NSLayoutConstraint!
     
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupData()
         
+        collectionView.isScrollEnabled = false
+        
+        setupData()
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 45
         tableView.tableFooterView = UIView()
-        //tableView.keyboardDismissMode = .interactive
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
@@ -150,6 +184,90 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         fetchReplys()
     }
     
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return images.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! BoardDetailImageCell
+        
+        if let url = URL(string: images[indexPath.item]) {
+            cell.imageView.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "attachment [#1575].png"))
+        }
+        
+        cell.delegate = self
+        
+        return cell
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        
+        guard let url = URL(string: images[indexPath.item]),
+            let data = NSData(contentsOf: url) as? Data else {
+            return CGSize(width: 0, height: 0)
+        }
+        let image = UIImage(data: data)
+        
+        
+        let w = image?.size.width
+        let h = image?.size.height
+        
+        let targetHeight = collectionView.frame.width/w! * h! //w!/h! * collectionView.frame.width
+        //targetHeight = targetHeight > 200 ? 200 : targetHeight
+        
+        return CGSize(width: collectionView.frame.width, height: targetHeight)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 10
+    }
+    
+    var targetView: UIView?
+    
+    func showZoomInPhotoView(imageView: UIImageView, cell: UICollectionViewCell){
+        if let startingFrame = imageView.superview?.convert(imageView.frame, to: nil) {
+            
+            let vc = ZoomViewController()
+            
+            vc.images = self.images
+            vc.delegate = self
+            
+            addChildViewController(vc)
+            
+            guard let indexPath = collectionView.indexPath(for: cell) else{
+                return
+            }
+            
+            vc.selectedIndex = indexPath.item
+            vc.collectionView.frame = startingFrame
+            
+            targetView = vc.view
+            targetView?.alpha = 0
+            view.addSubview(targetView!)
+            
+            vc.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+            
+            UIView.animate(withDuration: 0.4, animations: {
+                self.targetView?.alpha = 1
+            })
+            
+        }
+    }
+    
+    func hideZoomInPhotoView(){
+        if let target = self.targetView {
+            
+            UIView.animate(withDuration: 0.4, animations: {
+                target.alpha = 0
+            }, completion: { (finish) in
+                target.removeFromSuperview()
+            })
+            
+        }
+    }
+    
     
     func backHandler(){
         dismiss(animated: true, completion: nil)
@@ -192,11 +310,6 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
                 self.tableView.reloadData()
             }
         })
-    }
-    
-    func createReply(){
-        //let reply = Reply()
-        
     }
     
     func hideKeyboard(){
@@ -264,15 +377,150 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func setupData(){
+        
+        
         if let user = boardData?.authorName {
             userNameLabel.text = user
         }
         
         if let content = boardData?.bodyText {
             textView.text = content
+            
+            var imagesHeight: CGFloat = 0
+            
+            let contentSize = CGSize(width: view.frame.width, height: 1000)
+            let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 14)]
+            let estimateFrame = NSString(string: content).boundingRect(with: contentSize, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+            
+            imagesHeight += estimateFrame.height
+            
+            if let attachments = boardData?.attachments {
+                self.images = attachments
+                
+                
+                for i in 0..<self.images.count {
+                    
+                    let imageStr = self.images[i]
+                    
+                    guard let url = URL(string: imageStr),
+                        let data = NSData(contentsOf: url) as? Data else{
+                        
+                        self.images.remove(at: i)
+                        
+                        continue
+                    }
+                    
+                    let image = UIImage(data: data)
+                    
+                    let w = image?.size.width
+                    let h = image?.size.height
+                    
+                    let targetHeight = collectionView.frame.width/w! * h! //w!/h! * collectionView.frame.width
+                    //targetHeight = targetHeight > 200 ? 200 : targetHeight
+                    imagesHeight += targetHeight + 10
+                }
+
+                
+                
+//                DispatchQueue.main.async {
+//                    self.collectionView.reloadData()
+//                }
+                
+            }
+            
+            headerView.frame.size.height = imagesHeight + 50 + 40 + 5 + 8 + 20
+            
+            
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+            
+            //let contentSize = CGSize(width: view.frame.width, height: 1000)
+            //let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 14)]
+            //let estimateFrame = NSString(string: content).boundingRect(with: contentSize, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+            
+//            let attributedString = NSMutableAttributedString(string: content)
+//            var imagesHeight: CGFloat = 0
+//            
+//            if let attachments = boardData?.attachments {
+//                if attachments.count > 0 {
+//                    for imageString in attachments {
+//                        let url = URL(string: imageString)
+//                        if let data = NSData(contentsOf: url!) {
+//                            let textAttachment = NSTextAttachment()
+//                            textAttachment.image = UIImage(data: data as Data)
+//                            
+//                            let oldWidth = textAttachment.image!.size.width;
+//                            
+//                            let scaleFactor = oldWidth / (textView.frame.size.width - 10) //for the padding inside the textView
+//                            textAttachment.image = UIImage(cgImage: textAttachment.image!.cgImage!, scale: scaleFactor, orientation: .up)
+//                            
+//                            imagesHeight += (textAttachment.image?.size.height)!
+//                            
+//                            let attrStringWithImage = NSAttributedString(attachment: textAttachment)
+//                            attributedString.append(attrStringWithImage)
+//                            //attributedString.replaceCharacters(in: NSMakeRange(6, 1), with: attrStringWithImage)
+//                            //textView.attributedText = attrStringWithImage
+//                            //textView.font = UIFont.systemFont(ofSize: 14)
+//                        }
+//                    }
+//                    
+//                    
+//                    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapReadTerm))
+//                    textView.addGestureRecognizer(tapGesture)
+//                }
+//            }
+//            
+//            textView.attributedText = attributedString
+//            let contentSize = CGSize(width: view.frame.width, height: 1000)
+//            let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 14)]
+//            let estimateFrame = NSString(string: content).boundingRect(with: contentSize, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+//            
+//            
+//            
+//            headerView.frame.size.height = estimateFrame.height + imagesHeight + 50 + 40 + 5 + 8 + 20 //(extra)
+            
         }
         if let time = boardData?.editTime {
             timeLabel.text = time
+        }
+        
+        
+    }
+    
+    func didTapReadTerm(_ sender: UITapGestureRecognizer){
+        guard case let senderView = sender.view, (senderView is UITextView) else {
+            return
+        }
+        
+        // calculate layout manager touch location
+        let textView = senderView as! UITextView, // we sure this is an UITextView, so force casting it
+        layoutManager = textView.layoutManager
+        
+        var location = sender.location(in: textView)
+        location.x -= textView.textContainerInset.left
+        location.y -= textView.textContainerInset.top
+        
+        // find the value
+        let textContainer = textView.textContainer,
+        characterIndex = layoutManager.characterIndex(for: location, in: textContainer, fractionOfDistanceBetweenInsertionPoints: nil),
+        textStorage = textView.textStorage
+        
+        guard characterIndex < textStorage.length else {
+            return
+        }
+        
+        print("character index: \(characterIndex)")
+        
+        let myRange = NSRange(location: characterIndex, length: 1)
+        let substring = (textView.attributedText.string as NSString).substring(with: myRange)
+        print("character at index: \(substring)")
+        
+        
+        let attributeName = "MyCustomAttributeName"
+        let attributeValue = textView.attributedText.attribute(attributeName, at: characterIndex, effectiveRange: nil) as? String
+        if let value = attributeValue {
+            print("You tapped on \(attributeName) and the value is: \(value)")
         }
     }
     
@@ -291,6 +539,44 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         cell.reply = replys[indexPath.row]
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        let reply = replys[indexPath.row]
+        if reply.user.uid == "test" {
+            return true
+        }
+        
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete {
+            
+            
+            let key = replys[indexPath.row].replyKey
+            replyRef.child(key!).removeValue(completionBlock: { (err, ref) in
+                if err != nil {
+                    debugPrint("failed to remove reply")
+                    return
+                }
+                
+                tableView.beginUpdates()
+                self.replys.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                tableView.endUpdates()
+            })
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        let reply = replys[indexPath.row]
+        if reply.user.uid == "test" {
+            return "삭제"
+        }
+        
+        return ""
     }
     
     @IBAction func sendAction(_ sender: UIButton) {
@@ -319,7 +605,7 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
                 
                 let user = User()
                 user.userName = "song"
-                user.uid = "uid"
+                user.uid = "test"
                 user.profile_url = "usl"
                 
                 let reply = Reply()
@@ -347,6 +633,23 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
             
             self.navigationItem.rightBarButtonItem?.isEnabled = true
         }
+        
+    }
+    
+    func removeImage(downloadUrl: String){
+        //let key = boardData?.boradKey
+        
+        //let path = "Board/\(downloadUrl)"
+        
+        storageRef.reference(forURL: downloadUrl).delete { (err) in
+            if let err = err {
+                print(err.localizedDescription)
+                return
+            }
+            
+            print("success delete")
+        }
+        
         
     }
     
