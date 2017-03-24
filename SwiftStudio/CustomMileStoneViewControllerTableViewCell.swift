@@ -19,7 +19,6 @@ class CustomMileStoneViewControllerTableViewCell: UITableViewCell {
     @IBOutlet weak var textlabel: UILabel!
     @IBOutlet weak var accceptbutton: UIButton!
     @IBOutlet weak var rejectbutton: UIButton!
-    @IBOutlet weak var detailmorebutton: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

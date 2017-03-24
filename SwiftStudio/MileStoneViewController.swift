@@ -232,7 +232,7 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         
         cell.accceptbutton.tag = indexPath.row
         cell.rejectbutton.tag = indexPath.row
-        cell.detailmorebutton.tag = indexPath.row
+      //  cell.detailmorebutton.tag = indexPath.row
         cell.morebt.tag = indexPath.row
         
        
@@ -248,7 +248,7 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         
         cell.accceptbutton.setTitle("참석", for: .normal)
         cell.rejectbutton.setTitle("불참", for: .normal)
-        cell.detailmorebutton.setTitle(nil, for: .normal)
+    //    cell.detailmorebutton.setTitle(nil, for: .normal)
       
  
         return (cell)

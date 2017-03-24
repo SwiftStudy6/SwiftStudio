@@ -293,6 +293,7 @@ class MileStoneCreateViewController: UIViewController {
         someMileCreateData.userID  = self.user.userEmail
         someMileCreateData.userName = self.user.userName
         someMileCreateData.instUserUid = self.user.uid
+        someMileCreateData.profileImgUrl = self.user.profile_url
         
          let      ref = FIRDatabase.database().reference()
         
@@ -313,7 +314,8 @@ class MileStoneCreateViewController: UIViewController {
                     "mileTitle": someMileCreateData.mileTitle!,
                     "editTime": someMileCreateData.editTime!,
                     "bodyText": someMileCreateData.bodyText! ,
-                    "instUserUid": someMileCreateData.instUserUid! ]as [String : Any]
+                    "instUserUid": someMileCreateData.instUserUid!,
+                    "instUserProfileUrl": someMileCreateData.profileImgUrl                                                         ]as [String : Any]
         let mileUpdates = ["/milelist/\(key)": milelist]
                          //   "/milelist/\(someMileCreateData.id)/\(key)/": milelist]
         ref.updateChildValues(mileUpdates)
@@ -358,6 +360,7 @@ class MileStoneCreateViewController: UIViewController {
             let snapshotValue = snapshot.value as! NSDictionary
             self.user.userEmail  = snapshotValue["email"] as? String ?? ""
             self.user.userName  = snapshotValue["userName"] as? String ?? ""
+            self.user.profile_url  = snapshotValue["profile_url"] as? String ?? ""
             self.user.uid  = uid!
             
             print("user value3333")
