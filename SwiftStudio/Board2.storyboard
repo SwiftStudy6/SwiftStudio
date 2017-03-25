@@ -30,7 +30,7 @@
                                         <rect key="frame" x="0.0" y="28" width="414" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="veC-Oe-nqw" id="Pze-kJ-cSh">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="39.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="39"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Do6-z1-91n">
@@ -79,7 +79,7 @@
                                         <rect key="frame" x="0.0" y="68" width="414" height="260"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fd2-m0-uVE" id="8dO-BU-mWQ">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="259.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="259"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7ki-rN-Hpw">
@@ -199,7 +199,7 @@
                                                                                 <action selector="buttonTouchUpInside:" destination="fd2-m0-uVE" eventType="touchUpInside" id="i2A-fn-23d"/>
                                                                             </connections>
                                                                         </button>
-                                                                        <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rv6-08-aRC">
+                                                                        <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rv6-08-aRC">
                                                                             <rect key="frame" x="256" y="1" width="127.66666666666669" height="30"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
