@@ -443,6 +443,8 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
             }else {
                 cell.textRecorded?.text = "" //초기화
                 cell.textRecorded?.text = str
+                
+                cell.originalText = ""
             }
          
             cell.likeButton?.isSelected = false //버튼 선택 초기화
@@ -787,16 +789,16 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
     
     //share Button Event
     func shareButtonEvent(sender: UIButton, cell: BoardTableCell) {
-        let alertController = UIAlertController(title: "공유", message: nil, preferredStyle: .actionSheet)
         
-        let copyAction = UIAlertAction(title: "택스트내용 복사", style: .cancel, handler:{ (Void) in
-            UIPasteboard.general.string = cell.textRecorded?.text
-        })
+        var str = cell.textRecorded?.text ?? ""
+ 
+        if(str.utf16.count < cell.originalText.utf16.count){
+            str = cell.originalText!
+        }
         
-        alertController.addAction(copyAction)
+        let activityViewController = UIActivityViewController(activityItems: [str], applicationActivities: [])
         
-        
-        self.present(alertController, animated: true, completion: nil)
+        self.present(activityViewController, animated: true, completion: nil)
     }
     
     //ReadMore Event
@@ -939,9 +941,11 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         if((cell?.isExpend)!){
             cell?.isExpend = false
             
-            tableView.reloadData()
+            self.tableView.reloadData()
             
-            tableView.scrollToRow(at: IndexPath(row: (_view?.tag)!, section: 1), at: .top, animated: true)
+            self.tableView.scrollToRow(at: IndexPath(row: (_view?.tag)!, section: 1), at: .top, animated: true)
+        }else{
+            tableView(tableView, didSelectRowAt: IndexPath(row: (_view?.tag)!, section: 1))
         }
     }
 
