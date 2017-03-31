@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="XWS-c5-WNC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="XWS-c5-WNC">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -14,142 +14,109 @@
             <objects>
                 <viewController storyboardIdentifier="MileStone" useStoryboardIdentifierAsRestorationIdentifier="YES" id="XWS-c5-WNC" customClass="MileStoneViewController" customModule="SwiftStudio" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="RMm-9b-Lqw"/>
-                        <viewControllerLayoutGuide type="bottom" id="gJo-Sv-XWh"/>
+                        <viewControllerLayoutGuide type="top" id="zum-zG-bUf"/>
+                        <viewControllerLayoutGuide type="bottom" id="PGA-EF-shh"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="vUQ-bR-FkQ">
+                    <view key="view" autoresizesSubviews="NO" contentMode="scaleToFill" id="vUQ-bR-FkQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="170" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="02f-F9-Lba">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="166" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="02f-F9-Lba">
                                 <rect key="frame" x="0.0" y="67" width="375" height="556"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="separatorColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="170" id="457-0t-fOO" customClass="CustomMileStoneViewControllerTableViewCell" customModule="SwiftStudio" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="170"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="166" id="457-0t-fOO" customClass="CustomMileStoneViewControllerTableViewCell" customModule="SwiftStudio" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="166"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="457-0t-fOO" id="vsQ-8x-nlU">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="169"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="165"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W9v-wD-UPd">
-                                                    <rect key="frame" x="281" y="100" width="46" height="30"/>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W9v-wD-UPd">
+                                                    <rect key="frame" x="250" y="131" width="46" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <state key="normal" title="Button"/>
                                                     <connections>
                                                         <action selector="nobutton:" destination="XWS-c5-WNC" eventType="touchUpInside" id="xK4-1D-Oee"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FcE-aG-8Rb">
-                                                    <rect key="frame" x="178" y="100" width="46" height="30"/>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FcE-aG-8Rb">
+                                                    <rect key="frame" x="76" y="131" width="46" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" title="Button"/>
                                                     <connections>
                                                         <action selector="yesbutton:" destination="XWS-c5-WNC" eventType="touchUpInside" id="4Cc-K6-k5d"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="alP-ep-6Gx">
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="alP-ep-6Gx">
                                                     <rect key="frame" x="318" y="0.0" width="49" height="34"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" title="button"/>
                                                     <connections>
                                                         <action selector="milemorebutton:" destination="XWS-c5-WNC" eventType="touchUpInside" id="nq6-hq-WqB"/>
                                                     </connections>
                                                 </button>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d9w-01-4rt">
-                                                    <rect key="frame" x="22" y="8" width="105" height="98"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="105" id="YL0-D6-0id"/>
-                                                        <constraint firstAttribute="height" constant="98" id="zuu-tm-XWt"/>
-                                                    </constraints>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d9w-01-4rt">
+                                                    <rect key="frame" x="16" y="2" width="44" height="39"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                                 <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="niO-IM-9dh">
                                                     <rect key="frame" x="0.0" y="100" width="36" height="17"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </stackView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gve-qq-k3q">
-                                                    <rect key="frame" x="205" y="7" width="136" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gve-qq-k3q">
+                                                    <rect key="frame" x="110" y="40" width="136" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v4z-vf-YuO">
-                                                    <rect key="frame" x="213" y="64" width="120" height="31"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="200" id="25b-Up-e18"/>
-                                                        <constraint firstAttribute="height" constant="47" id="LPA-4Z-jL4"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v4z-vf-YuO">
+                                                    <rect key="frame" x="20" y="70" width="331" height="69"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="일정" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R3D-gv-3mb">
-                                                    <rect key="frame" x="156" y="36" width="69" height="22"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="일정" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R3D-gv-3mb">
+                                                    <rect key="frame" x="22" y="55" width="69" height="22"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="제목" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T15-AO-uiT">
-                                                    <rect key="frame" x="155" y="6" width="42" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="세부사항" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ktt-Xq-80k">
+                                                    <rect key="frame" x="22" y="77" width="67" height="18"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="세부사항" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ktt-Xq-80k">
-                                                    <rect key="frame" x="155" y="73" width="67" height="18"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Kg-X7-RXg">
+                                                    <rect key="frame" x="11" y="47" width="175" height="37"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Kg-X7-RXg">
-                                                    <rect key="frame" x="192" y="29" width="175" height="37"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="37" id="7S6-fp-d6e"/>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="jdt-tg-84v"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i9f-6n-wzL">
+                                                    <rect key="frame" x="135" y="-1" width="105" height="17"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i9f-6n-wzL">
-                                                    <rect key="frame" x="20" y="111" width="105" height="17"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bnr-vR-Z32">
+                                                    <rect key="frame" x="81" y="-2" width="42" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <constraints>
-                                                <constraint firstItem="v4z-vf-YuO" firstAttribute="bottom" secondItem="ktt-Xq-80k" secondAttribute="bottom" id="0N0-qx-bxM"/>
-                                                <constraint firstItem="v4z-vf-YuO" firstAttribute="leading" secondItem="3Kg-X7-RXg" secondAttribute="leading" id="5b8-Yb-EdY"/>
-                                                <constraint firstItem="alP-ep-6Gx" firstAttribute="top" secondItem="vsQ-8x-nlU" secondAttribute="top" constant="5" id="8An-uY-aJ4"/>
-                                                <constraint firstItem="W9v-wD-UPd" firstAttribute="leading" secondItem="FcE-aG-8Rb" secondAttribute="trailing" constant="60" id="Ed3-Mz-0mE"/>
-                                                <constraint firstItem="3Kg-X7-RXg" firstAttribute="top" secondItem="R3D-gv-3mb" secondAttribute="top" id="Gek-BB-ZGJ"/>
-                                                <constraint firstItem="FcE-aG-8Rb" firstAttribute="bottom" secondItem="i9f-6n-wzL" secondAttribute="bottom" id="ImT-kO-NKh"/>
-                                                <constraint firstItem="ktt-Xq-80k" firstAttribute="top" secondItem="R3D-gv-3mb" secondAttribute="bottom" constant="5" id="Lrb-dG-Wbq"/>
-                                                <constraint firstItem="T15-AO-uiT" firstAttribute="top" secondItem="d9w-01-4rt" secondAttribute="top" id="MXa-UQ-7xJ"/>
-                                                <constraint firstItem="R3D-gv-3mb" firstAttribute="top" secondItem="T15-AO-uiT" secondAttribute="bottom" constant="20" id="Qeq-7P-GJw"/>
-                                                <constraint firstItem="W9v-wD-UPd" firstAttribute="top" secondItem="FcE-aG-8Rb" secondAttribute="top" id="R5B-Mm-VcG"/>
-                                                <constraint firstItem="3Kg-X7-RXg" firstAttribute="leading" secondItem="R3D-gv-3mb" secondAttribute="trailing" constant="10" id="V2E-JM-xTT"/>
-                                                <constraint firstItem="gve-qq-k3q" firstAttribute="leading" secondItem="3Kg-X7-RXg" secondAttribute="leading" id="Wzj-hu-cw8"/>
-                                                <constraint firstItem="v4z-vf-YuO" firstAttribute="leading" secondItem="FcE-aG-8Rb" secondAttribute="leading" id="fOA-Dx-ZDO"/>
-                                                <constraint firstItem="FcE-aG-8Rb" firstAttribute="top" secondItem="i9f-6n-wzL" secondAttribute="top" id="fRR-TY-Pp0"/>
-                                                <constraint firstItem="T15-AO-uiT" firstAttribute="leading" secondItem="d9w-01-4rt" secondAttribute="trailing" constant="15" id="gf3-bh-HN6"/>
-                                                <constraint firstItem="v4z-vf-YuO" firstAttribute="leading" secondItem="ktt-Xq-80k" secondAttribute="trailing" constant="10" id="mhU-OO-AL1"/>
-                                                <constraint firstItem="3Kg-X7-RXg" firstAttribute="bottom" secondItem="R3D-gv-3mb" secondAttribute="bottom" id="odL-gg-PIw"/>
-                                                <constraint firstItem="ktt-Xq-80k" firstAttribute="leading" secondItem="R3D-gv-3mb" secondAttribute="leading" id="oyC-ga-dNa"/>
-                                                <constraint firstItem="i9f-6n-wzL" firstAttribute="leading" secondItem="vsQ-8x-nlU" secondAttribute="leading" constant="10" id="rBJ-sF-R99"/>
-                                                <constraint firstAttribute="trailing" secondItem="alP-ep-6Gx" secondAttribute="trailing" constant="10" id="rDW-x5-3Dh"/>
-                                                <constraint firstItem="i9f-6n-wzL" firstAttribute="top" secondItem="d9w-01-4rt" secondAttribute="bottom" constant="5" id="snr-5x-LSm"/>
-                                                <constraint firstItem="v4z-vf-YuO" firstAttribute="top" secondItem="ktt-Xq-80k" secondAttribute="top" id="tdB-g4-q8S"/>
-                                                <constraint firstItem="gve-qq-k3q" firstAttribute="top" secondItem="T15-AO-uiT" secondAttribute="top" id="wS1-J5-b51"/>
-                                                <constraint firstItem="W9v-wD-UPd" firstAttribute="bottom" secondItem="FcE-aG-8Rb" secondAttribute="bottom" id="wfI-eI-FDB"/>
-                                                <constraint firstItem="R3D-gv-3mb" firstAttribute="leading" secondItem="T15-AO-uiT" secondAttribute="leading" id="y5s-Be-3fB"/>
-                                                <constraint firstItem="gve-qq-k3q" firstAttribute="leading" secondItem="T15-AO-uiT" secondAttribute="trailing" constant="10" id="yaz-KA-mGa"/>
-                                            </constraints>
                                         </tableViewCellContentView>
-                                        <constraints>
-                                            <constraint firstItem="d9w-01-4rt" firstAttribute="top" secondItem="457-0t-fOO" secondAttribute="top" constant="10" id="Msv-By-qaO"/>
-                                            <constraint firstAttribute="bottom" secondItem="d9w-01-4rt" secondAttribute="bottom" constant="30" id="WZ1-5J-xfe"/>
-                                            <constraint firstItem="d9w-01-4rt" firstAttribute="leading" secondItem="457-0t-fOO" secondAttribute="leading" constant="10" id="i5S-qR-913"/>
-                                        </constraints>
                                         <connections>
                                             <outlet property="MileImage" destination="d9w-01-4rt" id="N7i-Fn-jeV"/>
                                             <outlet property="accceptbutton" destination="FcE-aG-8Rb" id="d5f-jQ-utE"/>
@@ -159,6 +126,7 @@
                                             <outlet property="rejectbutton" destination="W9v-wD-UPd" id="uyC-Gj-gTO"/>
                                             <outlet property="textlabel" destination="v4z-vf-YuO" id="Jja-Al-bPB"/>
                                             <outlet property="userlabel" destination="i9f-6n-wzL" id="JD8-Bo-rYJ"/>
+                                            <outlet property="usernamelabel" destination="Bnr-vR-Z32" id="d29-Q7-Olb"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -170,16 +138,16 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="02f-F9-Lba" secondAttribute="trailing" id="4XM-n0-IeM"/>
-                            <constraint firstItem="02f-F9-Lba" firstAttribute="leading" secondItem="vUQ-bR-FkQ" secondAttribute="leading" id="Mi2-Wx-xCe"/>
-                            <constraint firstItem="02f-F9-Lba" firstAttribute="top" secondItem="vUQ-bR-FkQ" secondAttribute="top" constant="70" id="qhC-xY-l8Q"/>
-                            <constraint firstAttribute="bottom" secondItem="02f-F9-Lba" secondAttribute="bottom" constant="50" id="v6g-fp-pCY"/>
+                            <constraint firstAttribute="bottom" secondItem="02f-F9-Lba" secondAttribute="bottom" id="9VW-VW-2Gc"/>
+                            <constraint firstAttribute="trailing" secondItem="02f-F9-Lba" secondAttribute="trailing" id="HeM-kp-tbj"/>
+                            <constraint firstItem="02f-F9-Lba" firstAttribute="top" secondItem="vUQ-bR-FkQ" secondAttribute="top" constant="70" id="N27-Ig-gJU"/>
+                            <constraint firstItem="02f-F9-Lba" firstAttribute="leading" secondItem="vUQ-bR-FkQ" secondAttribute="leading" id="fVj-Ur-gih"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Swift Study" id="byB-Hj-iBy">
-                        <barButtonItem key="leftBarButtonItem" image="158DE25C-49B7-49D5-AD01-8B13ECD53178" id="Fwd-Pt-pbc"/>
-                        <barButtonItem key="rightBarButtonItem" image="C0F07917-B9BA-421C-8AE1-97F65FC305A6" id="KAZ-vj-Bgp"/>
+                        <barButtonItem key="leftBarButtonItem" image="651ACED8-B401-4BF0-8045-4C3D8F624769" id="Fwd-Pt-pbc"/>
+                        <barButtonItem key="rightBarButtonItem" image="04E433C3-69FF-4EF4-B5FA-BC1BB5C62CE0" id="KAZ-vj-Bgp"/>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -188,89 +156,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zFg-y7-hlv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="98.400000000000006" y="77.811094452773617"/>
+            <point key="canvasLocation" x="0.5" y="85.5"/>
         </scene>
     </scenes>
     <resources>
-        <image name="158DE25C-49B7-49D5-AD01-8B13ECD53178" width="20" height="20">
-            <mutableData key="keyedArchiveRepresentation">
-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
-AARsdHJUUgAAACIAAASQZmlGSQAAACgAAASyaHJIUgAAACgAAATacGxQTAAAACwAAAUCcnVSVQAAACIA
-AAUuYXJFRwAAACYAAAVQZW5VUwAAACYAAAV2AFYBYQBlAG8AYgBlAGMAbgD9ACAAUgBHAEIAIABwAHIA
-bwBmAGkAbABHAGUAbgBlAHIAZQBsACAAUgBHAEIALQBiAGUAcwBrAHIAaQB2AGUAbABzAGUAUABlAHIA
-ZgBpAGwAIABSAEcAQgAgAGcAZQBuAOgAcgBpAGMAQx6lAHUAIABoAOwAbgBoACAAUgBHAEIAIABDAGgA
-dQBuAGcAUABlAHIAZgBpAGwAIABSAEcAQgAgAEcAZQBuAOkAcgBpAGMAbwQXBDAEMwQwBDsETAQ9BDgE
-OQAgBD8EQAQ+BEQEMAQ5BDsAIABSAEcAQgBQAHIAbwBmAGkAbAAgAGcA6QBuAOkAcgBpAHEAdQBlACAA
-UgBWAEIAwQBsAHQAYQBsAOEAbgBvAHMAIABSAEcAQgAgAHAAcgBvAGYAaQBskBp1KAAgAFIARwBCACCC
-cl9pY8+P8ABHAGUAbgBlAHIAaQBzAGsAIABSAEcAQgAtAHAAcgBvAGYAaQBsAE8AYgBlAGMAbgD9ACAA
-UgBHAEIAIABwAHIAbwBmAGkAbAXkBegF1QXkBdkF3AAgAFIARwBCACAF2wXcBdwF2QBQAHIAbwBmAGkA
-bABvACAAUgBHAEIAIABnAGUAbgBlAHIAaQBjAG8AUAByAG8AZgBpAGwAIABSAEcAQgAgAGcAZQBuAGUA
-cgBpAGMAQQBsAGwAZwBlAG0AZQBpAG4AZQBzACAAUgBHAEIALQBQAHIAbwBmAGkAbMd8vBgAIABSAEcA
-QgAg1QS4XNMMx3xmbpAaACAAUgBHAEIAIGPPj/Blh072TgCCLAAgAFIARwBCACAw1zDtMNUwoTCkMOsD
-kwO1A70DuQO6A8wAIAPAA8EDvwPGA68DuwAgAFIARwBCAFAAZQByAGYAaQBsACAAUgBHAEIAIABnAGUA
-bgDpAHIAaQBjAG8AQQBsAGcAZQBtAGUAZQBuACAAUgBHAEIALQBwAHIAbwBmAGkAZQBsDkIOGw4jDkQO
-Hw4lDkwAIABSAEcAQgAgDhcOMQ5IDicORA4bAEcAZQBuAGUAbAAgAFIARwBCACAAUAByAG8AZgBpAGwA
-aQBZAGwAZQBpAG4AZQBuACAAUgBHAEIALQBwAHIAbwBmAGkAaQBsAGkARwBlAG4AZQByAGkBDQBrAGkA
-IABSAEcAQgAgAHAAcgBvAGYAaQBsAFUAbgBpAHcAZQByAHMAYQBsAG4AeQAgAHAAcgBvAGYAaQBsACAA
-UgBHAEIEHgQxBEkEOAQ5ACAEPwRABD4ERAQ4BDsETAAgAFIARwBCBkUGRAZBACAGKgY5BjEGSgZBACAA
-UgBHAEIAIAYnBkQGOQYnBkUARwBlAG4AZQByAGkAYwAgAFIARwBCACAAUAByAG8AZgBpAGwAZXRleHQA
-AAAAQ29weXJpZ2h0IDIwMDcgQXBwbGUgSW5jLiwgYWxsIHJpZ2h0cyByZXNlcnZlZC4AWFlaIAAAAAAA
-APNSAAEAAAABFs9YWVogAAAAAAAAdE0AAD3uAAAD0FhZWiAAAAAAAABadQAArHMAABc0WFlaIAAAAAAA
-ACgaAAAVnwAAuDZjdXJ2AAAAAAAAAAEBzQAAc2YzMgAAAAAAAQxCAAAF3v//8yYAAAeSAAD9kf//+6L/
-//2jAAAD3AAAwGzSJSYnKFokY2xhc3NuYW1lWCRjbGFzc2VzXxAQTlNCaXRtYXBJbWFnZVJlcKMnKSpa
-TlNJbWFnZVJlcFhOU09iamVjdNIlJiwtV05TQXJyYXmiLCrSJSYvMF5OU011dGFibGVBcnJheaMvLCrT
-MjMKNDU2V05TV2hpdGVcTlNDb2xvclNwYWNlRDAgMAAQA4AM0iUmODlXTlNDb2xvcqI4KtIlJjs8V05T
-SW1hZ2WiOypfEA9OU0tleWVkQXJjaGl2ZXLRP0BUcm9vdIABAAgAEQAaACMALQAyADcARgBMAFcAXgBl
-AHIAeQCBAIMAhQCKAIwAjgCXAJwApwCpAKsArQCyALUAtwC5ALsAvQDCANkA2wDdD78PxA/PD9gP6w/v
-D/oQAxAIEBAQExAYECcQKxAyEDoQRxBMEE4QUBBVEF0QYBBlEG0QcBCCEIUQigAAAAAAAAIBAAAAAAAA
-AEEAAAAAAAAAAAAAAAAAABCMA
-</mutableData>
-        </image>
-        <image name="C0F07917-B9BA-421C-8AE1-97F65FC305A6" width="20" height="20">
+        <image name="04E433C3-69FF-4EF4-B5FA-BC1BB5C62CE0" width="20" height="20">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
@@ -348,5 +238,88 @@ D/oQAxAIEBAQExAYECcQKxAyEDoQRxBMEE4QUBBVEF0QYBBlEG0QcBCCEIUQigAAAAAAAAIBAAAAAAAA
 AEEAAAAAAAAAAAAAAAAAABCMA
 </mutableData>
         </image>
+        <image name="651ACED8-B401-4BF0-8045-4C3D8F624769" width="20" height="20">
+            <mutableData key="keyedArchiveRepresentation">
+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
+AARsdHJUUgAAACIAAASQZmlGSQAAACgAAASyaHJIUgAAACgAAATacGxQTAAAACwAAAUCcnVSVQAAACIA
+AAUuYXJFRwAAACYAAAVQZW5VUwAAACYAAAV2AFYBYQBlAG8AYgBlAGMAbgD9ACAAUgBHAEIAIABwAHIA
+bwBmAGkAbABHAGUAbgBlAHIAZQBsACAAUgBHAEIALQBiAGUAcwBrAHIAaQB2AGUAbABzAGUAUABlAHIA
+ZgBpAGwAIABSAEcAQgAgAGcAZQBuAOgAcgBpAGMAQx6lAHUAIABoAOwAbgBoACAAUgBHAEIAIABDAGgA
+dQBuAGcAUABlAHIAZgBpAGwAIABSAEcAQgAgAEcAZQBuAOkAcgBpAGMAbwQXBDAEMwQwBDsETAQ9BDgE
+OQAgBD8EQAQ+BEQEMAQ5BDsAIABSAEcAQgBQAHIAbwBmAGkAbAAgAGcA6QBuAOkAcgBpAHEAdQBlACAA
+UgBWAEIAwQBsAHQAYQBsAOEAbgBvAHMAIABSAEcAQgAgAHAAcgBvAGYAaQBskBp1KAAgAFIARwBCACCC
+cl9pY8+P8ABHAGUAbgBlAHIAaQBzAGsAIABSAEcAQgAtAHAAcgBvAGYAaQBsAE8AYgBlAGMAbgD9ACAA
+UgBHAEIAIABwAHIAbwBmAGkAbAXkBegF1QXkBdkF3AAgAFIARwBCACAF2wXcBdwF2QBQAHIAbwBmAGkA
+bABvACAAUgBHAEIAIABnAGUAbgBlAHIAaQBjAG8AUAByAG8AZgBpAGwAIABSAEcAQgAgAGcAZQBuAGUA
+cgBpAGMAQQBsAGwAZwBlAG0AZQBpAG4AZQBzACAAUgBHAEIALQBQAHIAbwBmAGkAbMd8vBgAIABSAEcA
+QgAg1QS4XNMMx3xmbpAaACAAUgBHAEIAIGPPj/Blh072TgCCLAAgAFIARwBCACAw1zDtMNUwoTCkMOsD
+kwO1A70DuQO6A8wAIAPAA8EDvwPGA68DuwAgAFIARwBCAFAAZQByAGYAaQBsACAAUgBHAEIAIABnAGUA
+bgDpAHIAaQBjAG8AQQBsAGcAZQBtAGUAZQBuACAAUgBHAEIALQBwAHIAbwBmAGkAZQBsDkIOGw4jDkQO
+Hw4lDkwAIABSAEcAQgAgDhcOMQ5IDicORA4bAEcAZQBuAGUAbAAgAFIARwBCACAAUAByAG8AZgBpAGwA
+aQBZAGwAZQBpAG4AZQBuACAAUgBHAEIALQBwAHIAbwBmAGkAaQBsAGkARwBlAG4AZQByAGkBDQBrAGkA
+IABSAEcAQgAgAHAAcgBvAGYAaQBsAFUAbgBpAHcAZQByAHMAYQBsAG4AeQAgAHAAcgBvAGYAaQBsACAA
+UgBHAEIEHgQxBEkEOAQ5ACAEPwRABD4ERAQ4BDsETAAgAFIARwBCBkUGRAZBACAGKgY5BjEGSgZBACAA
+UgBHAEIAIAYnBkQGOQYnBkUARwBlAG4AZQByAGkAYwAgAFIARwBCACAAUAByAG8AZgBpAGwAZXRleHQA
+AAAAQ29weXJpZ2h0IDIwMDcgQXBwbGUgSW5jLiwgYWxsIHJpZ2h0cyByZXNlcnZlZC4AWFlaIAAAAAAA
+APNSAAEAAAABFs9YWVogAAAAAAAAdE0AAD3uAAAD0FhZWiAAAAAAAABadQAArHMAABc0WFlaIAAAAAAA
+ACgaAAAVnwAAuDZjdXJ2AAAAAAAAAAEBzQAAc2YzMgAAAAAAAQxCAAAF3v//8yYAAAeSAAD9kf//+6L/
+//2jAAAD3AAAwGzSJSYnKFokY2xhc3NuYW1lWCRjbGFzc2VzXxAQTlNCaXRtYXBJbWFnZVJlcKMnKSpa
+TlNJbWFnZVJlcFhOU09iamVjdNIlJiwtV05TQXJyYXmiLCrSJSYvMF5OU011dGFibGVBcnJheaMvLCrT
+MjMKNDU2V05TV2hpdGVcTlNDb2xvclNwYWNlRDAgMAAQA4AM0iUmODlXTlNDb2xvcqI4KtIlJjs8V05T
+SW1hZ2WiOypfEA9OU0tleWVkQXJjaGl2ZXLRP0BUcm9vdIABAAgAEQAaACMALQAyADcARgBMAFcAXgBl
+AHIAeQCBAIMAhQCKAIwAjgCXAJwApwCpAKsArQCyALUAtwC5ALsAvQDCANkA2wDdD78PxA/PD9gP6w/v
+D/oQAxAIEBAQExAYECcQKxAyEDoQRxBMEE4QUBBVEF0QYBBlEG0QcBCCEIUQigAAAAAAAAIBAAAAAAAA
+AEEAAAAAAAAAAAAAAAAAABCMA
+</mutableData>
+        </image>
     </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
+    </simulatedMetricsContainer>
 </document>

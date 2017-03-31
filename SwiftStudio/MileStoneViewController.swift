@@ -28,7 +28,7 @@ class Mile: Equatable {
     init(snapshot: FIRDataSnapshot)
     {
         let snapshotValue = snapshot.value as! NSDictionary
-        username = snapshotValue["username"] as? String ?? ""
+        username = snapshotValue["userName"] as? String ?? ""
         userID = snapshotValue["userID"] as? String ?? ""
         mileTitle = snapshotValue["mileTitle"] as? String ?? ""
         uid = snapshotValue["uid"] as? String ?? ""
@@ -188,11 +188,30 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         cell.detaillabel.text = mile_list_data[indexPath.row]
          */
         
+        /*
+        cell.backgroundColor = UIColor(
+            red: 0.5,
+            green: 128/255.0,
+            blue: 0.5,
+            alpha: 1.0)
+   */
+        
+        
+        
+        // cell width setting
+        //cell.layer.borderWidth = 3.0
+        
+        //cell.layer.borderColor = UIColor.init(red: 0, green: 86, blue: 102)
+       // cell.layer.borderColor = UIColor.init(red: 0.00, green: 86.00, blue: 102.00, alpha: 1.0)
+        //cell.layer.borderColor = UIColor.blue.cgColor
+        
         let mile = miles[indexPath.row]
         cell.mainlabel.text = mile.mileTitle
+        cell.usernamelabel.text = mile.username
         cell.detaillabel.text = mile.editTime
         cell.userlabel.text = mile.userID
         cell.textlabel.text = mile.bodyText
+        
       //  cell.MileImage.image = UIImage(named: "30. User@3x"+".png")
         
         /*
@@ -295,6 +314,9 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         
     }
     
+    
+    //cell drag delete
+    /*
     public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
     {
         if editingStyle == UITableViewCellEditingStyle.delete {
@@ -310,7 +332,7 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         }
         
     }
-    
+    */
     
     
     
@@ -698,6 +720,9 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
         //tableView.reloadData()
         
        // loadOfPosts(1)
+        
+       // self.tableView.separatorColor = UIColor.init(red: 0, green: 86, blue: 102)
+      
         
         //navigationItem.title = self.titleString
         navigationItem.rightBarButtonItem = composeBarButtonItem

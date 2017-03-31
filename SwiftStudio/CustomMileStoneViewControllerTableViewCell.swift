@@ -16,6 +16,7 @@ class CustomMileStoneViewControllerTableViewCell: UITableViewCell {
     @IBOutlet weak var MileImage: UIImageView!
     @IBOutlet weak var userlabel: UILabel!
 
+    @IBOutlet weak var usernamelabel: UILabel!
     @IBOutlet weak var textlabel: UILabel!
     @IBOutlet weak var accceptbutton: UIButton!
     @IBOutlet weak var rejectbutton: UIButton!
