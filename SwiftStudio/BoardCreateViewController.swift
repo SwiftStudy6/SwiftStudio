@@ -166,12 +166,13 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
     func uploadImageAndUpdateBoardData(key: String, with completion:@escaping (_ success: Bool) -> ()){
         
         var urls = [String]()
-        var idx = 0
         let count = self.images.count
         
-        for image in self.images {
-            idx += 1
-            let name = "\(key)_\(idx)"
+        for i in 0..<count {
+            
+            let image = self.images[i]
+            
+            let name = "\(key)_\(i)"
             uploadImage(image, name){ (success: Bool, url: String?) in
                 if success {
                     if let url = url {
@@ -179,7 +180,7 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
                     }
                 }
                 
-                if idx == count {
+                if i == (count - 1) {
                     print(urls)
                     let value = ["attachments" : urls]
                     self.boardRef.child(key).updateChildValues(value)
@@ -191,8 +192,6 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     func doneHandler(){
-        //debugPrint(textView.text)
-        //debugPrint(textView.textStorage)
         
         guard let user = currentUser else{
             return
@@ -202,9 +201,15 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
         navigationItem.rightBarButtonItem?.isEnabled = false
         
         if textView.text.characters.count > 0 {
-            var key = boardRef.childByAutoId().key
+            var key: String = ""
+            if let bData = boardData {
+                key = bData.boradKey!
+            }else{
+                key = boardRef.childByAutoId().key
+            }
             
-            var value : [String : Any] = [
+            
+            let value : [String : Any] = [
                 "text" : textView.text,
                 "recordTime" : FIRServerValue.timestamp(),
                 "author" : [
@@ -223,27 +228,29 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
                 }else{
                     
                     self.uploadImageAndUpdateBoardData(key: ref.key){ (_ success) in
-                        self.textView.resignFirstResponder()
-                        self.textView.text = nil
-                        self.images.removeAll()
                         
-                        DispatchQueue.main.async {
-                            self.collectionView.reloadData()
-                        }
+                        print(success)
                         
-                        Toast(text: "성공").show()
                     }
                     
+                    self.images.removeAll()
+                    
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                    }
                     self.textView.resignFirstResponder()
                     self.textView.text = nil
                     Toast(text: "성공").show()
                     
-                    self.dismiss(animated: true, completion: {
-                        if self.boardData.like != nil{
-                            //수정후 처리
-                            self.delegate?.afterEdit(ref: ref, cell : self.cellDelegate!)
-                        }
-                    })
+                    self.delegate?.afterEdit(ref: ref, cell : self.cellDelegate!)
+                    self.closeViewController(true)
+                    
+//                    self.dismiss(animated: true, completion: {
+//                        if self.boardData.like != nil{
+//                            //수정후 처리
+//                            self.delegate?.afterEdit(ref: ref, cell : self.cellDelegate!)
+//                        }
+//                    })
                 }
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
             }
@@ -419,6 +426,18 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 100 - 8 - 8, height: 100 - 8 - 8)
+    }
+    
+    func closeViewController(_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+        var activateController = UIApplication.shared.keyWindow?.rootViewController
+        
+        if(activateController?.isKind(of: UINavigationController.self))!{
+            activateController = (activateController as! UINavigationController).visibleViewController
+        }else if((activateController?.presentedViewController) != nil){
+            activateController = activateController?.presentedViewController
+        }
+        
+        activateController?.dismiss(animated: animated, completion: completion)
     }
     
     

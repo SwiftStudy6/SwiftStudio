@@ -62,13 +62,15 @@
                                                         </label>
                                                     </subviews>
                                                 </stackView>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="95I-qk-dfx">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="95I-qk-dfx">
                                                     <rect key="frame" x="321" y="0.0" width="38" height="40"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="38" id="yps-fw-r2C"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <state key="normal" title="Button"/>
+                                                    <state key="normal" image="More"/>
+                                                    <connections>
+                                                        <action selector="moreBtnAction:" destination="5vf-SA-PPk" eventType="touchUpInside" id="A7A-sV-jPx"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -152,7 +154,7 @@
                                         <rect key="frame" x="0.0" y="228" width="375" height="74"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kny-HR-NQI" id="4wI-qP-xvF">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="74"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="73.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="User" translatesAutoresizingMaskIntoConstraints="NO" id="Nxe-Eg-qQS">
@@ -301,6 +303,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="More" width="6" height="20"/>
         <image name="User" width="42" height="42"/>
     </resources>
 </document>

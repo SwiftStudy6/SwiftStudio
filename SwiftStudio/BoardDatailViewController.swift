@@ -89,6 +89,7 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
     private var replyRef: FIRDatabaseReference! = FIRDatabase.database().reference().child("Board-Replys")
     
     private var boardRef: FIRDatabaseReference = FIRDatabase.database().reference().child("Board-Posts")
+    private var noticeRef : FIRDatabaseReference! = FIRDatabase.database().reference().child("Notice-Posts")
     
     private var storageRef = FIRStorage.storage()
     
@@ -227,7 +228,7 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
     var targetView: UIView?
     
     func showZoomInPhotoView(imageView: UIImageView, cell: UICollectionViewCell){
-        if let startingFrame = imageView.superview?.convert(imageView.frame, to: nil) {
+        //if let startingFrame = imageView.superview?.convert(imageView.frame, to: nil) {
             
             let vc = ZoomViewController()
             
@@ -241,7 +242,7 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
             }
             
             vc.selectedIndex = indexPath.item
-            vc.collectionView.frame = startingFrame
+            //vc.collectionView.frame = startingFrame
             
             targetView = vc.view
             targetView?.alpha = 0
@@ -253,7 +254,7 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
                 self.targetView?.alpha = 1
             })
             
-        }
+        //}
     }
     
     func hideZoomInPhotoView(){
@@ -653,6 +654,208 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
         
     }
     
+    @IBAction func moreBtnAction(_ sender: UIButton) {
+        
+        let user = FIRAuth.auth()?.currentUser
+        
+        let boardKey = boardData?.boradKey
+        let authorId = boardData?.authorId
+        
+        
+        let alertController = UIAlertController(title: "게시물 수정", message: nil, preferredStyle: .actionSheet)
+        
+        //공지 추가 액션
+//        let addNoticeAction = UIAlertAction(title: "공지사항 등록", style: .default) { (Void) in
+//            
+//            let noticeKey = boardKey!
+//            let data : [String : Any] = ["boardKey":boardKey!,
+//                                         "author": ["uid":authorId!],
+//                                         "text": self.boardData?.bodyText,
+//                                         "recordTime": FIRServerValue.timestamp(),
+//                                         "editTime": FIRServerValue.timestamp()]
+//            if(self.noticeList.count >= 2){
+//                Toast(text:"공지사항은 2개 이상 등록 할수 없습니다.").show()
+//                return
+//            }else{
+//                self.noticeRef.child(noticeKey).setValue(data, withCompletionBlock: { (error, ref) in
+//                    guard error == nil else {
+//                        return
+//                    }
+//                    
+//                    ref.observe(.value, with: { (snapshot) in
+//                        guard snapshot.exists() else {
+//                            return
+//                        }
+//                        
+//                        let count = self.noticeList.count
+//                        
+//                        let dict = snapshot.value as! [String : Any]
+//                        
+//                        let user = dict["author"] as? [String : Any]
+//                        
+//                        var time : Double = 0
+//                        
+//                        if let _ = dict["editTime"] {
+//                            time = dict["editTime"] as! Double
+//                        }else {
+//                            time = dict["recordTime"] as! Double
+//                        }
+//                        
+//                        let obj = NoticeObject(snapshot.key,
+//                                               user?["uid"] as! String,
+//                                               dict["text"] as! String,
+//                                               dict["recordTime"] as! Double,
+//                                               time)
+//                        var idx = -1
+//                        for obj in self.noticeList {
+//                            if (obj as! NoticeObject).noticeKey == snapshot.key{
+//                                idx = idx + 1
+//                            }
+//                        }
+//                        
+//                        
+//                        if(idx == -1 || self.noticeList.count == 0) {
+//                            self.noticeList.append(obj)
+//                        }
+//                        
+//                        if(count < self.noticeList.count){
+//                            self.collectionView?.insertItems(at: [IndexPath(row:self.noticeList.count-1, section: 0)])
+//                            self.collectionView?.reloadItems(at: [IndexPath(row:self.noticeList.count-1, section: 0)])
+//                        }
+//                    })
+//                })
+//            }
+//        }
+        
+        
+        
+        //공지 삭제 액션
+//        let delNoticeAction = UIAlertAction(title: "공지사항 내리기", style: .default) { (Void) in
+//            
+//            var noticeKey : String?
+//            var indexPath : IndexPath?
+//            
+//            for (idx,val) in self.noticeList.enumerated() {
+//                if(cell.key == (val as! NoticeObject).noticeKey){
+//                    indexPath = IndexPath(row: idx, section: 0)
+//                    
+//                    noticeKey = (val as! NoticeObject).noticeKey
+//                }
+//            }
+//            
+//            self.noticeRef.child(noticeKey!).removeValue(completionBlock: { (error, ref) in
+//                guard error == nil else {
+//                    return
+//                }
+//                
+//                let key = ref.key
+//                
+//                
+//                
+//                for (i,obj) in self.noticeList.enumerated() {
+//                    if(obj as! NoticeObject).noticeKey == key {
+//                        self.noticeList.remove(at: i)
+//                        self.collectionView?.deleteItems(at: [IndexPath(row: i, section: 0)])
+//                    }
+//                }
+//                
+//            })
+//            
+//            self.noticeRef.observeSingleEvent(of: .childRemoved, with: { (snapshot) in
+//                guard snapshot.exists() else{
+//                    return
+//                }
+//                
+//                let dict = snapshot.value as! [String : Any]
+//                
+//                if(boardKey == dict["boardKey"] as? String){
+//                    self.collectionView?.deleteItems(at: [indexPath!])
+//                    self.noticeList.remove(at: (indexPath?.row)!)
+//                }
+//            })
+//            
+//        }
+        
+        //글 수정 액션
+        let editAction = UIAlertAction(title: "글 수정", style: .default) { (Void) in
+            
+            
+            let boardEditViewController = UIStoryboard(name: "BoardCreate", bundle: nil).instantiateInitialViewController() as! BoardCreateViewController
+            
+            boardEditViewController.boardData = self.boardData //데이터 오브젝트를 보댄다
+            //boardEditViewController.cellDelegate = cell         //현제 셀의 정보를 넘긴다.
+            
+            //boardEditViewController.delegate = self             //수정후 처리를 위한 델리게이트르 넘긴다.
+            
+            //self.showViewController(boardEditViewController, true)
+            self.present(boardEditViewController, animated: true, completion: nil)
+        }
+        
+        //글 삭제 약션
+        let delAction = UIAlertAction(title: "글 삭제", style: .destructive) { (Void) in
+            let attachments = self.boardData?.attachments
+            let confirmControlelr = UIAlertController(title: "확인창", message: "정말로 게시물을 삭제 하실껍니까?\n(복구 안됩니다)", preferredStyle: .alert)
+            
+            let deleteAction = UIAlertAction(title: "삭제", style: .destructive, handler: { (Void) in
+                if(user?.uid == authorId){
+                    self.boardRef.child((self.boardData?.boradKey)!).removeValue(completionBlock: { (error, ref) in
+                        guard error == nil else {
+                            print(error.debugDescription)
+                            return
+                        }
+                        
+                        if (attachments?.count)! > 0 {
+                            
+                            for imgStr in attachments! {
+                                print("img url : ", imgStr)
+                                self.removeImage(downloadUrl: imgStr)
+                            }
+                            
+                        }
+                        
+                        self.delegate?.loadEvent()
+                        self.closeViewController(true)
+                    })
+                }
+            })
+            
+            let cancelAtion = UIAlertAction(title: "취소", style: .default, handler:nil)
+            
+            confirmControlelr.addAction(deleteAction)
+            confirmControlelr.addAction(cancelAtion)
+            
+            
+            self.present(confirmControlelr, animated: true, completion: nil)
+        }
+        
+        let cancelAtion = UIAlertAction(title: "취소", style: .cancel, handler:nil)
+        
+        //alertController.addAction(addNoticeAction)
+        //alertController.addAction(delNoticeAction)
+        
+        
+        if(user?.uid == authorId){
+            alertController.addAction(editAction)
+            alertController.addAction(delAction)
+        }
+        
+        alertController.addAction(cancelAtion)
+        
+        self.present(alertController, animated: true, completion: nil)
+        
+    }
+    
+    func closeViewController(_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+        var activateController = UIApplication.shared.keyWindow?.rootViewController
+        
+        if(activateController?.isKind(of: UINavigationController.self))!{
+            activateController = (activateController as! UINavigationController).visibleViewController
+        }else if((activateController?.presentedViewController) != nil){
+            activateController = activateController?.presentedViewController
+        }
+        
+        activateController?.dismiss(animated: animated, completion: completion)
+    }
 }
 
 extension UITextView {

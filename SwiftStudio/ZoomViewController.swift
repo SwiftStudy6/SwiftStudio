@@ -15,7 +15,7 @@ class ZoomCollectionViewCell: UICollectionViewCell {
     
     let imageView: UIImageView = {
         let v = UIImageView()
-        v.contentMode = .scaleAspectFill
+        v.contentMode = .scaleToFill
         
         return v
     }()
@@ -23,13 +23,16 @@ class ZoomCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        
-        imageView.backgroundColor = .red
+        self.backgroundColor = .red
         
         addSubview(imageView)
         
         addConstraintWithFormat("H:|[v0]|", imageView)
         addConstraintWithFormat("V:|[v0]|", imageView)
+    }
+    
+    override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
+        print(layoutAttributes.frame.origin.y)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -45,10 +48,11 @@ class ZoomViewController: UIViewController, UICollectionViewDelegate, UICollecti
     var selectedIndex: Int = 1
     var currentIndex: Int = 0
     
-    let collectionView: UICollectionView = {
+    lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        let v = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let frame = self.view.frame
+        let v = UICollectionView(frame: frame, collectionViewLayout: layout)
         return v
     }()
     
@@ -93,19 +97,16 @@ class ZoomViewController: UIViewController, UICollectionViewDelegate, UICollecti
         navItem.title = "\(selectedIndex+1)/\(images.count)"
         navItem.leftBarButtonItem = closeButtonItem
         navItem.rightBarButtonItems = [removeButtonItem, downButtonItem]
-        
         navBar.setItems([navItem], animated: false)
         
         
         view.addSubview(navBar)
         
-        
-        
         view.backgroundColor = .black
         
-        //let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideView))
-        //tapGesture.cancelsTouchesInView = true
-        //view.addGestureRecognizer(tapGesture)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideView))
+        tapGesture.cancelsTouchesInView = true
+        view.addGestureRecognizer(tapGesture)
         
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -129,25 +130,13 @@ class ZoomViewController: UIViewController, UICollectionViewDelegate, UICollecti
             
             self.collectionView.frame = CGRect(x: 0, y: Int(y), width: Int(self.view.frame.width), height: Int(height))
             
-            
         }, completion: nil)
-        
-        
-        
         
         self.collectionView.isPagingEnabled = true
         self.collectionView.register(ZoomCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        UIApplication.shared.statusBarStyle = .lightContent
-    }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        UIApplication.shared.statusBarStyle = .default
-    }
     
     func downImageHandle(){
         let aletCtrl = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -172,7 +161,6 @@ class ZoomViewController: UIViewController, UICollectionViewDelegate, UICollecti
             
             let url = self.images[self.selectedIndex]
             self.delegate.removeImage(downloadUrl: url)
-            
         }
         
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
@@ -200,14 +188,22 @@ class ZoomViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.width, height: 200)
+        
+        let imageStr = images[indexPath.item]
+        let url = URL(string: imageStr)
+        let data = NSData(contentsOf: url!)
+        let image = UIImage(data: data as! Data)
+        
+        return CGSize(width: self.collectionView.frame.width, height: (image?.size.height)! * self.view.frame.width / (image?.size.width)!)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
     
-    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         let index = targetContentOffset.pointee.x / view.frame.width
