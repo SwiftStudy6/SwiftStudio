@@ -175,8 +175,6 @@ class MileStoneViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     
-    
-    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         
