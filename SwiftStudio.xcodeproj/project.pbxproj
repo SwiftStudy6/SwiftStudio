@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		027F48A41E97334A002C061C /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027F48A31E97334A002C061C /* SettingViewController.swift */; };
+		027F48A61E973850002C061C /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 027F48A51E973850002C061C /* Login.storyboard */; };
 		02FC4C811E166B1B00E1EF61 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FC4C801E166B1B00E1EF61 /* AppDelegate.swift */; };
 		02FC4C831E166B1B00E1EF61 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FC4C821E166B1B00E1EF61 /* ViewController.swift */; };
 		02FC4C881E166B1B00E1EF61 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02FC4C871E166B1B00E1EF61 /* Assets.xcassets */; };
@@ -71,6 +72,7 @@
 /* Begin PBXFileReference section */
 		00886F2C53CE8FE7124D7783 /* Pods-SwiftStudio.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftStudio.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftStudio/Pods-SwiftStudio.release.xcconfig"; sourceTree = "<group>"; };
 		027F48A31E97334A002C061C /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		027F48A51E973850002C061C /* Login.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
 		02FC4C7D1E166B1B00E1EF61 /* SwiftStudio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftStudio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		02FC4C801E166B1B00E1EF61 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		02FC4C821E166B1B00E1EF61 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 				809EC7FC1E305ECD00E3BC4F /* BoardDetail.storyboard */,
 				809EC8021E30644900E3BC4F /* BoardCreate.storyboard */,
 				8E46F5141E517250002F6E60 /* Main.storyboard */,
+				027F48A51E973850002C061C /* Login.storyboard */,
 			);
 			name = StoryBoard;
 			sourceTree = "<group>";
@@ -381,6 +384,7 @@
 				8E46F44B1E45F009002F6E60 /* message [#1579]@1x.png in Resources */,
 				8E46F4461E45F009002F6E60 /* done [#1476]@3x.png in Resources */,
 				8E46F44D1E45F009002F6E60 /* profile [#1335].png in Resources */,
+				027F48A61E973850002C061C /* Login.storyboard in Resources */,
 				8E408EFF1E1FD63F00A7B38C /* Board.storyboard in Resources */,
 				8E46F4561E45F0E7002F6E60 /* menu_option [#1374]@1x.png in Resources */,
 				8E46F44E1E45F009002F6E60 /* profile [#1335]@1x.png in Resources */,
