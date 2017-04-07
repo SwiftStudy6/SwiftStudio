@@ -23,7 +23,7 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
  
     var naviBar: UINavigationBar!
     
-    let maxSize = 300
+    let maxSize = 200
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -425,6 +425,10 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
             
             let str : String! = boardObj.bodyText
             
+            let numLines = (cell.textRecorded?.contentSize.height)!/(cell.textRecorded?.font?.lineHeight)!;
+            
+            print("***** >> \(numLines) , \(cell.indexPath?.row)")
+            
             //더보기 추가
             if(str.utf16.count >= maxSize){
                 let readMore = "...더 보기"
@@ -492,10 +496,16 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
             
             
             
+            
             return cell
         }
     }
     
+  
+    
+//    func visibleTextRange(_ textView: UITextView) -> NSRange {
+//    
+//    }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if(section == 0) {
             return 10

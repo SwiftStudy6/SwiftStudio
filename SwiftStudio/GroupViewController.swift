@@ -358,12 +358,11 @@ extension GroupViewController : UICollectionViewDataSource{
         
         let rowItem = dataList[indexPath.row]
         
-        var url = URL(string: "http://bigmatch.i-um.net/wp-content/uploads/2014/12/Apple_Swift_Logo.png")
+        let url = URL(string: rowItem["coverImgUrl"] as! String)
         
-        url = URL(string: rowItem["coverImgUrl"] as! String)
-        
-        
-        cell.imageView.sd_setImage(with: url, placeholderImage: UIImage(), options: .retryFailed, completed: { (image, error, cachedType, url) in
+        let placeHolderImage = UIImage(named: "Camera-100.png")
+        //cell.imageView.contentMode = .center
+        cell.imageView.sd_setImage(with: url, placeholderImage: placeHolderImage, options: .retryFailed, completed: { (image, error, cachedType, url) in
             
             
             //이미지캐싱이 안되있을경우에 대한 애니메이션 셋팅_imageView.alpha = 1;
@@ -379,7 +378,6 @@ extension GroupViewController : UICollectionViewDataSource{
             }
         })
         
-//        cell.textLabel.text = "모임 우왕 우왕 \(indexPath.row)"
         cell.textLabel.text = rowItem["groupName"] as? String
         
         let selectedView = UIView()
