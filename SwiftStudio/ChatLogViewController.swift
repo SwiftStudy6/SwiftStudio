@@ -14,6 +14,8 @@ class ChatLogViewController: UICollectionViewController, UICollectionViewDelegat
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // dd
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
