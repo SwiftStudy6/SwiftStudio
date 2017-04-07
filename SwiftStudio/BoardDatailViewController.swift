@@ -149,6 +149,12 @@ class BoardDetailController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     
+    deinit {
+        self.tableView.removePullToRefresh(tableView.topPullToRefresh!)
+        self.tableView.removePullToRefresh(tableView.bottomPullToRefresh!)
+    }
+    
+    
     func backHandler(){
         dismiss(animated: true, completion: nil)
     }

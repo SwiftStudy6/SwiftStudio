@@ -315,6 +315,10 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+
+        
+        
         let customController = CustomTabBarController.sharedInstance
         
         self.titleString = "메인"
@@ -358,6 +362,9 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         //Load Data
         loadEvent()
     }
+    
+    
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
