@@ -63,6 +63,7 @@
 		8EF338CB1E56F5DE00680710 /* GroupCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF338CA1E56F5DE00680710 /* GroupCreateViewController.swift */; };
 		8EF338E31E5F58ED00680710 /* BoardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF338E21E5F58ED00680710 /* BoardCell.swift */; };
 		8EF338E51E5F592900680710 /* NoticeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF338E41E5F592900680710 /* NoticeCell.swift */; };
+		8EF51B231E964EF400949825 /* Camera-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EF51B221E964EF400949825 /* Camera-100.png */; };
 		EAEC83430219D128C6F4DE90 /* Pods_SwiftStudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44CA5C99B5C87210A9C2FEE1 /* Pods_SwiftStudio.framework */; };
 		F6B2F9081E27537600E0A1BD /* MileStoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B2F9071E27537600E0A1BD /* MileStoneViewController.swift */; };
 /* End PBXBuildFile section */
@@ -129,6 +130,7 @@
 		8EF338CA1E56F5DE00680710 /* GroupCreateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCreateViewController.swift; sourceTree = "<group>"; };
 		8EF338E21E5F58ED00680710 /* BoardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardCell.swift; sourceTree = "<group>"; };
 		8EF338E41E5F592900680710 /* NoticeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoticeCell.swift; sourceTree = "<group>"; };
+		8EF51B221E964EF400949825 /* Camera-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Camera-100.png"; sourceTree = "<group>"; };
 		F6B2F9071E27537600E0A1BD /* MileStoneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MileStoneViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -212,6 +214,7 @@
 		8E408EE91E1FCFEC00A7B38C /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				8EF51B221E964EF400949825 /* Camera-100.png */,
 				8E46F42E1E45F009002F6E60 /* TabbarIcon */,
 				02FC4C871E166B1B00E1EF61 /* Assets.xcassets */,
 			);
@@ -338,7 +341,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = swift;
 				TargetAttributes = {
 					02FC4C7C1E166B1B00E1EF61 = {
@@ -378,6 +381,7 @@
 				8E46F44B1E45F009002F6E60 /* message [#1579]@1x.png in Resources */,
 				8E46F4461E45F009002F6E60 /* done [#1476]@3x.png in Resources */,
 				8E46F44D1E45F009002F6E60 /* profile [#1335].png in Resources */,
+				8EF51B231E964EF400949825 /* Camera-100.png in Resources */,
 				8E408EFF1E1FD63F00A7B38C /* Board.storyboard in Resources */,
 				8E46F4561E45F0E7002F6E60 /* menu_option [#1374]@1x.png in Resources */,
 				8E46F44E1E45F009002F6E60 /* profile [#1335]@1x.png in Resources */,

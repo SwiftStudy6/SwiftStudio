@@ -252,10 +252,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             
             
         }else if(sender.tag == 1){ //forgot buuton
-            let test = TestViewController()
-            let navi = UINavigationController(rootViewController: test)
+            let test = GroupViewController()
             
-            present(navi, animated: true, completion: nil)
+            
+            present(test, animated: true, completion: nil)
             
         }else{ //signin button
             let signUpController = UIAlertController(title: "회원가입", message:"이메일, 비번.유저명 입력해주세요", preferredStyle: .alert)
