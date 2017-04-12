@@ -9,15 +9,16 @@
 import UIKit
 
 //BoardCell Delegate Protocol
-protocol BoardCellDelegate  {
+@objc protocol BoardCellDelegate  {
     func editButtonEvent(sender:UIButton, cell : BoardCell)
     func likeButtonEvent(sender:UIButton, cell : BoardCell)
     func replyButtonEvent(sender:UIButton, cell : BoardCell)
     func shareButtonEvent(sender:UIButton, cell : BoardCell)
+    @objc optional func readMoreEvent(cell : BoardCell)
 }
 
 //Board Cell Definition
-class BoardCell : UICollectionViewCell {
+class BoardCell : UICollectionViewCell, UITextViewDelegate {
     
     
     var key          : String! = nil                //Board Key
@@ -26,6 +27,10 @@ class BoardCell : UICollectionViewCell {
     var authorName   : UILabel? = nil               //Username
     var editTime     : UILabel? = nil               //Edited time
     var textRecorded : UITextView? = nil            //Text
+    private var originalText : String? = nil
+    
+    var cellSize     : CGSize = CGSize()
+
     
     var likeButton   : UIButton?                    //likeButton
     
@@ -38,6 +43,7 @@ class BoardCell : UICollectionViewCell {
             self.authorName?.text = newValue.authorName
             self.authorId = newValue.authorId
             self.textRecorded?.text = newValue.bodyText
+            self.originalText = newValue.bodyText
             self.editTime?.text = newValue.editTime
         }
         
@@ -47,7 +53,7 @@ class BoardCell : UICollectionViewCell {
             returnVal.boradKey   = self.key
             returnVal.authorId   = self.authorId
             returnVal.authorName = self.authorName?.text
-            returnVal.bodyText   = self.textRecorded?.text
+            returnVal.bodyText   = self.originalText
             returnVal.editTime   = self.editTime?.text
             
             return returnVal
@@ -68,7 +74,6 @@ class BoardCell : UICollectionViewCell {
     //View setting
     func setSetting(){
         self.contentView.backgroundColor = .white
-        
         
         let innerView = UIView(frame:CGRect.zero)
         innerView.translatesAutoresizingMaskIntoConstraints = false
@@ -163,12 +168,14 @@ class BoardCell : UICollectionViewCell {
         self.textRecorded?.font = UIFont.systemFont(ofSize: 13)
         self.textRecorded?.isUserInteractionEnabled = false
         self.contentView.addSubview(self.textRecorded!)
+        self.textRecorded?.delegate = self
         
         self.textRecorded?.translatesAutoresizingMaskIntoConstraints = false
         self.textRecorded?.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 12).isActive = true
         self.textRecorded?.topAnchor.constraint(equalTo: userInfoView.bottomAnchor, constant: 4).isActive = true
         self.textRecorded?.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -12).isActive = true
-        self.textRecorded?.heightAnchor.constraint(equalToConstant: 164).isActive = true
+        self.textRecorded?.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -35).isActive = true
+
         
         //setting bottom view
         let bottomView = UIView()
@@ -258,11 +265,30 @@ class BoardCell : UICollectionViewCell {
         shareButton.widthAnchor.constraint(equalToConstant: offsetWidth/3).isActive = true
         shareButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        
+        cellSize.width = self.frame.width
+        cellSize.height = userInfoView.frame.height + (textRecorded?.frame.height)! + bottomView.frame.height
         
     }
     
+    private func setUpReadMore(_ textView : UITextView) -> UITextView {
     
+    //let textView : UITextView = self.textRecorded!
+        
+    let maxSize = 120
+    
+        if textView.text.utf16.count >= maxSize {
+            var abc : String =  (textView.text as NSString).substring(with: NSRange(location: 0, length: 120))
+            abc += "...더 보기"
+            textView.text = abc
+            let attribs = [NSForegroundColorAttributeName: UIColor.darkGray, NSFontAttributeName: UIFont.systemFont(ofSize: 14.0)]
+            let attributedString: NSMutableAttributedString = NSMutableAttributedString(string: abc, attributes: attribs)
+            attributedString.addAttribute(NSLinkAttributeName, value: "...더 보기", range: NSRange(location: 120, length: 11))
+            attributedString.addAttribute(NSUnderlineStyleAttributeName, value: NSUnderlineStyle.styleSingle.rawValue, range: NSRange(location: 120, length: 11))
+            textView.attributedText = attributedString
+        }
+        
+        return textView
+    }
     //Button Delegate Fucniton
     @IBAction func editButtonTouchUpinside(_ sender:UIButton){
         self.delegate?.editButtonEvent(sender:sender, cell: self)
@@ -279,5 +305,52 @@ class BoardCell : UICollectionViewCell {
     @IBAction func shareButtonTouchUpInside(_ sender:UIButton){
         self.delegate?.shareButtonEvent(sender: sender, cell: self)
     }
+ 
     
+    
+    func setUpReadMore(_ textView : UITextView){
+        guard textView.text.isEmpty else {
+            return
+        }
+        
+        let maxSize = 500
+        
+        print(textView.text.utf16.count)
+        
+        if textView.text.utf16.count >= maxSize {
+            let readMore = " ...더 보기"
+            print(readMore.utf16.count)
+            
+            var abc : String =  (textView.text as NSString).substring(with: NSRange(location: 0, length: maxSize))
+            abc += readMore
+            textView.text = abc
+            let attribs = [NSForegroundColorAttributeName: UIColor.black, NSFontAttributeName: UIFont.systemFont(ofSize: 13.0)]
+            let attributedString: NSMutableAttributedString = NSMutableAttributedString(string: abc, attributes: attribs)
+            attributedString.addAttribute(NSLinkAttributeName, value: "", range: NSRange(location: maxSize, length: readMore.utf16.count))
+            textView.attributedText = attributedString
+        }
+
+    }
+    
+    //MARK : UITextView Delegate
+    
+    func textView(_ textView: UITextView, shouldInteractWith textAttachment: NSTextAttachment, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        
+        if(!(originalText?.isEmpty)!){
+            let fixedWidth = textView.frame.size.width
+            
+            textView.text = ""
+            textView.text = originalText
+            
+            textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+            let newSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+            var newFrame = textView.frame
+            newFrame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
+            textView.frame = newFrame;
+        }
+        
+        self.delegate?.readMoreEvent!(cell : self)
+        
+        return true
+    }
 }
