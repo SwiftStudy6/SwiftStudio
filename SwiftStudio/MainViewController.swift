@@ -526,7 +526,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 return CGSize.zero
             }
         }else{
-            var height : CGFloat = 250.0;
+            let height : CGFloat = 250.0;
 
             
             return CGSize(width: view.frame.width, height: height)
@@ -867,45 +867,45 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
     }
     
-    //view hierarchy 오류로 인해서 방법을 바꿈
-    //원인 : CustomTabbarController안에 뷰어를 인식하지 못하는것 같음
-    //원래 self.view.window.rootViewController로 가능했으나 구조상의 문제로 방법을 바꿈
-    func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
-        var activateController = UIApplication.shared.keyWindow?.rootViewController
-        
-        if(activateController?.isKind(of: UINavigationController.self))!{
-            print("showViewController - Navigation")
-            activateController = (activateController as! UINavigationController).visibleViewController
-            
-            
-
-        }else if((activateController?.presentedViewController) != nil){
-            print("showViewController - Nomal")
-            activateController = activateController?.presentedViewController
-            if(activateController?.isKind(of: UINavigationController.self))!{
-                print("showViewController - Nomal - Navigation")
-                activateController?.navigationController?.isNavigationBarHidden = true
-              
-            }
-            
-        }
-        
-        activateController?.present(viewController, animated: animated, completion: completion)
-
-    }
-    
-    //현재 띄워진 뷰어를 닫는다. (잘 생각하고 쓰세요)
-    func closeViewController(_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
-        var activateController = UIApplication.shared.keyWindow?.rootViewController
-        
-        if(activateController?.isKind(of: UINavigationController.self))!{
-            activateController = (activateController as! UINavigationController).visibleViewController
-        }else if((activateController?.presentedViewController) != nil){
-            activateController = activateController?.presentedViewController
-        }
-        
-        activateController?.dismiss(animated: animated, completion: completion)
-    }
+//    //view hierarchy 오류로 인해서 방법을 바꿈
+//    //원인 : CustomTabbarController안에 뷰어를 인식하지 못하는것 같음
+//    //원래 self.view.window.rootViewController로 가능했으나 구조상의 문제로 방법을 바꿈
+//    func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+//        var activateController = UIApplication.shared.keyWindow?.rootViewController
+//        
+//        if(activateController?.isKind(of: UINavigationController.self))!{
+//            print("showViewController - Navigation")
+//            activateController = (activateController as! UINavigationController).visibleViewController
+//            
+//            
+//
+//        }else if((activateController?.presentedViewController) != nil){
+//            print("showViewController - Nomal")
+//            activateController = activateController?.presentedViewController
+//            if(activateController?.isKind(of: UINavigationController.self))!{
+//                print("showViewController - Nomal - Navigation")
+//                activateController?.navigationController?.isNavigationBarHidden = true
+//              
+//            }
+//            
+//        }
+//        
+//        activateController?.present(viewController, animated: animated, completion: completion)
+//
+//    }
+//    
+//    //현재 띄워진 뷰어를 닫는다. (잘 생각하고 쓰세요)
+//    func closeViewController(_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+//        var activateController = UIApplication.shared.keyWindow?.rootViewController
+//        
+//        if(activateController?.isKind(of: UINavigationController.self))!{
+//            activateController = (activateController as! UINavigationController).visibleViewController
+//        }else if((activateController?.presentedViewController) != nil){
+//            activateController = activateController?.presentedViewController
+//        }
+//        
+//        activateController?.dismiss(animated: animated, completion: completion)
+//    }
     
     //indicator
     //최초 로딩시에 인디케이터를 불러온다.
