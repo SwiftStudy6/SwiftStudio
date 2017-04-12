@@ -23,7 +23,10 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
  
     var naviBar: UINavigationBar!
     
+    let maxSize = 300
+    
     @IBOutlet weak var tableView: UITableView!
+    
     
     private var ref : FIRDatabaseReference! = FIRDatabase.database().reference()
     private var data : String!
@@ -31,8 +34,8 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
     private var boardRef : FIRDatabaseReference! = FIRDatabase.database().reference().child(boardPostChildName)
     private var noticeRef : FIRDatabaseReference! = FIRDatabase.database().reference().child(noticePostChildName)
     
-    let rangeOfPosts : UInt = 10
-    var pageOfPosts  : UInt = 1
+    let rangeOfPosts : UInt = 10    //페이지당 표현 갯수
+    var pageOfPosts  : UInt = 1     //현재 페이지갯수
     
     var lastestKey : String?
     
@@ -43,6 +46,7 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         
         return button
     }()
+    
     
     lazy var composeBarButtonItem: UIBarButtonItem = {
         let button = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.navToWriteHandle))
@@ -60,6 +64,7 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
     //뱅글이를 위한 것
     var indicator : UIActivityIndicatorView?
     var indicView : UIView?
+    
     
     //초기 상태 로딩
     func loadPostsEvent(){
@@ -138,7 +143,7 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
             if(self.boardList.count > 0){
                 DispatchQueue.main.async {
                     self.tableView?.reloadData()
-                    self.tableView.scrollToRow(at: IndexPath(row: 0, section:0), at: .none, animated: false)
+                    
                     if isTrue {
                         self.tableView?.endRefreshing(at: .top)
                     }else{
@@ -232,6 +237,7 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
             }
         })
         
+        //3초뒤 리프레싱을 꺼지도록 한다.(혹시모를 상황에 대비)
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             self.tableView?.endRefreshing(at: .bottom)
         }
@@ -307,7 +313,6 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
-    
     func returnHome(){
         closeViewController(true)
     }
@@ -341,12 +346,14 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         self.refreshController = UIRefreshControl()
     
         
-        //Setting View
+        //Setting View & Table View
         self.view.backgroundColor = .white
-        self.tableView?.backgroundColor = UIColor.gray.withAlphaComponent(0.35)
+        self.tableView?.backgroundColor = UIColor(netHex: 0xAAAAAA)
+        
         
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 260
+        
         
         self.tableView.tableFooterView? = UIView()
         self.tableView.tableHeaderView? = UIView()
@@ -358,33 +365,27 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         //Load Data
         loadEvent()
     }
-
+    
+    //반드시 적어줘야함 (PullToRefresh를 사용할 경우)
+    deinit {
+        self.tableView.removePullToRefresh(tableView.topPullToRefresh!)
+        self.tableView.removePullToRefresh(tableView.bottomPullToRefresh!)
+    }
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     // MARK: - Table view data source
-
-     func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        
-        var countOfSection = 0
-        
-        if self.boardList.count > 0 {
-            countOfSection += 1
-        }
-        
-        if self.noticeList.count > 0 {
-            countOfSection += 1
-        }
-        
-        return countOfSection
+    
+    //표현할 섹션(섹션은 사용할 만큼의 고정값을 줘야 한다)
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
     }
 
-     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        
+    //Section 당 표현 갯수
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return self.noticeList.count
         }else {
@@ -394,22 +395,34 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
 
     
      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+        //Notice Section
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: noticeReuseIndentifier, for: indexPath) as! NoticeTableCell
             
             cell.lable?.text = self.noticeList[indexPath.row].text
             cell.lable.textAlignment = .left
             
+            let selectedView = UIView()
+            selectedView.backgroundColor = UIColor(netHex:0x7e9b96)
+            cell.selectedBackgroundView = selectedView
+            
+            
+            
+            
             return cell
+        //Board Section
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: boardReuseIndentifier, for: indexPath) as! BoardTableCell
             
             let boardObj = self.boardList[indexPath.row]
             
+            //Add TagGestureRecognizer
+            let tabGesture = UITapGestureRecognizer(target: self, action: #selector(tabGestureAction(_:)))
+            cell.textRecorded?.tag = indexPath.row
+            cell.textRecorded?.addGestureRecognizer(tabGesture)
+            
             cell.dataObject = boardObj
             
-            let maxSize = 200
             let str : String! = boardObj.bodyText
             
             //더보기 추가
@@ -436,13 +449,13 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
             }else {
                 cell.textRecorded?.text = "" //초기화
                 cell.textRecorded?.text = str
+                
+                cell.originalText = ""
             }
-
+         
+            cell.likeButton?.isSelected = false //버튼 선택 초기화
             
-            
-            
-            cell.likeButton?.isSelected = false
-            
+            //Like버튼 선택 여부
             if let like = boardObj.like {
                 if let _ = like[(FIRAuth.auth()?.currentUser?.uid)!] {
                     cell.likeButton.isSelected = true
@@ -451,7 +464,7 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
                 }
             }
             
-            //프로필 이미지 처리
+            //프로필 이미지 처리(이미 캐싱이 되어 있지만 순차적으로 표현되도록 만듬)
             cell.profileImage?.sd_setImage(with: URL(string:boardObj.profileImgUrl!), placeholderImage: UIImage(named:"User"), options: .retryFailed, completed: { (image, error, cachedType, url) in
                 
                 
@@ -472,6 +485,13 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
             
             cell.delegate = self
             
+            
+            let selectedView = UIView()
+            selectedView.backgroundColor = UIColor(netHex:0x7e9b96)
+            cell.selectedBackgroundView = selectedView
+            
+            
+            
             return cell
         }
     }
@@ -480,7 +500,6 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         if(section == 0) {
             return 10
         }
-        
         return 0
     }
     
@@ -639,8 +658,6 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
                 
                 let key = ref.key
                 
-                
-                
                 for (i,obj) in self.noticeList.enumerated() {
                     if obj.noticeKey == key {
                         self.noticeList.remove(at: i)
@@ -674,7 +691,7 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
             boardEditViewController.boardData = cell.dataObject //데이터 오브젝트를 보댄다
             boardEditViewController.cellDelegate = cell         //현제 셀의 정보를 넘긴다.
             
-            //boardEditViewController.delegate = self             //수정후 처리를 위한 델리게이트르 넘긴다.
+            boardEditViewController.delegate = self             //수정후 처리를 위한 델리게이트르 넘긴다.
             
             self.showViewController(boardEditViewController, true)
         }
@@ -697,7 +714,8 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
                         if obj.boradKey == key{
                             self.boardList.remove(at: (cell.indexPath?.row)!)
                             
-                            self.tableView.deselectRow(at: cell.indexPath!, animated: false)
+                            self.tableView.deleteRows(at: [(cell.indexPath)!], with: .automatic)
+            
                             
                         }
                     })
@@ -785,16 +803,16 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
     
     //share Button Event
     func shareButtonEvent(sender: UIButton, cell: BoardTableCell) {
-        let alertController = UIAlertController(title: "공유", message: nil, preferredStyle: .actionSheet)
         
-        let copyAction = UIAlertAction(title: "택스트내용 복사", style: .cancel, handler:{ (Void) in
-            UIPasteboard.general.string = cell.textRecorded?.text
-        })
+        var str = cell.textRecorded?.text ?? ""
+ 
+        if(str.utf16.count < cell.originalText.utf16.count){
+            str = cell.originalText!
+        }
         
-        alertController.addAction(copyAction)
+        let activityViewController = UIActivityViewController(activityItems: [str], applicationActivities: [])
         
-        
-        self.present(alertController, animated: true, completion: nil)
+        self.present(activityViewController, animated: true, completion: nil)
     }
     
     //ReadMore Event
@@ -803,47 +821,6 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView.endUpdates()
         
         tableView.scrollToRow(at: cell.indexPath!, at: .top, animated: false)
-        
-    }
-    
-    //view hierarchy 오류로 인해서 방법을 바꿈
-    //원인 : CustomTabbarController안에 뷰어를 인식하지 못하는것 같음
-    //원래 self.view.window.rootViewController로 가능했으나 구조상의 문제로 방법을 바꿈
-    func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
-        var activateController = UIApplication.shared.keyWindow?.rootViewController
-        
-        if(activateController?.isKind(of: UINavigationController.self))!{
-            print("showViewController - Navigation")
-            activateController = (activateController as! UINavigationController).visibleViewController
-            
-            
-            
-        }else if((activateController?.presentedViewController) != nil){
-            print("showViewController - Nomal")
-            activateController = activateController?.presentedViewController
-            if(activateController?.isKind(of: UINavigationController.self))!{
-                print("showViewController - Nomal - Navigation")
-                activateController?.navigationController?.isNavigationBarHidden = true
-                
-            }
-            
-        }
-        
-        activateController?.present(viewController, animated: animated, completion: completion)
-        
-    }
-    
-    //현재 띄워진 뷰어를 닫는다. (잘 생각하고 쓰세요)
-    func closeViewController(_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
-        var activateController = UIApplication.shared.keyWindow?.rootViewController
-        
-        if(activateController?.isKind(of: UINavigationController.self))!{
-            activateController = (activateController as! UINavigationController).visibleViewController
-        }else if((activateController?.presentedViewController) != nil){
-            activateController = activateController?.presentedViewController
-        }
-        
-        activateController?.dismiss(animated: animated, completion: completion)
     }
     
     //indicator
@@ -961,16 +938,78 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
                 self.boardList.append(obj)
                 
                 let newIndexPath = IndexPath(row:self.boardList.count-1, section:1)
+                
+//                DispatchQueue.main.async(execute: { 
+//                    self.tableView.reloadData()
+//                    self.tableView.scrollToRow(at: newIndexPath, at: .bottom, animated: false)
+//                })
+//        
+                
                 self.tableView.insertRows(at: [newIndexPath], with: .automatic)
                 
             }
         })
     }
-
     
+    //TextView TabGesture Action
+    func tabGestureAction(_ sender:UITapGestureRecognizer){
+        let _view = sender.view as? UITextView
+        
+        let cell = tableView.cellForRow(at: IndexPath(row: (_view?.tag)!, section: 1)) as? BoardTableCell
+        
+        print("Tab >>>> \(String(describing: cell?.isExpend))")
+        
+        if((cell?.isExpend)!){
+            cell?.isExpend = false
+            
+            self.tableView.reloadData()
+            
+            self.tableView.scrollToRow(at: IndexPath(row: (_view?.tag)!, section: 1), at: .top, animated: true)
+        }else{
+            tableView(tableView, didSelectRowAt: IndexPath(row: (_view?.tag)!, section: 1))
+        }
+    }
+
     
 }
 
+/*
+ 
+ BoardTableViewController Extension
+ 
+ */
+
+//PullToRefresh Setting
+private extension BoardTableViewController {
+    
+    func setupPullToRefresh() {
+        tableView?.addPullToRefresh(PullToRefresh()) { [weak self] in
+            let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
+                print("top reload start------")
+                self?.loadOfPosts((self?.pageOfPosts)!,true)
+                
+            }
+        }
+        
+        tableView?.addPullToRefresh(PullToRefresh(position: .bottom)) { [weak self] in
+            let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
+                print("botton reload start------")
+                self?.appendingOfPosts((self?.pageOfPosts)!)
+            }
+        }
+    }
+}
+
+
+
+
+/*
+ 
+ 추가적인 Extension구현을 위한 구간(공통)
+ 
+ */
 
 extension NSDate {
     
@@ -998,6 +1037,7 @@ extension NSDate {
     }
 }
 
+//AutoLayout을 생성하기 위한 함수
 extension UIView {
     func addConstraintWithFormat(_ format : String, _ views : UIView...){
         
@@ -1012,12 +1052,7 @@ extension UIView {
     }
 }
 
-extension CustomTabBarController {
-    func pushViewController(_ viewController:UIViewController, _ animated  : Bool){
-        self.navigationController?.pushViewController(viewController, animated: animated)
-    }
-}
-
+//UIColor rgb , Hex버전으로 변경
 extension UIColor {
     convenience init(red: Int, green: Int, blue: Int) {
         assert(red >= 0 && red <= 255, "Invalid red component")
@@ -1047,25 +1082,33 @@ extension UIColor {
 }
 
 
-private extension BoardTableViewController {
+extension UIViewController {
     
-    func setupPullToRefresh() {
-        tableView?.addPullToRefresh(PullToRefresh()) { [weak self] in
-            let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-            DispatchQueue.main.asyncAfter(deadline: delayTime) {
-                print("top reload start------")
-                self?.loadOfPosts((self?.pageOfPosts)!,true)
-                
-            }
+    //새로운 뷰를 띄울경우 사용 할것 (가장 최상단의 뷰어를 찾아서 present를 한다)
+    func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+        var activateController = UIApplication.shared.keyWindow?.rootViewController
+        
+        if(activateController?.isKind(of: UINavigationController.self))!{
+            activateController = (activateController as! UINavigationController).visibleViewController
+        }else if((activateController?.presentedViewController) != nil){
+            activateController = activateController?.presentedViewController
         }
         
-        tableView?.addPullToRefresh(PullToRefresh(position: .bottom)) { [weak self] in
-            let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-            DispatchQueue.main.asyncAfter(deadline: delayTime) {
-                print("botton reload start------")
-                self?.appendingOfPosts((self?.pageOfPosts)!)
-            }
-        }
+        activateController?.present(viewController, animated: animated, completion: completion)
     }
-}
+    
+    //현재 띄워진 뷰어를 닫는다. (잘 생각하고 쓰세요)
+    //가능하면 self.dismiss 를 사용 할것
+    func closeViewController(_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+        var activateController = UIApplication.shared.keyWindow?.rootViewController
+        
+        if(activateController?.isKind(of: UINavigationController.self))!{
+            activateController = (activateController as! UINavigationController).visibleViewController
+        }else if((activateController?.presentedViewController) != nil){
+            activateController = activateController?.presentedViewController
+        }
+        
+        activateController?.dismiss(animated: animated, completion: completion)
+    }
 
+}
