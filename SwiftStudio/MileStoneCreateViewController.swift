@@ -80,6 +80,17 @@ class MileStoneCreateViewController: UIViewController {
     
     @IBOutlet weak var donelabel: UIButton!
     
+    
+    // added by J for testing 
+    // UIViewController랑 UITableViewController랑 같이는 못쓰나?
+    // 이 페이지의 경우 uiview와 uitableview중에 뭐가 더 좋음? 그냥 취향인지?
+    @IBOutlet var map: UILabel!
+    @IBOutlet var mapToggle: UISwitch!
+    
+    
+    
+    
+    
     var selectedDate: String!
     var moidfy_uid : String! = "nodata"
 
@@ -98,8 +109,8 @@ class MileStoneCreateViewController: UIViewController {
         self.MileDateText.date = mdate!
         
       //  donelabel.setTitle("Done", for: .normal)
-        MildDetailText!.layer.borderWidth = 1
-        MildDetailText!.layer.borderColor = UIColor.black.cgColor
+//        MildDetailText!.layer.borderWidth = 1
+//        MildDetailText!.layer.borderColor = UIColor.black.cgColor
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "mm"
