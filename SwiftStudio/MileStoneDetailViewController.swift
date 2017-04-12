@@ -343,7 +343,7 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
     
     
     
-    func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+    override func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
         var activateController = UIApplication.shared.keyWindow?.rootViewController
         
         if(activateController?.isKind(of: UINavigationController.self))!{
