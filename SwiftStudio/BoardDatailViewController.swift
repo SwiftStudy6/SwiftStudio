@@ -6,6 +6,13 @@ class User: NSObject {
     public var uid: String!
     public var userName: String!
     public var profile_url: String?
+    
+    
+    public var name :String?
+    public var email :String?
+    public var profileImageUrl :String?
+    public var id:String?
+
 }
 
 class Reply: NSObject {
