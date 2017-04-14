@@ -25,8 +25,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         //        createView()
         //    //권한 생성으로 인해서 바꾸지 말아주세요 테스트용으로 냅둘겁니다
         #if DEBUG
-            self.emailTextField.text = "wajl1004@gmail.com"
-            self.passwdTextField.text = "11111111"
+            self.emailTextField.text = "you6878@icloud.com"
+            self.passwdTextField.text = "123456"
         #endif
         loginButton.addTarget(self, action: #selector(self.buttonTouchUpInside(_:)), for: .touchUpInside)
         

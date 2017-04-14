@@ -362,6 +362,11 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         //Load Data
         loadEvent()
     }
+    deinit {
+        self.tableView.removePullToRefresh(tableView.topPullToRefresh!)
+        self.tableView.removePullToRefresh(tableView.bottomPullToRefresh!)
+    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

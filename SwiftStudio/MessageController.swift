@@ -9,22 +9,38 @@
 import UIKit
 import Firebase
 
-class MessageController: UITableViewController {
+class MessageController: UIViewController,UITableViewDelegate,UITableViewDataSource {
     
     let cellId = "cellId"
-
+    
+    
+    
+    @IBOutlet weak var tableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.delegate = self;
+        tableView.dataSource = self;
+        
         // Do any additional setup after loading the view, typically from a nib.
-    
         
-//        let ref = FIRDatabase.database().reference(fromURL: "https://fir-chat-e94db.firebaseio.com/")
-//        ref.updateChildValues(["someValue":123])
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
-        let image = UIImage(named: "ic_message_3x")
+        
+        
+        //        let ref = FIRDatabase.database().reference(fromURL: "https://fir-chat-e94db.firebaseio.com/")
+        //        ref.updateChildValues(["someValue":123])
+        
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: nil)
+        let image = UIImage(named: "Chat")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
+        //네비바를 강제로 넣는다.
+        let naviBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 72))
+        naviBar.items = [navigationItem]
+        naviBar.barTintColor = .white
+        self.view.addSubview(naviBar)
         
-        checkIfUserIsLoggiedIn()
+        
         
         tableView.register(UserCell.self, forCellReuseIdentifier:cellId)
         
@@ -113,7 +129,7 @@ class MessageController: UITableViewController {
                 
                 //This will crash because of background thread , so lets call this on dispatch_async main thread
                 DispatchQueue.main.async(execute: {
-                self.tableView.reloadData()
+                    self.tableView.reloadData()
                 })
                 
             }
@@ -125,15 +141,15 @@ class MessageController: UITableViewController {
         }, withCancel: nil)
         
     }
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 72
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         
         //채팅으로 온 메세지 클릭시 작동하는 부분
@@ -145,7 +161,7 @@ class MessageController: UITableViewController {
         
         let ref = FIRDatabase.database().reference().child("users").child(chatPartnerId)
         ref.observe(.value, with: { (snapshot) in
-                        
+            
             guard let dictionory = snapshot.value as? [String: AnyObject]
                 else{
                     return
@@ -156,14 +172,14 @@ class MessageController: UITableViewController {
             self.showchatControllerForUser(user: user)
         }, withCancel: nil)
         
-       
+        
     }
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         
         let message = messages[indexPath.row]
-       cell.message = message
+        cell.message = message
         
         return cell
     }
@@ -194,7 +210,7 @@ class MessageController: UITableViewController {
         profileImageView.layer.cornerRadius = 20
         profileImageView.clipsToBounds = true
         
-        if let profileImageUrl = user.profileImageUrl{
+        if let profileImageUrl = user.profile_url{
             profileImageView.loadImageUsingCacheWithUrlStirng(urlString: profileImageUrl)
         }
         containerView.addSubview(profileImageView)
@@ -204,9 +220,9 @@ class MessageController: UITableViewController {
         profileImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 40).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 40).isActive = true
-
+        
         let nameLabel = UILabel()
-        nameLabel.text = user.name
+        nameLabel.text = user.userName
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(nameLabel)
         nameLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant : 0).isActive = true
@@ -223,7 +239,7 @@ class MessageController: UITableViewController {
     }
     
     func showchatControllerForUser(user:User) -> Void {
-    
+        
         
         let chatLoginController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLoginController.user = user
@@ -238,15 +254,7 @@ class MessageController: UITableViewController {
         present(navController, animated: true, completion: nil)
     }
     
-    func checkIfUserIsLoggiedIn(){
-        
-        if FIRAuth.auth()?.currentUser?.uid == nil {
-            
-            perform(#selector(handleLogout),with:nil,afterDelay:0)
-        }else{
-            fetchUserAndSetupNaBarTtile()
-        }
-    }
+    
     
     func fetchUserAndSetupNaBarTtile(){
         
@@ -254,7 +262,7 @@ class MessageController: UITableViewController {
             return
         }
         
-
+        
         FIRDatabase.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             
             if let dictionary = snapshot.value as? [String :AnyObject]{
@@ -266,25 +274,18 @@ class MessageController: UITableViewController {
                 
             }
         }, withCancel: nil)
-
+        
         
     }
-
-
-    func handleLogout(){
-        
-        //FIRAuth.auth()?.signOut()//
-        do{
-            try FIRAuth.auth()?.signOut()
-        }catch let logoutError {
-            print(logoutError)
-        }
+    
+    
+    
+}
+extension UIColor{
+    
+    convenience init(r:CGFloat, g:CGFloat, b:CGFloat){
         
         
-        
-        let loginController = LoginController()
-        loginController.messagesController = self
-        present(loginController, animated: true, completion: nil)
+        self.init(red:r/255,green:g/255,blue:b/255,alpha:1)
     }
 }
-

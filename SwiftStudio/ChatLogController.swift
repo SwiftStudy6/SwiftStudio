@@ -16,7 +16,7 @@ class  ChatLogController: UICollectionViewController,UITextFieldDelegate,UIColle
     var cellId = "cellId"
     var user:User?{
         didSet{
-            navigationItem.title = user?.name
+            navigationItem.title = user?.userName
             observeMessage()
         }
     }
@@ -107,7 +107,7 @@ class  ChatLogController: UICollectionViewController,UITextFieldDelegate,UIColle
     
     private func setupCell(cell:ChatMessageCell,message:Message) -> Void {
         
-        if let profileImageUrl = self.user?.profileImageUrl{
+        if let profileImageUrl = self.user?.profile_url{
             cell.profileImageView.loadImageUsingCacheWithUrlStirng(urlString: profileImageUrl)
         }
         

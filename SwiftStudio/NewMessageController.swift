@@ -21,7 +21,7 @@ class NewMessageController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
-        
+   
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         fetchUser()
@@ -59,11 +59,11 @@ class NewMessageController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         let user = users[indexPath.row]
-        cell.textLabel?.text = user.name
+        cell.textLabel?.text = user.userName
         cell.detailTextLabel?.text = user.email
 //        cell.imageView?.image = UIImage(named:"moon")
 //        cell.imageView?.contentMode = .scaleAspectFill
-        if let profileImageUrl = user.profileImageUrl{
+        if let profileImageUrl = user.profile_url{
             
             cell.profileImageView.loadImageUsingCacheWithUrlStirng(urlString: profileImageUrl)
 //            let url = NSURL(string: profileImageUrl)
