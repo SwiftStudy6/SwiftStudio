@@ -117,36 +117,41 @@
             <point key="canvasLocation" x="439" y="764"/>
         </scene>
         <!--Message Controller-->
-        <scene sceneID="lAE-uo-6AN">
+        <scene sceneID="l8V-5W-Fvh">
             <objects>
-                <viewController id="hak-AZ-ORz" customClass="MessageController" customModule="SwiftStudio" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="7z2-hn-Ewm" customClass="MessageController" customModule="SwiftStudio" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="1ln-LK-IlL"/>
-                        <viewControllerLayoutGuide type="bottom" id="eEc-dd-YbB"/>
+                        <viewControllerLayoutGuide type="top" id="4YG-bF-DKw"/>
+                        <viewControllerLayoutGuide type="bottom" id="Hgl-8b-Vyb"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="hf1-I6-2zb">
+                    <view key="view" contentMode="scaleToFill" id="fPr-ds-pnH">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ZrZ-qB-0db">
-                                <rect key="frame" x="0.0" y="68" width="414" height="480"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="kcF-eC-gF5">
+                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <outlet property="dataSource" destination="hak-AZ-ORz" id="bab-TU-LRa"/>
-                                    <outlet property="delegate" destination="hak-AZ-ORz" id="P3b-xw-tcW"/>
+                                    <outlet property="dataSource" destination="7z2-hn-Ewm" id="OK6-6f-Kna"/>
+                                    <outlet property="delegate" destination="7z2-hn-Ewm" id="ggn-oU-xyg"/>
                                 </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Hgl-8b-Vyb" firstAttribute="top" secondItem="kcF-eC-gF5" secondAttribute="bottom" id="BMk-uV-7Pc"/>
+                            <constraint firstItem="kcF-eC-gF5" firstAttribute="leading" secondItem="fPr-ds-pnH" secondAttribute="leading" id="MGt-rV-5Rg"/>
+                            <constraint firstAttribute="trailing" secondItem="kcF-eC-gF5" secondAttribute="trailing" id="Umt-il-Xfj"/>
+                            <constraint firstItem="kcF-eC-gF5" firstAttribute="top" secondItem="fPr-ds-pnH" secondAttribute="top" constant="64" id="aD4-RK-RFU"/>
+                        </constraints>
                     </view>
                     <connections>
-                        <outlet property="tableView" destination="ZrZ-qB-0db" id="Vzw-1Z-oZm"/>
+                        <outlet property="tableView" destination="kcF-eC-gF5" id="fk3-if-7mC"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="HK3-gf-fvW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jHQ-qd-phk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-68.115942028985515" y="956.25000000000011"/>
+            <point key="canvasLocation" x="92.753623188405811" y="1098.913043478261"/>
         </scene>
         <!--MileStone-->
         <scene sceneID="346-PX-stq">
@@ -245,7 +250,7 @@
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="hak-AZ-ORz" kind="custom" identifier="Chat" customClass="CustomNavigationSegue" customModule="SwiftStudio" customModuleProvider="target" id="O8o-4X-8Tk"/>
+                                            <segue destination="7z2-hn-Ewm" kind="custom" identifier="Chat" customClass="CustomNavigationSegue" customModule="SwiftStudio" customModuleProvider="target" id="X6P-W6-MiY"/>
                                         </connections>
                                     </button>
                                 </subviews>

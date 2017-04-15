@@ -13,38 +13,28 @@ class MessageController: UIViewController,UITableViewDelegate,UITableViewDataSou
     
     let cellId = "cellId"
     
-    
-    
     @IBOutlet weak var tableView: UITableView!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.delegate = self;
-        tableView.dataSource = self;
-        
         // Do any additional setup after loading the view, typically from a nib.
-        
-        
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
         
         //        let ref = FIRDatabase.database().reference(fromURL: "https://fir-chat-e94db.firebaseio.com/")
         //        ref.updateChildValues(["someValue":123])
-        
-        
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: nil)
         let image = UIImage(named: "Chat")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
         //네비바를 강제로 넣는다.
-        let naviBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 72))
+        let naviBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 64))
         naviBar.items = [navigationItem]
-        naviBar.barTintColor = .white
+        naviBar.barTintColor = UIColor(red: 0, green: 185, blue: 230)
+        naviBar.barStyle = .black
+        naviBar.tintColor = UIColor(red: 10, green: 137, blue: 167)
         self.view.addSubview(naviBar)
-        
-        
-        
         tableView.register(UserCell.self, forCellReuseIdentifier:cellId)
         
-        //observeMessage()
+        observeMessage()
         
         
     }
@@ -141,15 +131,15 @@ class MessageController: UIViewController,UITableViewDelegate,UITableViewDataSou
         }, withCancel: nil)
         
     }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 72
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         
         //채팅으로 온 메세지 클릭시 작동하는 부분
@@ -174,7 +164,7 @@ class MessageController: UIViewController,UITableViewDelegate,UITableViewDataSou
         
         
     }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         
@@ -244,12 +234,13 @@ class MessageController: UIViewController,UITableViewDelegate,UITableViewDataSou
         let chatLoginController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLoginController.user = user
         // UICollectionViewFlowLayout?
-        navigationController?.pushViewController(chatLoginController, animated: true)
+        
+        present(chatLoginController, animated: true, completion: nil)
         
     }
     func handleNewMessage(){
         let newMessageController = NewMessageController()
-        newMessageController.messagesController = self
+        //newMessageController.messagesController = self
         let navController = UINavigationController(rootViewController: newMessageController)
         present(navController, animated: true, completion: nil)
     }
@@ -281,11 +272,4 @@ class MessageController: UIViewController,UITableViewDelegate,UITableViewDataSou
     
     
 }
-extension UIColor{
-    
-    convenience init(r:CGFloat, g:CGFloat, b:CGFloat){
-        
-        
-        self.init(red:r/255,green:g/255,blue:b/255,alpha:1)
-    }
-}
+

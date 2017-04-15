@@ -20,9 +20,16 @@ class NewMessageController: UITableViewController {
     var users = [User]()
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.isNavigationBarHidden = true
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
    
-        
+        let naviBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 64))
+        naviBar.items = [navigationItem]
+        naviBar.barTintColor = UIColor(red: 0, green: 185, blue: 230)
+        naviBar.barStyle = .black
+        naviBar.tintColor = UIColor(red: 10, green: 137, blue: 167)
+        view.addSubview(naviBar)
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         fetchUser()
     
@@ -61,23 +68,10 @@ class NewMessageController: UITableViewController {
         let user = users[indexPath.row]
         cell.textLabel?.text = user.userName
         cell.detailTextLabel?.text = user.email
-//        cell.imageView?.image = UIImage(named:"moon")
-//        cell.imageView?.contentMode = .scaleAspectFill
         if let profileImageUrl = user.profile_url{
             
             cell.profileImageView.loadImageUsingCacheWithUrlStirng(urlString: profileImageUrl)
-//            let url = NSURL(string: profileImageUrl)
-//            URLSession.shared.dataTask(with: url! as URL,completionHandler:{(data,response,err)in
-//                if err != nil{
-//                    print(err)
-//                    return
-//                }
-//                DispatchQueue.main.async {
-//                    cell.profileImageView.image = UIImage(data: data!)
-//                    //cell.imageView?.image=UIImage(data:data!)
-//                    }
-//                
-//            }).resume();
+
             
         }
         return cell

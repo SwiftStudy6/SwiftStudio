@@ -82,7 +82,21 @@ class  ChatLogController: UICollectionViewController,UITextFieldDelegate,UIColle
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         setupInputComponents()
         
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(quit))
+        //네비바를 강제로 넣는다.
+        let naviBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 64))
+        naviBar.items = [navigationItem]
+        naviBar.barTintColor = UIColor(red: 0, green: 185, blue: 230)
+        naviBar.barStyle = .black
+        naviBar.tintColor = UIColor(red: 10, green: 137, blue: 167)
+        self.view.addSubview(naviBar)
+        
     }
+    func quit() -> Void {
+        dismiss(animated: true, completion: nil)
+    }
+    
     
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -121,7 +135,7 @@ class  ChatLogController: UICollectionViewController,UITextFieldDelegate,UIColle
             cell.bubleViewRightAnchor?.isActive = true
             cell.bubleViewLeftAnchor?.isActive = false
         }else{
-            cell.bubleView.backgroundColor = UIColor(r:240,g:240,b:240)
+            cell.bubleView.backgroundColor = UIColor(red:240,green:240,blue:240)
             cell.textView.textColor = UIColor.black
             cell.profileImageView.isHidden = false
             cell.bubleViewRightAnchor?.isActive = false
@@ -183,7 +197,7 @@ class  ChatLogController: UICollectionViewController,UITextFieldDelegate,UIColle
         inputTextField.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
         
         let separatorLineView = UIView()
-        separatorLineView.backgroundColor = UIColor(r:220,g:220,b:220)
+        separatorLineView.backgroundColor = UIColor(red:220,green:220,blue:220)
         separatorLineView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(separatorLineView)
         
