@@ -17,6 +17,9 @@ target 'SwiftStudio' do
   #SDWebImage
   pod 'SDWebImage', '~>3.8'
   
+  # Eureka (form builder)
+  pod 'Eureka', '~> 3.0'
+  
   
   #etc
   #pod 'SwiftyJSON', '~> 3.1' #delete

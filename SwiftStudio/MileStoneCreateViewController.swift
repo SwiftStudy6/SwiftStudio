@@ -54,51 +54,34 @@ class USER {
 */
 
 class MileStoneCreateViewController: UIViewController {
-    
-    
     lazy var homeBarButtonItem: UIBarButtonItem = {
         let button = UIBarButtonItem(image: UIImage(named: "Home"), style: .plain, target: self, action: #selector(self.back))
         
         return button
     }()
-    
     lazy var composeBarButtonItem: UIBarButtonItem = {
         let button = UIBarButtonItem(image: UIImage(named: "done [#1476].png"), style: .plain, target: self, action: #selector(self.DoneButton(_:)))
         
         return button
     }()
     
-    
-    
     @IBOutlet weak var MileTitleText: UITextField!
-    
     @IBOutlet weak var MileDateText: UIDatePicker!
-    
     @IBOutlet weak var MildDetailText: UITextView!
-    
     @IBOutlet weak var main_title: UILabel!
-    
     @IBOutlet weak var donelabel: UIButton!
-    
-    
-    // added by J for testing 
-    // UIViewController랑 UITableViewController랑 같이는 못쓰나?
-    // 이 페이지의 경우 uiview와 uitableview중에 뭐가 더 좋음? 그냥 취향인지?
+    // added by J for testing
     @IBOutlet var map: UILabel!
     @IBOutlet var mapToggle: UISwitch!
-    
-    
-    
-    
+   
     
     var selectedDate: String!
     var moidfy_uid : String! = "nodata"
-
     let user = USER()
-    
     var mtitle: String?
     var mdetail: String?
     var mdate :Date? =  NSDate() as Date
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -141,22 +124,15 @@ class MileStoneCreateViewController: UIViewController {
         self.view.addSubview(naviBar)
 
         
-        
-        
-        
         // keyboard control
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         user_info()
-    
         
     }
-    
-    
    
     // Called when 'return' key pressed. return NO to ignore.
-    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         
         MildDetailText.resignFirstResponder()
@@ -165,11 +141,10 @@ class MileStoneCreateViewController: UIViewController {
     }
     
     // Called when the user click on the view (outside the UITextField).
-    
-    
+    // -> ???
     
     // in swift 3 click view event !!
-     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)  {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)  {
         if let touch = touches.first {
             let currnetPoint = touch.location(in:  self.view)
             print(currnetPoint)
@@ -179,7 +154,8 @@ class MileStoneCreateViewController: UIViewController {
     
     
     // func touchesMoved
-    // func touchesEnded 
+    // func touchesEnded
+    // -> ???
     
     func keyboardDismiss() {
         MildDetailText.resignFirstResponder()
@@ -202,7 +178,6 @@ class MileStoneCreateViewController: UIViewController {
     
     // keyboard show
     func keyboardWillShow(notification: NSNotification) {
-        
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y == 0{
                 self.view.frame.origin.y -= 100
@@ -219,6 +194,7 @@ class MileStoneCreateViewController: UIViewController {
         }
     }
     
+    
     @IBAction func MileDateAction(_ sender: Any) {
         
      let dateFormatter = DateFormatter()
@@ -228,7 +204,6 @@ class MileStoneCreateViewController: UIViewController {
         NSLog("%@",strDate )
         NSLog("%@",selectedDate )
     }
-    
     
     
     override func didReceiveMemoryWarning() {
@@ -263,11 +238,13 @@ class MileStoneCreateViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
         
     }
+    
     @IBAction func back(_ sender: Any) {
         
         self.dismiss(animated: true, completion: nil)
         
     }
+    
     
     func dataSetting()
     {
@@ -354,13 +331,7 @@ class MileStoneCreateViewController: UIViewController {
         
     }
     
-    
-    
-    
     func user_info() {
-        
-        
-        
         let uid = FIRAuth.auth()?.currentUser?.uid
         let ref = FIRDatabase.database().reference()
         ref.child("users").child(uid!).observeSingleEvent(of: .value, with:  { (snapshot) in
@@ -378,8 +349,6 @@ class MileStoneCreateViewController: UIViewController {
             print(self.user.userEmail)
             print(self.user.userName)
         })
-        
-        
     }
     
     
