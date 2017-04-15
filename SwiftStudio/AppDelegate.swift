@@ -32,10 +32,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
          놓은 상태에서 아래 코드와 같이 하면 됩니다.
          */
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.makeKeyAndVisible()
+
+        window?.makeKeyAndVisible();
+        
+
+          let loginViewController = LoginViewController()
+       // let loginViewController = testMileController()
         
         //여기 부분 바꾸지 말것 (loginview에서 if debug flag 추가했음) by June
-        let loginViewController = LoginViewController()
+//        let loginViewController = LoginViewController()
         window?.rootViewController = loginViewController
                 
         return true

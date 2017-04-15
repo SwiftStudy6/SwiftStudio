@@ -1,31 +1,32 @@
 //
-//  MainViewController.swift
+//  BoardTableViewController.swift
 //  SwiftStudio
 //
-//  Created by David June Kang on 2016. 12. 31..
-//  Copyright © 2016년 ven2s.soft. All rights reserved.
+//  Created by David June Kang on 2017. 3. 15..
+//  Copyright © 2017년 swift. All rights reserved.
 //
 
 import UIKit
 import Firebase
-import SDWebImage
 import Toaster
+import SDWebImage
 import PullToRefresh
 
-
-/*************************************************************************************
- * MainViewController Start
- *************************************************************************************/
-
-//전역변수
-private let reuseIdentifier = "BoardCell"
-private let reuseIdentifier2 = "NoticeCell"
+private let boardReuseIndentifier = "BoardTableCell"
+private let noticeReuseIndentifier = "NoticeTableCell"
 
 private let boardPostChildName = "Board-Posts"
 private let noticePostChildName = "Notice-Posts"
 
-//Definition Class MainViewController
-class MainViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, BoardCellDelegate {
+
+class BoardTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, BoardTableCellDelegate {
+ 
+    var naviBar: UINavigationBar!
+    
+    let maxSize = 300
+    
+    @IBOutlet weak var tableView: UITableView!
+    
     
     private var ref : FIRDatabaseReference! = FIRDatabase.database().reference()
     private var data : String!
@@ -33,8 +34,8 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     private var boardRef : FIRDatabaseReference! = FIRDatabase.database().reference().child(boardPostChildName)
     private var noticeRef : FIRDatabaseReference! = FIRDatabase.database().reference().child(noticePostChildName)
     
-    let rangeOfPosts : UInt = 10
-    var pageOfPosts  : UInt = 1
+    let rangeOfPosts : UInt = 10    //페이지당 표현 갯수
+    var pageOfPosts  : UInt = 1     //현재 페이지갯수
     
     var lastestKey : String?
     
@@ -46,6 +47,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         return button
     }()
     
+    
     lazy var composeBarButtonItem: UIBarButtonItem = {
         let button = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.navToWriteHandle))
         
@@ -56,21 +58,22 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     var titleString : String! = nil
     
     //데이터 리스트
-    var boardList : Array<Any>! = Array()
-    var noticeList : Array<Any>! = Array()
+    var boardList : Array<BoardObject>! = Array()
+    var noticeList: Array<NoticeObject>!  = Array()
     
     //뱅글이를 위한 것
     var indicator : UIActivityIndicatorView?
     var indicView : UIView?
     
+    
     //초기 상태 로딩
     func loadPostsEvent(){
         
         loadOfPosts(1, false, startBlock: { () in
-                let tup = self.showActivityIndicatory(uiView: self.view)
-                self.indicator = tup.1
-                self.indicView = tup.0
-                self.indicView?.isHidden = false
+            let tup = self.showActivityIndicatory(uiView: self.view)
+            self.indicator = tup.1
+            self.indicView = tup.0
+            self.indicView?.isHidden = false
         }, endBlock: { () in
             self.indicView?.isHidden = true
             self.indicator?.stopAnimating()
@@ -80,8 +83,6 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     //게시판 내용을 블러온다 (모두)
     func loadOfPosts(_ pageCount : UInt, _ isTrue : Bool = false, startBlock : (() -> Swift.Void)? = nil, endBlock:(() -> Swift.Void)? = nil){
-        
-        self.boardList.removeAll() //초기화
         
         let ref = boardRef.queryOrderedByKey()
         
@@ -93,8 +94,9 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             guard snapshot.exists() else {
                 return
             }
+            self.boardList.removeAll() //초기화
             
-            var tempList : Array<Any>! = Array() //초기화
+            var tempList : Array<BoardObject>! = Array() //초기화
             
             let enumerate = snapshot.children
             while let rest = enumerate.nextObject()  as? FIRDataSnapshot {
@@ -126,26 +128,24 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                     
                     obj.like = like as? Dictionary<String, Bool>
                     obj.likeCount = likeCount as! Int
-                   
+                    
                 }
-
+                
                 tempList.append(obj)
             }
             
             self.boardList.append(contentsOf: tempList)
             
             //페이징을 위한 방법
-            
-            let counts = UInt(self.boardList.count) / self.rangeOfPosts
-            self.pageOfPosts = counts == 0 ? self.pageOfPosts : counts
+            self.pageOfPosts = UInt(self.boardList.count) / self.rangeOfPosts == 0 ? self.pageOfPosts : UInt(self.boardList.count) / self.rangeOfPosts
             self.lastestKey = (snapshot.children.allObjects.last as! FIRDataSnapshot).key
             
             if(self.boardList.count > 0){
                 DispatchQueue.main.async {
-                    self.collectionView?.reloadData()
-                    self.collectionView?.scrollToItem(at: IndexPath(row: self.boardList.count-1, section:1), at: .bottom, animated: false)
+                    self.tableView?.reloadData()
+                    
                     if isTrue {
-                        self.collectionView?.endRefreshing(at: .top)
+                        self.tableView?.endRefreshing(at: .top)
                     }else{
                         endBlock!()
                     }
@@ -153,7 +153,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             }
         })
         if (self.indicator?.isAnimating)! {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: { 
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
                 endBlock!()
             })
         }
@@ -172,7 +172,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 return
             }
             
-            var tempList : Array<Any>! = Array() //초기화
+            var tempList : Array<BoardObject>! = Array() //초기화
             
             let enumerated = snapshot.children
             while let rest = enumerated.nextObject() as? FIRDataSnapshot {
@@ -212,7 +212,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             
             for board in self.boardList {
                 for (idx,temp) in tempList.enumerated() {
-                    if (board as! BoardObject).isEqual(temp as! BoardObject) {
+                    if board.isEqual(temp) {
                         tempList.remove(at: idx)
                     }
                 }
@@ -228,22 +228,23 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 self.pageOfPosts = self.pageOfPosts + 1
             }
             
+            
             DispatchQueue.main.async {
                 
-                self.collectionView?.reloadData()
-                self.collectionView?.scrollToItem(at: IndexPath(row: count-1, section: 1), at: .bottom, animated: false)
-                
-                self.collectionView?.endRefreshing(at: .bottom)
+                self.tableView?.reloadData()
+                self.tableView.scrollToRow(at: IndexPath(row: count-1, section: 1), at: .bottom, animated: false)
+                self.tableView?.endRefreshing(at: .bottom)
             }
         })
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { 
-            self.collectionView?.endRefreshing(at: .bottom)
+        //3초뒤 리프레싱을 꺼지도록 한다.(혹시모를 상황에 대비)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            self.tableView?.endRefreshing(at: .bottom)
         }
         print("bottom reload end ----------")
         
     }
-
+    
     
     
     //초기 불러오기 이벤트
@@ -257,7 +258,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 return
             }
             
-            var tempList : Array<Any>! = Array()
+            var tempList : Array<NoticeObject>! = Array()
             let enumerator = snapshot.children
             while let rest = enumerator.nextObject() as? FIRDataSnapshot {
                 let noticeKey = rest.key
@@ -285,7 +286,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             if(self.noticeList.count > 0){
                 for idx in self.noticeList {
                     for (i,temp) in tempList.enumerated() {
-                        if (idx as! NoticeObject).isEqual(temp as? NoticeObject){
+                        if idx.isEqual(temp){
                             tempList.remove(at: i)
                         }
                     }
@@ -294,7 +295,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             
             if(tempList.count > 0){
                 self.noticeList.append(contentsOf: tempList)
-                self.collectionView?.reloadData()
+                self.tableView?.reloadData()
             }
             
         })
@@ -306,65 +307,18 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         let vc = UIStoryboard(name: "BoardCreate", bundle: nil).instantiateInitialViewController() as! BoardCreateViewController
         
-        //vc.delegate = self
+        vc.delegate = self
         
         showViewController(vc, true)
-    
+        
     }
     
-
     func returnHome(){
         closeViewController(true)
     }
     
-
-    func fetchBoardList(enumerator: NSEnumerator){
-        
-        for item in enumerator {
-            if let item = item as? FIRDataSnapshot {
-                
-                let dict = item.value as! [String : Any]
-                let author = dict["author"] as! [String: String]
-                
-                let bObj : BoardObject! = BoardObject()
-                
-                bObj.boradKey = item.key
-                bObj.authorId = author["uid"]
-                bObj.authorName = author["userName"]
-                bObj.bodyText = dict["text"] as? String
-                
-                if let time = dict["recordTime"] as? Int {
-                    bObj.editTime = NSDate(timeIntervalSince1970: Double(time/1000)).toString()
-                }
-                
-                self.boardList.append(bObj)
-            }
-        }
-        
-        
-        DispatchQueue.main.async {
-            self.collectionView?.reloadData()
-        }
-    }
-
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-
-        loadEvent()
-//      //테스터 더미
-//        if(self.boardList.count == 0){
-//            let bObj : BoardObject! = BoardObject()
-//            
-//            bObj.boradKey = boardRef.childByAutoId().key
-//            bObj.authorId = FIRAuth.auth()?.currentUser?.uid
-//            bObj.authorName = "June Kang"
-//            bObj.bodyText = "테스트용 더미(실제데이터데이스에는 추가안되어있다)"
-//            bObj.editTime = "2017년 01월 24일 오후 02:30"
-//            self.boardList.append(bObj)
-//        }
-
         
         let customController = CustomTabBarController.sharedInstance
         
@@ -374,7 +328,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             self.titleString = title
         }
         
-              
+        
         navigationItem.title = self.titleString
         navigationItem.rightBarButtonItem = composeBarButtonItem
         navigationItem.leftBarButtonItem = homeBarButtonItem
@@ -387,168 +341,173 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         self.view.addSubview(naviBar)
         
-        self.collectionView?.frame = CGRect(x: 0, y: 64, width: self.view.frame.width, height: (self.collectionView?.frame.height)!-64)
-        
         
         //RefreshController Setting
         self.refreshController = UIRefreshControl()
+    
         
-        
-        // Register cell classes
-        self.collectionView!.register(BoardCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        self.collectionView!.register(NoticeCell.self, forCellWithReuseIdentifier: reuseIdentifier2)
-        
-        //Setting View
+        //Setting View & Table View
         self.view.backgroundColor = .white
-        self.collectionView?.backgroundColor = UIColor.gray.withAlphaComponent(0.25)
+        self.tableView?.backgroundColor = UIColor(netHex: 0xAAAAAA)
         
-        self.collectionView?.delegate = self
         
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.estimatedRowHeight = 260
+        
+        
+        self.tableView.tableFooterView? = UIView()
+        self.tableView.tableHeaderView? = UIView()
         
         //Pull to Refresth Setting
-        //setupPullToRefresh()
-       
+        setupPullToRefresh()
+        
+        
+        //Load Data
+        loadEvent()
     }
     
+    //반드시 적어줘야함 (PullToRefresh를 사용할 경우)
     deinit {
-        collectionView?.removePullToRefresh((collectionView?.bottomPullToRefresh!)!)
-        collectionView?.removePullToRefresh((collectionView?.topPullToRefresh!)!)
+        self.tableView.removePullToRefresh(tableView.topPullToRefresh!)
+        self.tableView.removePullToRefresh(tableView.bottomPullToRefresh!)
     }
-
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        ref.removeAllObservers()
-    }
+    // MARK: - Table view data source
     
-    // MARK: UICollectionViewDataSource
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        
-        //내용이 없을 경우 보여준다.
-        collectionView.backgroundView = nil
-    
-        if (self.boardList.count == 0), (self.noticeList.count == 0) {
-            let noDataLabel = UILabel(frame: CGRect(x: 0, y: 0, width: collectionView.frame.size.width, height: collectionView.frame.size.height))
-            noDataLabel.text = "결과가 없거나 조회중입니다. 잠시만 기다려주세요"
-            noDataLabel.textColor = .black
-            noDataLabel.textAlignment = .center
-            collectionView.backgroundView = noDataLabel
-        }
-        
+    //표현할 섹션(섹션은 사용할 만큼의 고정값을 줘야 한다)
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
 
-
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        
-        if(section == 0){
+    //Section 당 표현 갯수
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
             return self.noticeList.count
-        } else if (section == 1) {
+        }else {
             return self.boardList.count
-        }else{
-            return 3
         }
-        
     }
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        //공지사항을 위한 cell
-        if(indexPath.section == 0){
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier2, for: indexPath) as! NoticeCell
+    
+     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        //Notice Section
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: noticeReuseIndentifier, for: indexPath) as! NoticeTableCell
             
-            cell.dataObject = self.noticeList[indexPath.row] as! NoticeObject
+            cell.lable?.text = self.noticeList[indexPath.row].text
+            cell.lable.textAlignment = .left
             
-            cell.indexPath = indexPath
+            let selectedView = UIView()
+            selectedView.backgroundColor = UIColor(netHex:0x7e9b96)
+            cell.selectedBackgroundView = selectedView
+            
+            
+            
             
             return cell
-        
-        //일반적인 게시물을 위한 cell
-        }else{
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! BoardCell
-            let boardObj = self.boardList[indexPath.row] as! BoardObject
+        //Board Section
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: boardReuseIndentifier, for: indexPath) as! BoardTableCell
+            
+            let boardObj = self.boardList[indexPath.row]
+            
+            //Add TagGestureRecognizer
+            let tabGesture = UITapGestureRecognizer(target: self, action: #selector(tabGestureAction(_:)))
+            cell.textRecorded?.tag = indexPath.row
+            cell.textRecorded?.addGestureRecognizer(tabGesture)
             
             cell.dataObject = boardObj
             
-            cell.likeButton?.isSelected = false
+            let str : String! = boardObj.bodyText
             
+            //더보기 추가
+            if(str.utf16.count >= maxSize){
+                let readMore = "...더 보기"
+                
+                var tmp : String = (str as NSString).substring(with: NSRange(location:0, length: maxSize))
+                tmp += readMore
+                
+                let attribs = [NSForegroundColorAttributeName : UIColor.black, NSFontAttributeName: UIFont.systemFont(ofSize: 13)]
+                let attributedStr = NSMutableAttributedString(string: tmp, attributes: attribs)
+                attributedStr.addAttribute(NSLinkAttributeName, value: "", range: NSRange(location: maxSize, length: readMore.utf16.count))
+                
+                cell.textRecorded?.text = "" //초기화
+                
+                //확장여부로 인해 달라지게 표현
+                if !cell.isExpend {
+                    cell.textRecorded?.attributedText = attributedStr
+                    cell.originalText = boardObj.bodyText
+                }else{
+                    cell.textRecorded?.text = boardObj.bodyText
+                    cell.originalText = ""
+                }
+            }else {
+                cell.textRecorded?.text = "" //초기화
+                cell.textRecorded?.text = str
+                
+                cell.originalText = ""
+            }
+         
+            cell.likeButton?.isSelected = false //버튼 선택 초기화
+            
+            //Like버튼 선택 여부
             if let like = boardObj.like {
                 if let _ = like[(FIRAuth.auth()?.currentUser?.uid)!] {
-                    cell.likeButton?.isSelected = true
+                    cell.likeButton.isSelected = true
                 }else{
-                    cell.likeButton?.isSelected = false
+                    cell.likeButton.isSelected = false
                 }
             }
             
-            //프로필 이미지 처리
-            cell.userImage.sd_setImage(with: URL(string:boardObj.profileImgUrl!), placeholderImage: UIImage(named:"User"), options: .retryFailed, completed: { (image, error, cachedType, url) in
+            //프로필 이미지 처리(이미 캐싱이 되어 있지만 순차적으로 표현되도록 만듬)
+            cell.profileImage?.sd_setImage(with: URL(string:boardObj.profileImgUrl!), placeholderImage: UIImage(named:"User"), options: .retryFailed, completed: { (image, error, cachedType, url) in
                 
                 
                 //이미지캐싱이 안되있을경우에 대한 애니메이션 셋팅_imageView.alpha = 1;
-                if cell.userImage != nil, cachedType == .none {
+                if cell.profileImage != nil, cachedType == .none {
                     
-                    cell.userImage?.alpha = 0
+                    cell.profileImage?.alpha = 0
                     
                     UIView.animate(withDuration: 0.2, animations: {
-                        cell.userImage?.alpha = 1
+                        cell.profileImage?.alpha = 1
                     }, completion: { (finished) in
-                        cell.userImage?.alpha = 1
+                        cell.profileImage?.alpha = 1
                     })
                 }
             })
-        
+            
             cell.indexPath = indexPath
-        
+            
             cell.delegate = self
             
             
-            //text 
+            let selectedView = UIView()
+            selectedView.backgroundColor = UIColor(netHex:0x7e9b96)
+            cell.selectedBackgroundView = selectedView
             
-            let lineCount = (cell.textRecorded?.frame.size.height)! / (cell.textRecorded?.font?.lineHeight)!
-            print("\(indexPath.row) : \(lineCount)")
             
             
             return cell
         }
     }
     
-    // MARK: UICollectionViewDelegate
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        if( indexPath.section == 0 ){
-            if self.noticeList.count > 0 {
-                return CGSize(width: view.frame.width, height: 30)
-            }else {
-                return CGSize.zero
-            }
-        }else{
-            let height : CGFloat = 250.0;
-
-            
-            return CGSize(width: view.frame.width, height: height)
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if(section == 0) {
+            return 10
         }
+        return 0
     }
     
-    
-    //셀 내부 유격
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
-    }
-    
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    //셀선택시
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         
         if(indexPath.section == 0){
-            let noticeObj = self.noticeList[indexPath.row] as! NoticeObject
+            let noticeObj = self.noticeList[indexPath.row]
             
             let actionController = UIAlertController(title: "확인창", message: "해당 공지사항을 내리겠습니까?", preferredStyle: .alert)
             //공지사항 삭제
@@ -562,12 +521,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                     
                     
                     for (idx,obj) in self.noticeList.enumerated() {
-                        if(obj as! NoticeObject).noticeKey == key {
+                        if obj.noticeKey == key {
                             self.noticeList.remove(at: idx)
-                            self.collectionView?.deleteItems(at: [IndexPath(row: idx, section: 0)])
+                            
+                            self.tableView.deleteRows(at: [IndexPath(row: idx, section: 0)], with: .none)
                         }
                     }
-
+                    
                     
                 })
                 
@@ -584,11 +544,10 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             }
             
         }else{
-        
-            collectionView.deselectItem(at: indexPath, animated: true)
             
+
             let boardDetailController = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
-            boardDetailController.boardData = self.boardList[indexPath.row] as? BoardObject
+            boardDetailController.boardData = self.boardList[indexPath.row]
             
             let navigationController = UINavigationController(rootViewController: boardDetailController)
             
@@ -597,22 +556,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             showViewController(navigationController, true)
             
         }
+
     }
+  
+    // MARK : - BoardTableCell Delegate
     
-    // MARK : FlowlayoutDelegate
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        if section == 0 {
-            return 1
-        }else{
-            return 8
-        }
-    }
-    
-    // MARK : BoardCellDelegate
-    //Edit Button
-    func editButtonEvent(sender: UIButton, cell : BoardCell) {
-        
+    //menuButtonEvent
+    func menuButtonEvent(sender: UIButton, cell: BoardTableCell) {
         let user = FIRAuth.auth()?.currentUser
         
         let boardKey = cell.key
@@ -621,7 +571,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         
         let alertController = UIAlertController(title: "게시물 수정", message: nil, preferredStyle: .actionSheet)
-     
+        
         //공지 추가 액션
         let addNoticeAction = UIAlertAction(title: "공지사항 등록", style: .default) { (Void) in
             
@@ -667,7 +617,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                                                time)
                         var idx = -1
                         for obj in self.noticeList {
-                            if (obj as! NoticeObject).noticeKey == snapshot.key{
+                            if obj.noticeKey == snapshot.key{
                                 idx = idx + 1
                             }
                         }
@@ -678,8 +628,9 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                         }
                         
                         if(count < self.noticeList.count){
-                            self.collectionView?.insertItems(at: [IndexPath(row:self.noticeList.count-1, section: 0)])
-                            self.collectionView?.reloadItems(at: [IndexPath(row:self.noticeList.count-1, section: 0)])
+                            let _indexPath = IndexPath(row:self.noticeList.count-1, section: 0)
+                            self.tableView.insertRows(at: [_indexPath], with: .none)
+                            self.tableView.reloadRows(at: [_indexPath], with: .none)
                         }
                     })
                 })
@@ -691,12 +642,12 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             
             var noticeKey : String?
             var indexPath : IndexPath?
-
+            
             for (idx,val) in self.noticeList.enumerated() {
-                if(cell.key == (val as! NoticeObject).noticeKey){
+                if(cell.key == val.noticeKey){
                     indexPath = IndexPath(row: idx, section: 0)
                     
-                    noticeKey = (val as! NoticeObject).noticeKey
+                    noticeKey = val.noticeKey
                 }
             }
             
@@ -707,12 +658,10 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 
                 let key = ref.key
                 
-                
-                
                 for (i,obj) in self.noticeList.enumerated() {
-                    if(obj as! NoticeObject).noticeKey == key {
+                    if obj.noticeKey == key {
                         self.noticeList.remove(at: i)
-                        self.collectionView?.deleteItems(at: [IndexPath(row: i, section: 0)])
+                        self.tableView.deleteRows(at: [IndexPath(row: i, section: 0)], with: .none)
                     }
                 }
                 
@@ -726,7 +675,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 let dict = snapshot.value as! [String : Any]
                 
                 if(boardKey == dict["boardKey"] as? String){
-                    self.collectionView?.deleteItems(at: [indexPath!])
+                    self.tableView.deselectRow(at: indexPath!, animated: true)
                     self.noticeList.remove(at: (indexPath?.row)!)
                 }
             })
@@ -736,20 +685,20 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         //글 수정 액션
         let editAction = UIAlertAction(title: "글 수정", style: .default) { (Void) in
             
-
+            
             let boardEditViewController = UIStoryboard(name: "BoardCreate", bundle: nil).instantiateInitialViewController() as! BoardCreateViewController
             
             boardEditViewController.boardData = cell.dataObject //데이터 오브젝트를 보댄다
-            //boardEditViewController.cellDelegate = cell         //현제 셀의 정보를 넘긴다.
+            boardEditViewController.cellDelegate = cell         //현제 셀의 정보를 넘긴다.
             
-            //boardEditViewController.delegate = self             //수정후 처리를 위한 델리게이트르 넘긴다.
-        
+            boardEditViewController.delegate = self             //수정후 처리를 위한 델리게이트르 넘긴다.
+            
             self.showViewController(boardEditViewController, true)
         }
         
         //글 삭제 약션
         let delAction = UIAlertAction(title: "글 삭제", style: .destructive) { (Void) in
-           
+            
             let confirmControlelr = UIAlertController(title: "확인창", message: "정말로 게시물을 삭제 하실껍니까?\n(복구 안됩니다)", preferredStyle: .alert)
             
             let deleteAction = UIAlertAction(title: "삭제", style: .destructive, handler: { (Void) in
@@ -760,12 +709,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                         }
                         
                         let key = ref.key
-                        let obj = self.boardList[cell.indexPath.row] as! BoardObject
+                        let obj = self.boardList[(cell.indexPath?.row)!]
                         
                         if obj.boradKey == key{
-                            self.boardList.remove(at: cell.indexPath.row)
+                            self.boardList.remove(at: (cell.indexPath?.row)!)
                             
-                            self.collectionView?.deleteItems(at: [cell.indexPath])
+                            self.tableView.deleteRows(at: [(cell.indexPath)!], with: .automatic)
+            
                             
                         }
                     })
@@ -796,11 +746,11 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         self.present(alertController, animated: true, completion: nil)
         
+        
     }
     
-    //Like Button
-    func likeButtonEvent(sender: UIButton, cell : BoardCell) {
-        
+    //like Button Event
+    func likeButtonEvent(sender: UIButton, cell: BoardTableCell) {
         var flag = false    //flag for select
         
         boardRef.child(cell.key).runTransactionBlock({ (currentData) -> FIRTransactionResult in
@@ -833,79 +783,45 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             }
             
             let dict = snapshot?.value as! [String:Any]
-            let obj = self.boardList[cell.indexPath.row] as! BoardObject
+            let obj = self.boardList[(cell.indexPath?.row)!]
             
             cell.likeButton?.isSelected = flag
             obj.like = dict["like"] as! Dictionary<String, Bool>?
             obj.likeCount = dict["likeCount"] as! Int
             
-            self.collectionView?.reloadItems(at: [cell.indexPath])
+            self.tableView.reloadRows(at: [cell.indexPath!], with: .none)
         })
     }
     
-    //Reply Button
-    func replyButtonEvent(sender: UIButton, cell : BoardCell) {
+    //reply Button Event
+    func replyButtonEvent(sender: UIButton, cell: BoardTableCell) {
         let vc = UIStoryboard(name: "BoardDetail", bundle: nil).instantiateInitialViewController() as! BoardDetailController
         vc.boardData = cell.dataObject
         
         showViewController(vc, true)
     }
     
-    //Share Button
-    func shareButtonEvent(sender: UIButton, cell : BoardCell) {
-        //code
-        let alertController = UIAlertController(title: "공유", message: nil, preferredStyle: .actionSheet)
+    //share Button Event
+    func shareButtonEvent(sender: UIButton, cell: BoardTableCell) {
         
-        let copyAction = UIAlertAction(title: "택스트내용 복사", style: .cancel, handler:{ (Void) in
-            UIPasteboard.general.string = cell.textRecorded?.text
-        })
+        var str = cell.textRecorded?.text ?? ""
+ 
+        if(str.utf16.count < cell.originalText.utf16.count){
+            str = cell.originalText!
+        }
         
-        alertController.addAction(copyAction)
+        let activityViewController = UIActivityViewController(activityItems: [str], applicationActivities: [])
         
-        
-        self.present(alertController, animated: true, completion: nil)
-        
+        self.present(activityViewController, animated: true, completion: nil)
     }
     
-//    //view hierarchy 오류로 인해서 방법을 바꿈
-//    //원인 : CustomTabbarController안에 뷰어를 인식하지 못하는것 같음
-//    //원래 self.view.window.rootViewController로 가능했으나 구조상의 문제로 방법을 바꿈
-//    func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
-//        var activateController = UIApplication.shared.keyWindow?.rootViewController
-//        
-//        if(activateController?.isKind(of: UINavigationController.self))!{
-//            print("showViewController - Navigation")
-//            activateController = (activateController as! UINavigationController).visibleViewController
-//            
-//            
-//
-//        }else if((activateController?.presentedViewController) != nil){
-//            print("showViewController - Nomal")
-//            activateController = activateController?.presentedViewController
-//            if(activateController?.isKind(of: UINavigationController.self))!{
-//                print("showViewController - Nomal - Navigation")
-//                activateController?.navigationController?.isNavigationBarHidden = true
-//              
-//            }
-//            
-//        }
-//        
-//        activateController?.present(viewController, animated: animated, completion: completion)
-//
-//    }
-//    
-//    //현재 띄워진 뷰어를 닫는다. (잘 생각하고 쓰세요)
-//    func closeViewController(_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
-//        var activateController = UIApplication.shared.keyWindow?.rootViewController
-//        
-//        if(activateController?.isKind(of: UINavigationController.self))!{
-//            activateController = (activateController as! UINavigationController).visibleViewController
-//        }else if((activateController?.presentedViewController) != nil){
-//            activateController = activateController?.presentedViewController
-//        }
-//        
-//        activateController?.dismiss(animated: animated, completion: completion)
-//    }
+    //ReadMore Event
+    func readMoreEvent(cell: BoardTableCell) {
+        tableView.beginUpdates()
+        tableView.endUpdates()
+        
+        tableView.scrollToRow(at: cell.indexPath!, at: .top, animated: false)
+    }
     
     //indicator
     //최초 로딩시에 인디케이터를 불러온다.
@@ -935,7 +851,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     //수정후 로직
-    func afterEdit(ref : FIRDatabaseReference, cell : BoardCell?, _ isNew : Bool = false) {
+    func afterEdit(ref : FIRDatabaseReference, cell : BoardTableCell?, _ isNew : Bool = false) {
         
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             guard snapshot.exists() else {
@@ -945,13 +861,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
             let value = snapshot.value as! [String : Any]
             
             if !isNew {
-                let bObj = self.boardList[(cell?.indexPath.row)!] as! BoardObject
+                let bObj = self.boardList[(cell?.indexPath?.row)!]
                 
                 var nObj : NoticeObject?
                 var index = -1
                 for (idx, value) in self.noticeList.enumerated() {
-                    if (value as! NoticeObject).noticeKey == snapshot.key {
-                        nObj = self.noticeList[idx] as? NoticeObject
+                    if value.noticeKey == snapshot.key {
+                        nObj = self.noticeList[idx]
                         index = idx
                     }
                 }
@@ -961,12 +877,12 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 bObj.editTime = NSDate(timeIntervalSince1970: (value["editTime"] as? Double)! / 1000).toString().appending(" 수정됨")
                 
                 
-                self.boardList[(cell?.indexPath.row)!]  = bObj
+                self.boardList[(cell?.indexPath?.row)!]  = bObj
                 
                 var indexPaths : Array<IndexPath> = Array()
                 
                 indexPaths.append((cell?.indexPath)!)
-                self.collectionView?.reloadItems(at: indexPaths)
+                self.tableView.reloadRows(at: indexPaths, with: .top)
                 
                 if(index > -1){
                     nObj?.text = value["text"] as! String
@@ -986,7 +902,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                             return
                         }
                         indexPaths.append(IndexPath(row: index, section: 0))
-                        self.collectionView?.reloadItems(at: indexPaths)
+                        self.tableView.reloadRows(at: indexPaths, with: .top)
                     })
                 }
             } else {
@@ -1022,108 +938,177 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 self.boardList.append(obj)
                 
                 let newIndexPath = IndexPath(row:self.boardList.count-1, section:1)
-                self.collectionView?.insertItems(at: [newIndexPath])
-
+                
+//                DispatchQueue.main.async(execute: { 
+//                    self.tableView.reloadData()
+//                    self.tableView.scrollToRow(at: newIndexPath, at: .bottom, animated: false)
+//                })
+//        
+                
+                self.tableView.insertRows(at: [newIndexPath], with: .automatic)
+                
             }
         })
     }
-} //End of MaincViewController
+    
+    //TextView TabGesture Action
+    func tabGestureAction(_ sender:UITapGestureRecognizer){
+        let _view = sender.view as? UITextView
+        
+        let cell = tableView.cellForRow(at: IndexPath(row: (_view?.tag)!, section: 1)) as? BoardTableCell
+        
+        print("Tab >>>> \(String(describing: cell?.isExpend))")
+        
+        if((cell?.isExpend)!){
+            cell?.isExpend = false
+            
+            self.tableView.reloadData()
+            
+            self.tableView.scrollToRow(at: IndexPath(row: (_view?.tag)!, section: 1), at: .top, animated: true)
+        }else{
+            tableView(tableView, didSelectRowAt: IndexPath(row: (_view?.tag)!, section: 1))
+        }
+    }
 
-//
-//extension NSDate {
-//    
-//    func toString() -> String {
-//        
-//        let formater = DateFormatter()
-//        formater.amSymbol = "오전"
-//        formater.pmSymbol = "오후"
-//        formater.dateFormat = "yyyy년 MM월 dd일 a hh시 mm분 ss초 "
-//        
-//        
-//        return formater.string(from: self as Date)
-//    }
-//    
-//
-//    func toString(_ format:String?) -> String {
-//        
-//        let formater = DateFormatter()
-//        formater.amSymbol = "오전"
-//        formater.pmSymbol = "오후"
-//        formater.dateFormat = format ?? "yyyy년 MM월 dd일 a hh시 mm분 ss초 "
-//        
-//        
-//        return formater.string(from: self as Date)
-//    }
-//}
-//
-//extension UIView {
-//    func addConstraintWithFormat(_ format : String, _ views : UIView...){
-//        
-//        var viewsDictionary = [String : UIView]()
-//        
-//        for (index, view) in views.enumerated() {
-//            let key = "v\(index)"
-//            viewsDictionary[key] = view
-//            view.translatesAutoresizingMaskIntoConstraints = false
-//        }
-//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
-//    }
-//}
-//
-//extension CustomTabBarController {
-//    func pushViewController(_ viewController:UIViewController, _ animated  : Bool){
-//        self.navigationController?.pushViewController(viewController, animated: animated)
-//    }
-//}
-//
-//extension UIColor {
-//    convenience init(red: Int, green: Int, blue: Int) {
-//        assert(red >= 0 && red <= 255, "Invalid red component")
-//        assert(green >= 0 && green <= 255, "Invalid green component")
-//        assert(blue >= 0 && blue <= 255, "Invalid blue component")
-//        
-//        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
-//    }
-//    
-//    @nonobjc
-//    convenience init(red: Int, green: Int, blue: Int, alpha : Float) {
-//        assert(red >= 0 && red <= 255, "Invalid red component")
-//        assert(green >= 0 && green <= 255, "Invalid green component")
-//        assert(blue >= 0 && blue <= 255, "Invalid blue component")
-//        
-//        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: CGFloat(alpha))
-//    }
-//
-//    
-//    convenience init(netHex:Int) {
-//        self.init(red:(netHex >> 16) & 0xff, green:(netHex >> 8) & 0xff, blue:netHex & 0xff)
-//    }
-//    
-//    convenience init(netHex:Int, alpha:Float) {
-//        self.init(red:(netHex >> 16) & 0xff, green:(netHex >> 8) & 0xff, blue:netHex & 0xff, alpha : alpha)
-//    }
-//}
-//
-//
-//private extension MainViewController {
-//    
-//    func setupPullToRefresh() {
-//        collectionView?.addPullToRefresh(PullToRefresh()) { [weak self] in
-//            let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-//            DispatchQueue.main.asyncAfter(deadline: delayTime) {
-//                print("top reload start------")
-//                self?.loadOfPosts((self?.pageOfPosts)!,true)
-//                
-//            }
-//        }
-//        
-//        collectionView?.addPullToRefresh(PullToRefresh(position: .bottom)) { [weak self] in
-//            let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-//            DispatchQueue.main.asyncAfter(deadline: delayTime) {
-//                print("botton reload start------")
-//                self?.appendingOfPosts((self?.pageOfPosts)!)
-//            }
-//        }
-//    }
-//}
+    
+}
 
+/*
+ 
+ BoardTableViewController Extension
+ 
+ */
+
+//PullToRefresh Setting
+private extension BoardTableViewController {
+    
+    func setupPullToRefresh() {
+        tableView?.addPullToRefresh(PullToRefresh()) { [weak self] in
+            let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
+                print("top reload start------")
+                self?.loadOfPosts((self?.pageOfPosts)!,true)
+                
+            }
+        }
+        
+        tableView?.addPullToRefresh(PullToRefresh(position: .bottom)) { [weak self] in
+            let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
+                print("botton reload start------")
+                self?.appendingOfPosts((self?.pageOfPosts)!)
+            }
+        }
+    }
+}
+
+
+
+
+/*
+ 
+ 추가적인 Extension구현을 위한 구간(공통)
+ 
+ */
+
+extension NSDate {
+    
+    func toString() -> String {
+        
+        let formater = DateFormatter()
+        formater.amSymbol = "오전"
+        formater.pmSymbol = "오후"
+        formater.dateFormat = "yyyy년 MM월 dd일 a hh시 mm분 ss초 "
+        
+        
+        return formater.string(from: self as Date)
+    }
+    
+    
+    func toString(_ format:String?) -> String {
+        
+        let formater = DateFormatter()
+        formater.amSymbol = "오전"
+        formater.pmSymbol = "오후"
+        formater.dateFormat = format ?? "yyyy년 MM월 dd일 a hh시 mm분 ss초 "
+        
+        
+        return formater.string(from: self as Date)
+    }
+}
+
+//AutoLayout을 생성하기 위한 함수
+extension UIView {
+    func addConstraintWithFormat(_ format : String, _ views : UIView...){
+        
+        var viewsDictionary = [String : UIView]()
+        
+        for (index, view) in views.enumerated() {
+            let key = "v\(index)"
+            viewsDictionary[key] = view
+            view.translatesAutoresizingMaskIntoConstraints = false
+        }
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
+    }
+}
+
+//UIColor rgb , Hex버전으로 변경
+extension UIColor {
+    convenience init(red: Int, green: Int, blue: Int) {
+        assert(red >= 0 && red <= 255, "Invalid red component")
+        assert(green >= 0 && green <= 255, "Invalid green component")
+        assert(blue >= 0 && blue <= 255, "Invalid blue component")
+        
+        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+    }
+    
+    @nonobjc
+    convenience init(red: Int, green: Int, blue: Int, alpha : Float) {
+        assert(red >= 0 && red <= 255, "Invalid red component")
+        assert(green >= 0 && green <= 255, "Invalid green component")
+        assert(blue >= 0 && blue <= 255, "Invalid blue component")
+        
+        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: CGFloat(alpha))
+    }
+    
+    
+    convenience init(netHex:Int) {
+        self.init(red:(netHex >> 16) & 0xff, green:(netHex >> 8) & 0xff, blue:netHex & 0xff)
+    }
+    
+    convenience init(netHex:Int, alpha:Float) {
+        self.init(red:(netHex >> 16) & 0xff, green:(netHex >> 8) & 0xff, blue:netHex & 0xff, alpha : alpha)
+    }
+}
+
+
+extension UIViewController {
+    
+    //새로운 뷰를 띄울경우 사용 할것 (가장 최상단의 뷰어를 찾아서 present를 한다)
+    func showViewController(_ viewController: UIViewController,_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+        var activateController = UIApplication.shared.keyWindow?.rootViewController
+        
+        if(activateController?.isKind(of: UINavigationController.self))!{
+            activateController = (activateController as! UINavigationController).visibleViewController
+        }else if((activateController?.presentedViewController) != nil){
+            activateController = activateController?.presentedViewController
+        }
+        
+        activateController?.present(viewController, animated: animated, completion: completion)
+    }
+    
+    //현재 띄워진 뷰어를 닫는다. (잘 생각하고 쓰세요)
+    //가능하면 self.dismiss 를 사용 할것
+    func closeViewController(_ animated : Bool,_ completion :(() -> Swift.Void)? = nil){
+        var activateController = UIApplication.shared.keyWindow?.rootViewController
+        
+        if(activateController?.isKind(of: UINavigationController.self))!{
+            activateController = (activateController as! UINavigationController).visibleViewController
+        }else if((activateController?.presentedViewController) != nil){
+            activateController = activateController?.presentedViewController
+        }
+        
+        activateController?.dismiss(animated: animated, completion: completion)
+    }
+
+}

@@ -17,8 +17,8 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
     @IBOutlet weak var addPhotoButton: UIButton!
     
     var boardData: BoardObject!
-    var delegate: MainViewController?
-    var cellDelegate : BoardCell?
+    var delegate: BoardTableViewController?
+    var cellDelegate : BoardTableCell?
     
     private var ref : FIRDatabaseReference! = FIRDatabase.database().reference()
     private var boardRef : FIRDatabaseReference! = FIRDatabase.database().reference().child(boardPostChildName)
@@ -83,9 +83,9 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
                 "text" : textView.text,
                 "recordTime" : FIRServerValue.timestamp(),
                 "author" : [
-                    "uid" : "test",
+                    "uid" : FIRAuth.auth()?.currentUser?.uid,
                     "profile_url" : "url",
-                    "userName" : "song"
+                    "userName" : "Tester"
                 ]
             ]
             
@@ -121,9 +121,12 @@ class BoardCreateViewController: UIViewController, UIImagePickerControllerDelega
                     Toast(text: "성공").show()
                     
                     self.dismiss(animated: true, completion: {
-                        if self.boardData.like != nil{
+                        if self.boardData != nil{
                             //수정후 처리
                             self.delegate?.afterEdit(ref: ref, cell : self.cellDelegate!)
+                        } else {
+                            //생성 후 처리
+                            self.delegate?.afterEdit(ref: ref, cell : nil, true)
                         }
                     })
                 }

@@ -77,7 +77,7 @@ extension BoardObject{
             return false
         }
         if(self.authorName != obj.authorName) {
-            
+            return false
         }
         if(self.profileImgUrl != obj.profileImgUrl) {
             return false
