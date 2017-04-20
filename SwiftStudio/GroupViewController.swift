@@ -187,9 +187,9 @@ class GroupViewController: UIViewController{
     
     
     lazy var menuButtonItem : UIBarButtonItem = {
-        let image = UIImage(named:"Menu")
-        var _inButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(menuButtonEvent))
         
+        let image = UIImage(named:"MenuWhite")?.resizeImage(targetSize: CGSize(width: 31.5, height: 21))
+        var _inButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(menuButtonEvent))
         return _inButton
     }()
     
@@ -214,8 +214,16 @@ class GroupViewController: UIViewController{
         
         let naviBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 64))
         naviBar.items = [navigationItem]
-        naviBar.backgroundColor = .white
+        naviBar.barTintColor = Common().defaultColor
+        naviBar.tintColor = .white
+        naviBar.isTranslucent = true
+
         view.addSubview(naviBar)
+        
+        let statusBar = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 20))
+        statusBar.backgroundColor = Common().defaultStatusColor
+        self.view.addSubview(statusBar)
+        
         
         let size = view.frame.size
         
@@ -257,18 +265,19 @@ class GroupViewController: UIViewController{
             var array : Array<[String : Any]>! = []
             let dict = snapshot.value as! [String : Any]
             
-            var info = dict["groupList"] as!  [String : Any]
-            
-            for (key, _) in info {
-                info["key"] = key
-                array.append(info[key] as! [String : Any])
-            }
-            
-            self.dataList.removeAll() //reset
-            
-            if(array.count > 0){
-                self.dataList = array
-                self.collectioView.reloadData()
+            if var info = dict["groupList"] as? [String : Any] {
+                
+                for (key, _) in info {
+                    info["key"] = key
+                    array.append(info[key] as! [String : Any])
+                }
+                
+                self.dataList.removeAll() //reset
+                
+                if(array.count > 0){
+                    self.dataList = array
+                    self.collectioView.reloadData()
+                }
             }
             
         }) { (error) in
@@ -358,12 +367,11 @@ extension GroupViewController : UICollectionViewDataSource{
         
         let rowItem = dataList[indexPath.row]
         
-        var url = URL(string: "http://bigmatch.i-um.net/wp-content/uploads/2014/12/Apple_Swift_Logo.png")
+        let url = URL(string: rowItem["coverImgUrl"] as! String)
         
-        url = URL(string: rowItem["coverImgUrl"] as! String)
-        
-        
-        cell.imageView.sd_setImage(with: url, placeholderImage: UIImage(), options: .retryFailed, completed: { (image, error, cachedType, url) in
+        let placeHolderImage = UIImage(named: "Camera-100.png")
+        //cell.imageView.contentMode = .center
+        cell.imageView.sd_setImage(with: url, placeholderImage: placeHolderImage, options: .retryFailed, completed: { (image, error, cachedType, url) in
             
             
             //이미지캐싱이 안되있을경우에 대한 애니메이션 셋팅_imageView.alpha = 1;
@@ -379,7 +387,6 @@ extension GroupViewController : UICollectionViewDataSource{
             }
         })
         
-//        cell.textLabel.text = "모임 우왕 우왕 \(indexPath.row)"
         cell.textLabel.text = rowItem["groupName"] as? String
         
         let selectedView = UIView()
