@@ -289,10 +289,6 @@
 		F63DF6601E5D6C1B00095E27 /* CustomMileStoneDetailViewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMileStoneDetailViewTableViewCell.swift; sourceTree = "<group>"; };
 		F63DF6611E5D6C1B00095E27 /* CustomMileStoneViewControllerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMileStoneViewControllerTableViewCell.swift; sourceTree = "<group>"; };
 		F63DF6641E5D6C4300095E27 /* testMileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = testMileController.swift; sourceTree = "<group>"; };
-		8EF338CA1E56F5DE00680710 /* GroupCreateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCreateViewController.swift; sourceTree = "<group>"; };
-		8EF338E21E5F58ED00680710 /* BoardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardCell.swift; sourceTree = "<group>"; };
-		8EF338E41E5F592900680710 /* NoticeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoticeCell.swift; sourceTree = "<group>"; };
-		8EF51B221E964EF400949825 /* Camera-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Camera-100.png"; sourceTree = "<group>"; };
 		F6B2F9071E27537600E0A1BD /* MileStoneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MileStoneViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -603,7 +599,6 @@
 				TargetAttributes = {
 					02FC4C7C1E166B1B00E1EF61 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = Q37XCM98VD;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -940,9 +935,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7E001633EDC68637FE8613D3 /* Pods-SwiftStudio.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = Q37XCM98VD;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SwiftStudio/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -957,9 +952,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 00886F2C53CE8FE7124D7783 /* Pods-SwiftStudio.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = Q37XCM98VD;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SwiftStudio/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
