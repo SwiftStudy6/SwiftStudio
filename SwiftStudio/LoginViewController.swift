@@ -21,7 +21,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         createView()
-        
+    //권한 생성으로 인해서 바꾸지 말아주세요 테스트용으로 냅둘겁니다
     #if DEBUG
         self.emailTextField.text = "wajl1004@gmail.com"
         self.passwdTextField.text = "11111111"
@@ -252,10 +252,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             
             
         }else if(sender.tag == 1){ //forgot buuton
-            let test = TestViewController()
-            let navi = UINavigationController(rootViewController: test)
+            let test = GroupViewController()
             
-            present(navi, animated: true, completion: nil)
+            
+            present(test, animated: true, completion: nil)
             
         }else{ //signin button
             let signUpController = UIAlertController(title: "회원가입", message:"이메일, 비번.유저명 입력해주세요", preferredStyle: .alert)
@@ -321,7 +321,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             
         }
     }
-    
+     
 }
 
 

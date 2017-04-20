@@ -104,25 +104,27 @@ class CustomTabBarController: UIViewController {
     
     func tabbarSetting(){
         
-        self.bottomView.backgroundColor = .white
+        self.bottomView.backgroundColor = Common().defaultColor
         
         let lineView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 1))
         lineView.backgroundColor = UIColor.darkGray.withAlphaComponent(0.31)
         
         self.bottomView.addSubview(lineView)
         
+        let selectedFontColor = UIColor.white
+        let normalFontColor = UIColor.black.withAlphaComponent(0.5)
+        
         self.boardButton = {
             let _button = self.boardButton
             
-           // let _image = _button!.resizeImage(image: UIImage.init(named: "List")!, targetSize: CGSize(width: 27 , height: 27))
+            let _image = _button!.resizeImage(image: UIImage.init(named: "ListWhite")!, targetSize: CGSize(width: 25 , height: 20.59))
+            let _image2 = _button!.resizeImage(image: UIImage.init(named: "List")!, targetSize: CGSize(width: 25 , height: 20.59))
             
-            let _image = UIImage(named: "List")
-            
-            _button!.setImage(_image?.alpha(0.3), for: .normal)
+            _button!.setImage(_image2, for: .normal)
             _button!.setImage(_image, for: .selected)
             _button!.setTitle("게시판", for: .normal)
-            _button!.setTitleColor(.black, for: .normal)
-            _button!.setTitleColor(pinkshRed, for: .selected)
+            _button!.setTitleColor(normalFontColor, for: .normal)
+            _button!.setTitleColor(selectedFontColor, for: .selected)
             _button!.alignContentVerticallyByCenter(offset: 18)
             _button!.titleLabel!.font = UIFont.systemFont(ofSize: 10)
             _button!.contentHorizontalAlignment = .left
@@ -135,15 +137,15 @@ class CustomTabBarController: UIViewController {
         self.chatButton = {
             let _button = self.chatButton
             
-//            let _image = _button!.resizeImage(image: UIImage.init(named: "Chat")!, targetSize: CGSize(width: 27 , height: 27))
+            let _image = _button!.resizeImage(image: UIImage.init(named: "ChatWhite")!, targetSize: CGSize(width: 25 , height: 25))
+            let _image2 = _button!.resizeImage(image: UIImage.init(named: "Chat")!, targetSize: CGSize(width: 25 , height: 25))
+
             
-            let _image = UIImage(named: "Chat")
-            
-            _button!.setImage(_image?.alpha(0.3), for: .normal)
+            _button!.setImage(_image2, for: .normal)
             _button!.setImage(_image, for: .selected)
             _button!.setTitle("대화방", for: .normal)
-            _button!.setTitleColor(.black, for: .normal)
-            _button!.setTitleColor(pinkshRed, for: .selected)
+            _button!.setTitleColor(normalFontColor, for: .normal)
+            _button!.setTitleColor(selectedFontColor, for: .selected)
             _button!.alignContentVerticallyByCenter(offset: 18)
             _button!.titleLabel!.font = UIFont.systemFont(ofSize: 10)
             _button!.contentHorizontalAlignment = .left
@@ -155,15 +157,15 @@ class CustomTabBarController: UIViewController {
         
         self.milestoneButton = {
             let _button = self.milestoneButton
-//            let _image = _button!.resizeImage(image: UIImage.init(named: "CheckMark")!, targetSize: CGSize(width: 27 , height: 27))
+            let _image = _button!.resizeImage(image: UIImage.init(named: "CheckMarkWhite")!, targetSize: CGSize(width: 25 , height: 25))
+            let _image2 = _button!.resizeImage(image: UIImage.init(named: "CheckMark")!, targetSize: CGSize(width: 25 , height: 25))
+
             
-            let _image = UIImage(named: "CheckMark")
-            
-            _button!.setImage(_image?.alpha(0.3), for: .normal)
+            _button!.setImage(_image2, for: .normal)
             _button!.setImage(_image, for: .selected)
             _button!.setTitle("마일스톤", for: .normal)
-            _button!.setTitleColor(.black, for: .normal)
-            _button!.setTitleColor(pinkshRed, for: .selected)
+            _button!.setTitleColor(normalFontColor, for: .normal)
+            _button!.setTitleColor(selectedFontColor, for: .selected)
             _button!.alignContentVerticallyByCenter(offset: 18)
             _button!.titleLabel!.font = UIFont.systemFont(ofSize: 10)
             _button!.contentHorizontalAlignment = .left
@@ -176,15 +178,15 @@ class CustomTabBarController: UIViewController {
         self.userListButton = {
             let _button = self.userListButton
             
-//            let _image = _button!.resizeImage(image: UIImage.init(named: "Profile")!, targetSize: CGSize(width: 27 , height: 27))
+            let _image = _button!.resizeImage(image: UIImage.init(named: "ProfileWhite")!, targetSize: CGSize(width: 25 , height: 25))
+            let _image2 = _button!.resizeImage(image: UIImage.init(named: "Profile")!, targetSize: CGSize(width: 25 , height: 25))
+
             
-            let _image = UIImage(named: "Profile")
-            
-            _button!.setImage(_image?.alpha(0.3), for: .normal)
+            _button!.setImage(_image2, for: .normal)
             _button!.setImage(_image, for: .selected)
             _button!.setTitle("사용자목록", for: .normal)
-            _button!.setTitleColor(.black, for: .normal)
-            _button!.setTitleColor(pinkshRed, for: .selected)
+            _button!.setTitleColor(normalFontColor, for: .normal)
+            _button!.setTitleColor(selectedFontColor, for: .selected)
             _button!.alignContentVerticallyByCenter(offset: 18)
             _button!.titleLabel!.font = UIFont.systemFont(ofSize: 10)
             _button!.contentHorizontalAlignment = .left
@@ -197,15 +199,15 @@ class CustomTabBarController: UIViewController {
         self.settingButton = {
             let _button = self.settingButton
             
-//            let _image = _button!.resizeImage(image: UIImage.init(named: "Setting")!, targetSize: CGSize(width: 27 , height: 27))
+            let _image = _button!.resizeImage(image: UIImage.init(named: "SettingWhite")!, targetSize: CGSize(width: 25 , height: 25))
+            let _image2 = _button!.resizeImage(image: UIImage.init(named: "Setting")!, targetSize: CGSize(width: 25 , height: 25))
+
             
-            let _image = UIImage(named: "Setting")
-            
-            _button!.setImage(_image?.alpha(0.3), for: .normal)
+            _button!.setImage(_image2, for: .normal)
             _button!.setImage(_image, for: .selected)
             _button!.setTitle("설정", for: .normal)
-            _button!.setTitleColor(.black, for: .normal)
-            _button!.setTitleColor(pinkshRed, for: .selected)
+            _button!.setTitleColor(normalFontColor, for: .normal)
+            _button!.setTitleColor(selectedFontColor, for: .selected)
             _button!.alignContentVerticallyByCenter(offset: 18)
             _button!.titleLabel!.font = UIFont.systemFont(ofSize: 10)
             _button!.contentHorizontalAlignment = .left

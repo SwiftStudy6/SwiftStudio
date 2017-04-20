@@ -19,6 +19,7 @@ target 'SwiftStudio' do
   
   
   #etc
-  pod 'SwiftyJSON', '~> 3.1'
+  #pod 'SwiftyJSON', '~> 3.1' #delete
   pod 'Toaster', '~> 2.0'
+  pod 'PullToRefresher', '~> 2.0'
 end
