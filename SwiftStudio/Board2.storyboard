@@ -188,15 +188,6 @@
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" secondItem="TIj-pX-YxT" secondAttribute="height" multiplier="64:15" id="iPP-RV-k03"/>
                                                                             </constraints>
-<<<<<<< HEAD
-                                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                                            <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                                            <state key="normal" title="좋아요">
-                                                                                <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                                            </state>
-                                                                            <state key="selected">
-                                                                                <color key="titleColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-=======
                                                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                                             <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                                             <inset key="imageEdgeInsets" minX="-18" minY="-2" maxX="0.0" maxY="0.0"/>
@@ -208,19 +199,11 @@
                                                                             </state>
                                                                             <state key="highlighted">
                                                                                 <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
->>>>>>> e36898230169a08887a0341ccc2a2332cc3d4d4b
                                                                             </state>
                                                                             <connections>
                                                                                 <action selector="buttonTouchUpInside:" destination="fd2-m0-uVE" eventType="touchUpInside" id="i2A-fn-23d"/>
                                                                             </connections>
                                                                         </button>
-<<<<<<< HEAD
-                                                                        <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rv6-08-aRC">
-                                                                            <rect key="frame" x="256" y="1" width="127.66666666666669" height="30"/>
-                                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                                            <state key="normal" title="공유하기">
-=======
                                                                         <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rv6-08-aRC">
                                                                             <rect key="frame" x="256" y="1" width="128" height="30"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -228,7 +211,6 @@
                                                                             <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                                             <inset key="imageEdgeInsets" minX="-18" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                                             <state key="normal" title="공유하기" image="ShareImage">
->>>>>>> e36898230169a08887a0341ccc2a2332cc3d4d4b
                                                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                             </state>
                                                                             <state key="selected">
@@ -241,15 +223,11 @@
                                                                         <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FhQ-GS-CGf">
                                                                             <rect key="frame" x="128" y="1" width="128" height="30"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-<<<<<<< HEAD
-                                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                                            <state key="normal" title="댓글 달기">
-=======
+
                                                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                                             <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                                             <inset key="imageEdgeInsets" minX="-18" minY="3" maxX="0.0" maxY="0.0"/>
                                                                             <state key="normal" title="댓글 달기" image="ReplyImage">
->>>>>>> e36898230169a08887a0341ccc2a2332cc3d4d4b
                                                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                             </state>
                                                                             <state key="selected">

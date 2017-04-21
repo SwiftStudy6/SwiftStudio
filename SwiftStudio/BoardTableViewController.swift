@@ -23,11 +23,8 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
  
     var naviBar: UINavigationBar!
     
-<<<<<<< HEAD
-    let maxSize = 300
-=======
     let maxSize = 200
->>>>>>> e36898230169a08887a0341ccc2a2332cc3d4d4b
+
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -383,48 +380,27 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         //Load Data
         loadEvent()
     }
-<<<<<<< HEAD
-=======
+
+
     
     //반드시 적어줘야함 (PullToRefresh를 사용할 경우)
->>>>>>> e36898230169a08887a0341ccc2a2332cc3d4d4b
+
     deinit {
         self.tableView.removePullToRefresh(tableView.topPullToRefresh!)
         self.tableView.removePullToRefresh(tableView.bottomPullToRefresh!)
     }
-<<<<<<< HEAD
 
 
-=======
-    
-    
->>>>>>> e36898230169a08887a0341ccc2a2332cc3d4d4b
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 
     // MARK: - Table view data source
-    
-<<<<<<< HEAD
-    //표현할 섹션
-    func numberOfSections(in tableView: UITableView) -> Int {
-        
-        var countOfSection = 0
-        
-        if self.boardList.count > 0 {
-            countOfSection += 1
-        }
-        
-        if self.noticeList.count > 0 {
-            countOfSection += 1
-        }
-        
-        return countOfSection
-=======
+
+
     //표현할 섹션(섹션은 사용할 만큼의 고정값을 줘야 한다)
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
->>>>>>> e36898230169a08887a0341ccc2a2332cc3d4d4b
     }
 
     //Section 당 표현 갯수
@@ -992,11 +968,8 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         
         let cell = tableView.cellForRow(at: IndexPath(row: (_view?.tag)!, section: 1)) as? BoardTableCell
         
-<<<<<<< HEAD
-        print("Tab >>>> \(cell?.isExpend)")
-=======
         print("Tab >>>> \(String(describing: cell?.isExpend))")
->>>>>>> e36898230169a08887a0341ccc2a2332cc3d4d4b
+
         
         if((cell?.isExpend)!){
             cell?.isExpend = false
@@ -1149,10 +1122,6 @@ extension UIViewController {
         
         activateController?.dismiss(animated: animated, completion: completion)
     }
-<<<<<<< HEAD
-
-=======
-
 }
 
 extension UIImage {
@@ -1182,6 +1151,4 @@ extension UIImage {
         
         return newImage!
     }
-
->>>>>>> e36898230169a08887a0341ccc2a2332cc3d4d4b
 }
