@@ -55,10 +55,13 @@ PODS:
     - GoogleToolboxForMac/NSString+URLArguments (= 2.1.0)
   - GoogleToolboxForMac/NSString+URLArguments (2.1.0)
   - GTMSessionFetcher/Core (1.1.7)
+  - PullToRefresher (2.0.2)
+  - RxCocoa (3.2.0):
+    - RxSwift (~> 3.1)
+  - RxSwift (3.2.0)
   - SDWebImage (3.8.2):
     - SDWebImage/Core (= 3.8.2)
   - SDWebImage/Core (3.8.2)
-  - SwiftyJSON (3.1.4)
   - Toaster (2.0.1)
 
 DEPENDENCIES:
@@ -67,8 +70,10 @@ DEPENDENCIES:
   - Firebase/Database
   - Firebase/Messaging
   - Firebase/Storage
+  - PullToRefresher (~> 2.0)
+  - RxCocoa
+  - RxSwift
   - SDWebImage (~> 3.8)
-  - SwiftyJSON (~> 3.1)
   - Toaster (~> 2.0)
 
 SPEC CHECKSUMS:
@@ -84,10 +89,12 @@ SPEC CHECKSUMS:
   GoogleSymbolUtilities: 631ee17048aa5e9ab133470d768ea997a5ef9b96
   GoogleToolboxForMac: 2b2596cbb7186865e98cadf2b1e262d851c2b168
   GTMSessionFetcher: a1f8ed39e4fe21c68957daed472c7afbcdf29166
+  PullToRefresher: 5e101a8c3523e67ee0291375ba932ef59e0853c2
+  RxCocoa: ccdf43101a70407097a29082f648ba1676075b30
+  RxSwift: 46574f70d416b7923c237195939cc488a7fbf3a0
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
-  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
   Toaster: be65cd48e93a525b2a9cc4bd25a2bfc900e02d9f
 
-PODFILE CHECKSUM: 81beb89b80c3275464bf2491dba61dbbb1093cd8
+PODFILE CHECKSUM: ccf746bd3cb0ac4b808ef474802a4f696c282dd4
 
 COCOAPODS: 1.1.1

@@ -26,20 +26,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //FireBase를 위한 설정
         FIRApp.configure()
         
+    
         
-        /*
-         StoryBoard없이 연결할 경우 앱설정 (맨위 프로젝트 설정) -> General -> Main Interface (빈칸)
-         놓은 상태에서 아래 코드와 같이 하면 됩니다.
-         */
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.makeKeyAndVisible()
         
-
-        let loginViewController = LoginViewController()
-//        let mainViewController = MainViewController(collectionViewLayout: UICollectionViewFlowLayout())
-        
-        window?.rootViewController = loginViewController
-                
         return true
     }
 

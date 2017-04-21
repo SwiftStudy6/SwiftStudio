@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="rCA-3l-qkJ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="rCA-3l-qkJ">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Board2-->
+        <scene sceneID="EMb-ji-ijN">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Board2" id="UDO-dP-m5m" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ttK-Tz-d4z" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-898" y="802"/>
+        </scene>
         <!--Main View Controller-->
         <scene sceneID="PO1-KM-Dga">
             <objects>
@@ -19,27 +28,74 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="viX-w2-Adv">
-                            <size key="itemSize" width="50" height="50"/>
+                            <size key="itemSize" width="384" height="250"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="BoardCell" reuseIdentifier="BoardCell" id="BH6-Ga-jz8" customClass="BoardCell" customModule="SwiftStudio" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="250"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="250"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9yK-h0-oSa">
+                                            <rect key="frame" x="15" y="0.0" width="385" height="250"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="62k-JI-0zt">
+                                                    <rect key="frame" x="0.0" y="219" width="385" height="31"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="31" id="zg2-rQ-7Hg"/>
+                                                    </constraints>
+                                                </view>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wkl-qX-WLw">
+                                                    <rect key="frame" x="0.0" y="0.0" width="385" height="50"/>
+                                                    <color key="backgroundColor" red="0.99019607843137258" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="50" id="DIQ-l4-gls"/>
+                                                    </constraints>
+                                                </view>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="muz-2p-8KN">
+                                                    <rect key="frame" x="0.0" y="54" width="385" height="161"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstItem="62k-JI-0zt" firstAttribute="leading" secondItem="9yK-h0-oSa" secondAttribute="leading" id="63T-ld-lUw"/>
+                                                <constraint firstAttribute="bottom" secondItem="62k-JI-0zt" secondAttribute="bottom" id="7aI-jw-jut"/>
+                                                <constraint firstAttribute="trailing" secondItem="wkl-qX-WLw" secondAttribute="trailing" id="OYO-vv-w56"/>
+                                                <constraint firstItem="muz-2p-8KN" firstAttribute="top" secondItem="wkl-qX-WLw" secondAttribute="bottom" constant="4" id="aUq-py-9JW"/>
+                                                <constraint firstItem="62k-JI-0zt" firstAttribute="top" secondItem="muz-2p-8KN" secondAttribute="bottom" constant="4" id="bxc-Rg-HWP"/>
+                                                <constraint firstAttribute="trailing" secondItem="62k-JI-0zt" secondAttribute="trailing" id="fmI-6B-b1n"/>
+                                                <constraint firstItem="muz-2p-8KN" firstAttribute="leading" secondItem="9yK-h0-oSa" secondAttribute="leading" id="mGY-i0-Tvc"/>
+                                                <constraint firstItem="wkl-qX-WLw" firstAttribute="top" secondItem="9yK-h0-oSa" secondAttribute="top" id="ro2-m4-6S4"/>
+                                                <constraint firstItem="wkl-qX-WLw" firstAttribute="leading" secondItem="9yK-h0-oSa" secondAttribute="leading" id="vOw-sE-v5l"/>
+                                                <constraint firstItem="muz-2p-8KN" firstAttribute="top" secondItem="wkl-qX-WLw" secondAttribute="bottom" constant="4" id="vXj-GH-juh"/>
+                                                <constraint firstAttribute="trailing" secondItem="muz-2p-8KN" secondAttribute="trailing" id="wDH-Dp-g1F"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
                                 </view>
-                            </collectionViewCell>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="NoticeCell" reuseIdentifier="NoticeCell" id="hfS-cJ-twB" customClass="NoticeCell" customModule="SwiftStudio" customModuleProvider="target">
-                                <rect key="frame" x="60.666666666666664" y="0.0" width="50" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="9yK-h0-oSa" secondAttribute="trailing" constant="14" id="2J0-2b-tDx"/>
+                                    <constraint firstItem="9yK-h0-oSa" firstAttribute="leading" secondItem="BH6-Ga-jz8" secondAttribute="leadingMargin" constant="7" id="3xH-My-SYB"/>
+                                    <constraint firstItem="9yK-h0-oSa" firstAttribute="leading" secondItem="BH6-Ga-jz8" secondAttribute="leading" constant="15" id="HWR-Bh-Aif"/>
+                                    <constraint firstItem="9yK-h0-oSa" firstAttribute="leading" secondItem="BH6-Ga-jz8" secondAttribute="leadingMargin" constant="7" id="P5I-Nm-XVV"/>
+                                    <constraint firstAttribute="bottom" secondItem="9yK-h0-oSa" secondAttribute="bottom" id="euX-3k-7gW"/>
+                                    <constraint firstItem="9yK-h0-oSa" firstAttribute="top" secondItem="BH6-Ga-jz8" secondAttribute="top" id="g6C-qz-GXL"/>
+                                </constraints>
+                                <size key="customSize" width="414" height="250"/>
+                                <connections>
+                                    <outlet property="bottomView" destination="62k-JI-0zt" id="Bt2-BJ-dF1"/>
+                                    <outlet property="textRecorded" destination="muz-2p-8KN" id="5U0-sQ-cXo"/>
+                                    <outlet property="userInfoView" destination="wkl-qX-WLw" id="Dw9-MW-fH8"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <connections>
@@ -50,41 +106,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7kI-zb-HHA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-752" y="1118"/>
-        </scene>
-        <!--Chat Log View Controller-->
-        <scene sceneID="84Z-9E-9Nw">
-            <objects>
-                <collectionViewController id="XEG-Cp-KTJ" customClass="ChatLogViewController" customModule="SwiftStudio" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="fMt-Xp-fE2">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="1gF-my-k93">
-                            <size key="itemSize" width="50" height="50"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        </collectionViewFlowLayout>
-                        <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="ChatLogCell" reuseIdentifier="ChatLogCell" id="dxn-aH-I8f">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </view>
-                            </collectionViewCell>
-                        </cells>
-                        <connections>
-                            <outlet property="dataSource" destination="XEG-Cp-KTJ" id="TsZ-uw-Sb6"/>
-                            <outlet property="delegate" destination="XEG-Cp-KTJ" id="hvU-4D-5Za"/>
-                        </connections>
-                    </collectionView>
-                </collectionViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="KqV-8i-2wd" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-94" y="1118"/>
+            <point key="canvasLocation" x="-1738" y="1171"/>
         </scene>
         <!--UserList-->
         <scene sceneID="lyY-WF-XAx">
@@ -94,13 +116,50 @@
             </objects>
             <point key="canvasLocation" x="439" y="764"/>
         </scene>
+        <!--Message Controller-->
+        <scene sceneID="l8V-5W-Fvh">
+            <objects>
+                <viewController id="7z2-hn-Ewm" customClass="MessageController" customModule="SwiftStudio" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="4YG-bF-DKw"/>
+                        <viewControllerLayoutGuide type="bottom" id="Hgl-8b-Vyb"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="fPr-ds-pnH">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="kcF-eC-gF5">
+                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="7z2-hn-Ewm" id="OK6-6f-Kna"/>
+                                    <outlet property="delegate" destination="7z2-hn-Ewm" id="ggn-oU-xyg"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Hgl-8b-Vyb" firstAttribute="top" secondItem="kcF-eC-gF5" secondAttribute="bottom" id="BMk-uV-7Pc"/>
+                            <constraint firstItem="kcF-eC-gF5" firstAttribute="leading" secondItem="fPr-ds-pnH" secondAttribute="leading" id="MGt-rV-5Rg"/>
+                            <constraint firstAttribute="trailing" secondItem="kcF-eC-gF5" secondAttribute="trailing" id="Umt-il-Xfj"/>
+                            <constraint firstItem="kcF-eC-gF5" firstAttribute="top" secondItem="fPr-ds-pnH" secondAttribute="top" constant="64" id="aD4-RK-RFU"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="kcF-eC-gF5" id="fk3-if-7mC"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jHQ-qd-phk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="92.753623188405811" y="1098.913043478261"/>
+        </scene>
         <!--MileStone-->
         <scene sceneID="346-PX-stq">
             <objects>
                 <viewControllerPlaceholder storyboardName="MileStone" id="uHf-gM-1CM" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QRs-H4-4bv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="196" y="757"/>
+            <point key="canvasLocation" x="776" y="802"/>
         </scene>
         <!--Setting-->
         <scene sceneID="tgN-ew-wEG">
@@ -108,7 +167,7 @@
                 <viewControllerPlaceholder storyboardName="Setting" id="OCU-lh-CiU" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="glA-3t-ECI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="717" y="740"/>
+            <point key="canvasLocation" x="1096" y="802"/>
         </scene>
         <!--Custom Tab Bar Controller-->
         <scene sceneID="Xtt-57-FSh">
@@ -130,7 +189,7 @@
                                 <rect key="frame" x="0.0" y="687" width="414" height="49"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Q0-Xs-XGB" customClass="CustomButton" customModule="SwiftStudio" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="82.666666666666671" height="49"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="83" height="49"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="49" id="rIr-iQ-urw"/>
                                         </constraints>
@@ -139,11 +198,11 @@
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="9Qn-T8-ydf" kind="custom" identifier="Board" customClass="CustomNavigationSegue" customModule="SwiftStudio" customModuleProvider="target" id="d2F-uJ-iGt"/>
+                                            <segue destination="UDO-dP-m5m" kind="custom" identifier="Board" customClass="CustomNavigationSegue" customModule="SwiftStudio" customModuleProvider="target" id="K86-QS-UxY"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n2a-U1-sgY" customClass="CustomButton" customModule="SwiftStudio" customModuleProvider="target">
-                                        <rect key="frame" x="165.66666666666666" y="0.0" width="82.666666666666686" height="49"/>
+                                        <rect key="frame" x="166" y="0.0" width="82" height="49"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="49" id="cs8-J7-AsC"/>
                                         </constraints>
@@ -156,7 +215,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Xa-PC-QKF" customClass="CustomButton" customModule="SwiftStudio" customModuleProvider="target">
-                                        <rect key="frame" x="248.33333333333331" y="0.0" width="82.999999999999943" height="49"/>
+                                        <rect key="frame" x="248" y="0.0" width="83" height="49"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="49" id="Cc6-d6-Ww9"/>
                                         </constraints>
@@ -169,7 +228,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FPf-dH-Cje" customClass="CustomButton" customModule="SwiftStudio" customModuleProvider="target">
-                                        <rect key="frame" x="331.33333333333326" y="0.0" width="82.666666666666686" height="49"/>
+                                        <rect key="frame" x="331" y="0.0" width="83" height="49"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="49" id="9dI-Lx-8jt"/>
                                         </constraints>
@@ -182,7 +241,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xG4-1i-Q1P" customClass="CustomButton" customModule="SwiftStudio" customModuleProvider="target">
-                                        <rect key="frame" x="82.666666666666657" y="0.0" width="82.999999999999972" height="49"/>
+                                        <rect key="frame" x="83" y="0.0" width="83" height="49"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="49" id="5yj-G2-8uv"/>
                                         </constraints>
@@ -191,7 +250,7 @@
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="XEG-Cp-KTJ" kind="custom" identifier="Chat" customClass="CustomNavigationSegue" customModule="SwiftStudio" customModuleProvider="target" id="MrJ-a8-PZD"/>
+                                            <segue destination="7z2-hn-Ewm" kind="custom" identifier="Chat" customClass="CustomNavigationSegue" customModule="SwiftStudio" customModuleProvider="target" id="X6P-W6-MiY"/>
                                         </connections>
                                     </button>
                                 </subviews>
