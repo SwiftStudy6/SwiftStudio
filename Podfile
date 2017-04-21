@@ -7,15 +7,14 @@ target 'SwiftStudio' do
 
   # Pods for SwiftStudio
 
-
-
   #Rx
   pod 'RxSwift'
   pod 'RxCocoa'
+  
   #Firebase
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
-  pod 'Firebase/Messaging'
+  #pod 'Firebase/Messaging'
   pod 'Firebase/Database'
   pod 'Firebase/Storage'
 
