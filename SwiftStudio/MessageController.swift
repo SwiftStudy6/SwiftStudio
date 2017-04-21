@@ -13,7 +13,7 @@ class MessageController: UIViewController,UITableViewDelegate,UITableViewDataSou
     
     let cellId = "cellId"
     
-    @IBOutlet weak var tableView: UITableView!
+    weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -240,9 +240,9 @@ class MessageController: UIViewController,UITableViewDelegate,UITableViewDataSou
     }
     func handleNewMessage(){
         let newMessageController = NewMessageController()
-        //newMessageController.messagesController = self
-        let navController = UINavigationController(rootViewController: newMessageController)
-        present(navController, animated: true, completion: nil)
+//        newMessageController.messagesController = self
+//        let navController = UINavigationController(rootViewController: newMessageController)
+        present(newMessageController, animated: true, completion: nil)
     }
     
     
