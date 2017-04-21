@@ -574,7 +574,7 @@
 				8EF338E41E5F592900680710 /* NoticeCell.swift */,
 
 				021095901EA0A47400B91226 /* User.swift */,
-=======
+
 				8E523B1E1EA49F4D00146D74 /* Common.swift */,
 
 			);
@@ -664,7 +664,7 @@
 				8E46F44D1E45F009002F6E60 /* profile [#1335].png in Resources */,
 
 				027F48A61E973850002C061C /* Login.storyboard in Resources */,
-=======
+
 				8E523B6B1EA5F6D600146D74 /* HomeWhite.png in Resources */,
 				8E523B761EA5F6D600146D74 /* white-check-circle-outline@3x.png in Resources */,
 				8E523B781EA5F6D600146D74 /* white-messenger@2x.png in Resources */,
