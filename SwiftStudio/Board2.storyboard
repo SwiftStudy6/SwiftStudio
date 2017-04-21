@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="dyu-SR-HNG">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="dyu-SR-HNG">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -25,6 +25,7 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="V63-Fl-h5K">
                                 <rect key="frame" x="0.0" y="64" width="414" height="672"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="sectionIndexBackgroundColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="NoticeTableCell" rowHeight="40" id="veC-Oe-nqw" customClass="NoticeTableCell" customModule="SwiftStudio" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="40"/>
@@ -83,10 +84,10 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7ki-rN-Hpw">
-                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="249.66666666666666"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="259"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xwb-5Y-bNb">
-                                                            <rect key="frame" x="15" y="0.0" width="384" height="249"/>
+                                                            <rect key="frame" x="15" y="0.0" width="384" height="259"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JnQ-Mq-omZ">
                                                                     <rect key="frame" x="0.0" y="0.0" width="384" height="50"/>
@@ -158,7 +159,7 @@
                                                                     </constraints>
                                                                 </view>
                                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6HE-6S-6eq">
-                                                                    <rect key="frame" x="0.0" y="54.000000000000014" width="384" height="159.33333333333337"/>
+                                                                    <rect key="frame" x="0.0" y="54" width="384" height="170"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                     <gestureRecognizers/>
                                                                     <constraints>
@@ -172,7 +173,7 @@
                                                                     </connections>
                                                                 </textView>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LlG-Zk-qoh">
-                                                                    <rect key="frame" x="0.0" y="218" width="384" height="31"/>
+                                                                    <rect key="frame" x="0.0" y="228" width="384" height="31"/>
                                                                     <subviews>
                                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LD5-lr-ybO">
                                                                             <rect key="frame" x="0.0" y="0.0" width="384" height="1"/>
@@ -181,12 +182,13 @@
                                                                                 <constraint firstAttribute="height" constant="1" id="axE-qo-8a0"/>
                                                                             </constraints>
                                                                         </view>
-                                                                        <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TIj-pX-YxT">
+                                                                        <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TIj-pX-YxT">
                                                                             <rect key="frame" x="0.0" y="1" width="128" height="30"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" secondItem="TIj-pX-YxT" secondAttribute="height" multiplier="64:15" id="iPP-RV-k03"/>
                                                                             </constraints>
+<<<<<<< HEAD
                                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                             <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                             <state key="normal" title="좋아요">
@@ -194,16 +196,39 @@
                                                                             </state>
                                                                             <state key="selected">
                                                                                 <color key="titleColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+=======
+                                                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                                            <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                            <inset key="imageEdgeInsets" minX="-18" minY="-2" maxX="0.0" maxY="0.0"/>
+                                                                            <state key="normal" title="좋아요" image="LikeImage">
+                                                                                <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                            </state>
+                                                                            <state key="selected" image="LikeImageSel">
+                                                                                <color key="titleColor" red="0.0" green="0.72549019607843135" blue="0.90196078431372551" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                            </state>
+                                                                            <state key="highlighted">
+                                                                                <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+>>>>>>> e36898230169a08887a0341ccc2a2332cc3d4d4b
                                                                             </state>
                                                                             <connections>
                                                                                 <action selector="buttonTouchUpInside:" destination="fd2-m0-uVE" eventType="touchUpInside" id="i2A-fn-23d"/>
                                                                             </connections>
                                                                         </button>
+<<<<<<< HEAD
                                                                         <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rv6-08-aRC">
                                                                             <rect key="frame" x="256" y="1" width="127.66666666666669" height="30"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                             <state key="normal" title="공유하기">
+=======
+                                                                        <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rv6-08-aRC">
+                                                                            <rect key="frame" x="256" y="1" width="128" height="30"/>
+                                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                                            <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                            <inset key="imageEdgeInsets" minX="-18" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                            <state key="normal" title="공유하기" image="ShareImage">
+>>>>>>> e36898230169a08887a0341ccc2a2332cc3d4d4b
                                                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                             </state>
                                                                             <state key="selected">
@@ -213,11 +238,18 @@
                                                                                 <action selector="buttonTouchUpInside:" destination="fd2-m0-uVE" eventType="touchUpInside" id="70b-MU-7PN"/>
                                                                             </connections>
                                                                         </button>
-                                                                        <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FhQ-GS-CGf">
+                                                                        <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FhQ-GS-CGf">
                                                                             <rect key="frame" x="128" y="1" width="128" height="30"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+<<<<<<< HEAD
                                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                             <state key="normal" title="댓글 달기">
+=======
+                                                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                                            <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                            <inset key="imageEdgeInsets" minX="-18" minY="3" maxX="0.0" maxY="0.0"/>
+                                                                            <state key="normal" title="댓글 달기" image="ReplyImage">
+>>>>>>> e36898230169a08887a0341ccc2a2332cc3d4d4b
                                                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                             </state>
                                                                             <state key="selected">
@@ -277,7 +309,7 @@
                                                 <constraint firstItem="7ki-rN-Hpw" firstAttribute="leading" secondItem="8dO-BU-mWQ" secondAttribute="leading" id="9UN-ds-DPU"/>
                                                 <constraint firstAttribute="trailing" secondItem="7ki-rN-Hpw" secondAttribute="trailing" id="a6s-gC-faN"/>
                                                 <constraint firstItem="7ki-rN-Hpw" firstAttribute="top" secondItem="8dO-BU-mWQ" secondAttribute="top" id="tRW-4P-RpC"/>
-                                                <constraint firstAttribute="bottom" secondItem="7ki-rN-Hpw" secondAttribute="bottom" constant="9.8300000000000001" id="uDV-9G-DFY"/>
+                                                <constraint firstAttribute="bottom" secondItem="7ki-rN-Hpw" secondAttribute="bottom" id="uDV-9G-DFY"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -321,7 +353,11 @@
         </scene>
     </scenes>
     <resources>
+        <image name="LikeImage" width="17" height="16"/>
+        <image name="LikeImageSel" width="17" height="16"/>
         <image name="More" width="6" height="20"/>
-        <image name="User" width="42" height="42"/>
+        <image name="ReplyImage" width="17" height="17"/>
+        <image name="ShareImage" width="17" height="14"/>
+        <image name="User" width="40" height="40"/>
     </resources>
 </document>

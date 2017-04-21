@@ -74,7 +74,13 @@ class BoardTableCell: UITableViewCell, UITextViewDelegate {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        contentView.frame = UIEdgeInsetsInsetRect(contentView.frame, UIEdgeInsetsMake(0, 0, 10, 0))
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }

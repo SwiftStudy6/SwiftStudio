@@ -526,7 +526,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
                 return CGSize.zero
             }
         }else{
-            var height : CGFloat = 250.0;
+            let height : CGFloat = 250.0;
 
             
             return CGSize(width: view.frame.width, height: height)

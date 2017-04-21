@@ -107,6 +107,43 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7kI-zb-HHA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1738" y="1171"/>
+<<<<<<< HEAD
+=======
+        </scene>
+        <!--Chat Log View Controller-->
+        <scene sceneID="84Z-9E-9Nw">
+            <objects>
+                <collectionViewController id="XEG-Cp-KTJ" customClass="ChatLogViewController" customModule="SwiftStudio" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="fMt-Xp-fE2">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="1gF-my-k93">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="ChatLogCell" reuseIdentifier="ChatLogCell" id="dxn-aH-I8f">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </view>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="XEG-Cp-KTJ" id="TsZ-uw-Sb6"/>
+                            <outlet property="delegate" destination="XEG-Cp-KTJ" id="hvU-4D-5Za"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KqV-8i-2wd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-49" y="1171"/>
+>>>>>>> e36898230169a08887a0341ccc2a2332cc3d4d4b
         </scene>
         <!--UserList-->
         <scene sceneID="lyY-WF-XAx">
@@ -116,6 +153,7 @@
             </objects>
             <point key="canvasLocation" x="439" y="764"/>
         </scene>
+<<<<<<< HEAD
         <!--Message Controller-->
         <scene sceneID="l8V-5W-Fvh">
             <objects>
@@ -153,6 +191,8 @@
             </objects>
             <point key="canvasLocation" x="92.753623188405811" y="1098.913043478261"/>
         </scene>
+=======
+>>>>>>> e36898230169a08887a0341ccc2a2332cc3d4d4b
         <!--MileStone-->
         <scene sceneID="346-PX-stq">
             <objects>
