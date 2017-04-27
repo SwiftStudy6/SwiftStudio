@@ -377,7 +377,7 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         self.tableView.removePullToRefresh(tableView.bottomPullToRefresh!)
     }
     
-    
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
