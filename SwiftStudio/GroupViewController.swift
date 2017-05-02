@@ -187,9 +187,10 @@ class GroupViewController: UIViewController{
     
     
     lazy var menuButtonItem : UIBarButtonItem = {
-        
+       
         let image = UIImage(named:"MenuWhite")?.resizeImage(targetSize: CGSize(width: 31.5, height: 21))
         var _inButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(menuButtonEvent))
+
         return _inButton
     }()
     
@@ -223,8 +224,7 @@ class GroupViewController: UIViewController{
         let statusBar = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 20))
         statusBar.backgroundColor = Common().defaultStatusColor
         self.view.addSubview(statusBar)
-        
-        
+
         let size = view.frame.size
         
         print("Size : \(size.width/2 - 5)")
@@ -278,6 +278,7 @@ class GroupViewController: UIViewController{
                     self.dataList = array
                     self.collectioView.reloadData()
                 }
+
             }
             
         }) { (error) in
@@ -285,12 +286,14 @@ class GroupViewController: UIViewController{
                 return
             }
         }
+
     }
     
     func menuButtonEvent(){
         self.dismiss(animated: true, completion: nil)
     }
     
+
 }
 
 extension GroupViewController : UICollectionViewDelegate {
@@ -391,9 +394,7 @@ extension GroupViewController : UICollectionViewDataSource{
         
         let selectedView = UIView()
         selectedView.backgroundColor = .black
-        cell.selectedBackgroundView = selectedView
-        
-      
+        cell.selectedBackgroundView = selectedView  
         
         return cell
     }

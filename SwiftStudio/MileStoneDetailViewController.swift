@@ -56,7 +56,14 @@ class USERATTEND {
 
 
 
-class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MileStoneDetailViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource  {
+   
+
+  
+
+    
+
+
     
     lazy var homeBarButtonItem: UIBarButtonItem = {
         let button = UIBarButtonItem(image: UIImage(named: "Home"), style: .plain, target: self, action: #selector(self.back))
@@ -80,21 +87,39 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
     @IBOutlet weak var nonattend_count: UILabel!
     
     
-    @IBOutlet weak var tableView: UITableView!
+
+    
     
     @IBOutlet weak var timelabel: UILabel!
     
     @IBOutlet weak var bodytext: UITextView!
     
+    @IBOutlet weak var milecreat_user_img: UIImageView!
+    
+    @IBOutlet weak var milecreat_user_nm: UILabel!
+    
+    @IBOutlet weak var milecreate_user_id: UILabel!
+    
+    
     
     @IBOutlet weak var scrollView: UIScrollView!
+    
+    @IBOutlet weak var collectionA: UICollectionView!
+    
+    @IBOutlet weak var collectionB: UICollectionView!
+    
     
     var title_key :String?
     
    //var mileAttend = [USERATTEND]()
     var mile_user = [USERATTEND]()
+    var  mile_user_2 = [USERATTEND]()
 
-
+    
+    var mile_user_nm : String!
+    var mile_user_id  : String!
+    var mile_user_profile_url : String!
+    
     var mile_detail_title: String!
     var mile_time: String!
     var mile_body:String!
@@ -103,10 +128,117 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
     var absent : Int = 0
     var textcontent : String! = nil
     
-    //var mile_user = [String : Bool]()
     
-  //  let mile_user_list = [mile_user]()
     
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+  var count = 0
+        
+        if collectionView == self.collectionA
+        {
+        count =  mile_user.count
+        return count
+        }
+        
+        else if collectionView == self.collectionB
+        {
+        count =  mile_user_2.count
+       return count
+        }
+        
+        else
+        {
+        count = 1
+        return count
+        }
+        //return count
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+    {
+        
+        if collectionView == self.collectionA {
+            
+            let cellA = collectionA.dequeueReusableCell(withReuseIdentifier: "CollectionViewACell", for: indexPath) as! customcellA
+            
+            // Set up cell
+            
+            print("mile_user.count  ")
+            print(mile_user.count )
+            
+           if(self.attend > 0)
+           {
+            
+            let mind = mile_user[indexPath.row]
+            cellA.userName.text = mind.user_nm
+            cellA.userImage.sd_setImage(with: URL(string:mind.profile_url!), placeholderImage: UIImage(named:"30. User@3x.png"), options: .retryFailed, completed: { (image, error, cachedType, url) in
+                
+                
+                //이미지캐싱이 안되있을경우에 대한 애니메이션 셋팅_imageView.alpha = 1;
+                if cellA.userImage != nil, cachedType == .none {
+                    
+                    cellA.userImage?.alpha = 0
+                    
+                    UIView.animate(withDuration: 0.2, animations: {
+                        cellA.userImage?.alpha = 1
+                    }, completion: { (finished) in
+                        cellA.userImage?.alpha = 1
+                    })
+                }
+            })
+            
+            cellA.userImage.layer.cornerRadius = cellA.userImage.frame.size.width/2
+            cellA.userImage.layer.masksToBounds = true
+            
+            }
+            return cellA
+        }
+            
+        else {
+            let cellB = collectionB.dequeueReusableCell(withReuseIdentifier: "CollectionViewBCell", for: indexPath) as! customcellB
+            
+            // ...Set up cell
+            
+            
+            print("mile_user_2.count  ")
+            print(mile_user_2.count )
+            
+           if(self.absent > 0)
+           {
+           
+            let mind2 = mile_user_2[indexPath.row]
+            cellB.userName.text = mind2.user_nm
+            cellB.userImage.sd_setImage(with: URL(string:mind2.profile_url!), placeholderImage: UIImage(named:"30. User@3x.png"), options: .retryFailed, completed: { (image, error, cachedType, url) in
+                
+                
+                //이미지캐싱이 안되있을경우에 대한 애니메이션 셋팅_imageView.alpha = 1;
+                if cellB.userImage != nil, cachedType == .none {
+                    
+                    cellB.userImage?.alpha = 0
+                    
+                    UIView.animate(withDuration: 0.2, animations: {
+                        cellB.userImage?.alpha = 1
+                    }, completion: { (finished) in
+                        cellB.userImage?.alpha = 1
+                    })
+                }
+            })
+            
+            cellB.userImage.layer.cornerRadius = cellB.userImage.frame.size.width/2
+            cellB.userImage.layer.masksToBounds = true
+            
+            }
+            
+            return cellB
+        }
+        /*
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewBCell", for: indexPath as IndexPath) as!
+        customcellA
+
+        return cell
+ */
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,15 +247,39 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
         self.mainlabel.text = mile_detail_title
         self.timelabel.text = mile_time
         self.bodytext.text = mile_body
+        self.milecreat_user_nm.text = mile_user_nm
+        self.milecreate_user_id.text = mile_user_id
+        
+        
+        self.milecreat_user_img.sd_setImage(with: URL(string:self.mile_user_profile_url), placeholderImage: UIImage(named:"30. User@3x.png"), options: .retryFailed, completed: { (image, error, cachedType, url) in
+            
+            
+            //이미지캐싱이 안되있을경우에 대한 애니메이션 셋팅_imageView.alpha = 1;
+            if self.milecreat_user_img != nil, cachedType == .none {
+                
+                self.milecreat_user_img?.alpha = 0
+                
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.milecreat_user_img?.alpha = 1
+                }, completion: { (finished) in
+                    self.milecreat_user_img?.alpha = 1
+                })
+            }
+        })
+        
+        self.milecreat_user_img.layer.cornerRadius = self.milecreat_user_img.frame.size.width/2
+        self.milecreat_user_img.layer.masksToBounds = true
+
+        
+        
+        
         
         self.acceptlabel.text = "참석"
         
          self.nonattendlabel.text = "불참"
      
-        
-        
-        
-        
+        // collectionViewB.delegate = self
+       //  collectionViewB.dataSource = self
         
         
         NSLog("detail printing")
@@ -140,39 +296,14 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
         
         self.view.addSubview(naviBar)
         
+           self.loadTable_1()
         
-        self.loadTable_1()
-        
-        
-       // self.attend_count.text = String(self.attend!)
-        //self.nonattend_count.text = String(mileattends.count - self.attend!)
-        
-     //   print(String(self.attend!))
-      //  print(attend)
-        
-        self.tableView.reloadData()
-      
+           self.collectionA.reloadData()
+           self.collectionB.reloadData()
     }
      func attendCnt()
      {
-        /*
-        let ref = FIRDatabase.database().reference()
-        ref.child("milelist").child(self.mile_detail_title).child().chlid("attendFlag").observeSingleEvent(of: .value, with:  { (snapshot) in
-            
-            print("user value")
-            print(snapshot.value)
-            
-            let snapshotValue = snapshot.value as! NSDictionary
-            self.user.userEmail  = snapshotValue["email"] as? String ?? ""
-            self.user.userName  = snapshotValue["userName"] as? String ?? ""
-            self.user.uid  = uid!
-            
-            print("user value3333")
-            print(self.user.userEmail)
-            print(self.user.userName)
-        })
-*/
-        
+       
     }
     
     
@@ -180,135 +311,6 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
     
     let test_image = ["user", "user", "user"]
     
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
-    {
-        
-        //return mileattends.count
-        //return (mile_detail_list.count)
-        
-        
-        return mile_user.count
-        
-    }
-    
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomMileStoneDetailViewTableViewCell
-        
-        
-       // let mileuser = mile_user[indexPath.row]
-        
-        //cell.detailImage.image = UIImage(named: "30. User@3x"+".png")
-        
-        //let celluserid = mileuser.
-        //
-       // cell.detailLabel1.text =
-        
-        
-        print("mileAttend!!!!!1")
-       // print(mileAttend.count)
-        print(indexPath.row)
-        let mind = mile_user[indexPath.row]
-
-        
-    
-    //    print(mind)
-        
-      //  attend_count.text = String(mileAttend.count)
-        
-        
-          cell.detailLabel1.text = mind.user_email
-          cell.usernamelabel.text = mind.user_nm
-        if(mind.attend_yn == "1")
-        {
-         cell.attendlabel.text = "참석"
-        }
-        else
-        {
-         cell.attendlabel.text = "불참"
-        }
-        
-        /*
-        let ref = FIRDatabase.database().reference()
-        ref.child("users").child(mind.uid!).child("profile_url").observe(.value, with: { (snapshot) in
-            self.textcontent = snapshot.value as? String
-            
-            print("mile.instUserUid is \(mind.uid)")
-            print("textcontent is \(self.textcontent)")
-            
-            if let url = NSURL(string: self.textcontent!) {
-                if let data = NSData(contentsOf: url as URL) {
-                    cell.detailImage.image = UIImage(data: data as Data)
-                }
-            }
-        })
-    */
-        
-        //프로필 이미지 처리
-        cell.detailImage.sd_setImage(with: URL(string:mind.profile_url!), placeholderImage: UIImage(named:"30. User@3x.png"), options: .retryFailed, completed: { (image, error, cachedType, url) in
-            
-            
-            //이미지캐싱이 안되있을경우에 대한 애니메이션 셋팅_imageView.alpha = 1;
-            if cell.detailImage != nil, cachedType == .none {
-                
-                cell.detailImage?.alpha = 0
-                
-                UIView.animate(withDuration: 0.2, animations: {
-                    cell.detailImage?.alpha = 1
-                }, completion: { (finished) in
-                    cell.detailImage?.alpha = 1
-                })
-            }
-        })
-
-        
-        
-        
-        print("user info!!")
-        print(mind.user_email)
-        print(mind.user_nm)
-        print(mind.attend_yn)
-     //   let mileattend = mileattends[indexPath.row]
-     //   cell.detailLabel1.text = mileattend.userId
-      //  cell.usernamelabel.text = mileattend.userName
-    //    if(mileattend.attendFlag == "Y")
-     //   {
-     //   cell.attendlabel.text = "참석"
-    //    }
-     //   else
-    //    {
-     //   cell.attendlabel.text = "불참"
-     //   }
-        
-       // var attend: Int
-       // var x: Int
-        
-       // attend = 0
-        
-        /*
-        for var i in 0..<mileattends.count {
-            attend +=  1
-            print(attend)
-        }
-        */
-        /*
-        let values = []
-        
-        
-        for item in values {
-            let userName = item["userName"]
-            
-            let user = User()
-            user.userName = userName
-            
-            mileAttend.append(user)
-        }
-        
-      */
-        
-        return (cell)
-    }
     
     
     
@@ -363,8 +365,6 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
     }
     
     
-    
-    
     func loadTable_1()
     {
         
@@ -372,151 +372,124 @@ class MileStoneDetailViewController: UIViewController, UITableViewDataSource, UI
         //  let  milelist = MileObject.init()
         var tempList : Array<Any>! = nil
         
-        
-        /*
-         let ref = FIRDatabase.database().reference()
-         _=ref.child("milelist").observe(.value, with: {snapshot in
-         print(snapshot.value)
-         })
-         */
-        
-        
-        
-        
-        
-        /*
-         let query = ref.child("milelist")
-         query.observeSingleEvent(of: .value, with: {[weak self] snapshot in
-         //    guard let wself = self else {return}
-         print(snapshot.value)
-         for childSnapshot in snapshot.children {
-         if let childSnapshot = childSnapshot as? FIRDataSnapshot {
-         let mile = Mile(snapshot: childSnapshot)
-         self?.miles.append(mile)
-         }
-         }
-         
-         DispatchQueue.main.async{
-         self?.tableView.reloadData()
-         }
-         })
-         */
-        
-        
-        //ref.child("mileattend").child("mileTitle").setValue(mile_detail_title)
-        
-        //let mileattends = ref.child("mileattend")
-       // print(mileattends)
-        
-       // let query = mileattends.queryEqual(toValue: mile_detail_title, childKey: "mileTitle")
-        //let mileattends = MILEATTEND1()
-        
-        
-        
-    
-        
-      //  var attendlists = [mileAttend]()
-    
+       
         print("title_key")
-         print(title_key!)
+        print(title_key!)
         print(mile_detail_title)
         
-       //  let ref = FIRDatabase.database().reference()
-       // let mileattends = ref.child("milelist")
-       // let query = mileattends.queryOrdered(byChild: "uid").queryEqual(toValue: title_key)
+    
         
         let ref = FIRDatabase.database().reference().child("milelist").child(title_key!).child("mileAttend")
-       // let query = ref.queryOrdered(byChild: "uid").queryEqual(toValue: title_key)
-        
+   
         ref.observe(.childAdded, with: {[weak self] snapshot in
-           // let mileat = MILEATTEND1()
-           // mileat.userID = ref.child("mileattend").setValue(<#T##value: Any?##Any?#>, forKey: "userID")
-       //    mileat.userID = ref.child("mileattend").value(forKey: "userID") as! String?
-            
-            print("snapshot.value ")
-         //   print(snapshot.key )
-            print(snapshot.value )
-          //  print([snapshot.value].uid )
-            
-         //   let snapshotValue = snapshot.value as! NSDictionary
-         //   let snapshotValue = snapshot.value as! String
-         //   var mileAttend : Dictionary<String, Bool>
-            let snapshotValue = snapshot.value as! NSDictionary
-               let  attendlists = USERATTEND()
-             attendlists.user_email = snapshotValue["userEmail"] as? String ?? ""
-             attendlists.user_nm = snapshotValue["userName"] as? String ?? ""
-             attendlists.uid = snapshotValue["uid"] as? String ?? ""
-             attendlists.attend_yn = snapshotValue["attendFlag"] as? String ?? ""
-             attendlists.profile_url = snapshotValue["profile_url"] as? String ?? ""
-            
           
-            if( attendlists.attend_yn  == "0" )
+            print("snapshot.value ")
+            
+            print(snapshot.value )
+      
+            
+            
+            
+            
+            let snapshotValue = snapshot.value as! NSDictionary
+            
+            print("snapshot.attendFlag ")
+            print(snapshotValue["attendFlag"] )
+            
+            let  attendlists = USERATTEND()
+            let  nonattendlists = USERATTEND()
+            
+            let tmp_attendflag = snapshotValue["attendFlag"] as? String ?? ""
+            
+            
+            if(tmp_attendflag == "1")
             {
-                self?.absent  +=  1
-                print("self?.absent ")
-                print(self?.absent )
-    
+            attendlists.user_email = snapshotValue["userEmail"] as? String ?? ""
+            attendlists.user_nm = snapshotValue["userName"] as? String ?? ""
+            attendlists.uid = snapshotValue["uid"] as? String ?? ""
+            attendlists.attend_yn = snapshotValue["attendFlag"] as? String ?? ""
+            attendlists.profile_url = snapshotValue["profile_url"] as? String ?? ""
             }
             else
             {
-                self?.attend   +=  1
+            nonattendlists.user_email = snapshotValue["userEmail"] as? String ?? ""
+            nonattendlists.user_nm = snapshotValue["userName"] as? String ?? ""
+            nonattendlists.uid = snapshotValue["uid"] as? String ?? ""
+            nonattendlists.attend_yn = snapshotValue["attendFlag"] as? String ?? ""
+            nonattendlists.profile_url = snapshotValue["profile_url"] as? String ?? ""
+            }
+            
+            if( attendlists.attend_yn  == "1" )
+            {
+                self?.attend  +=  1
+                print("self?.absent ")
+                print(self?.absent )
+                
+            }
+            
+            if( nonattendlists.attend_yn  == "0" )
+            {
+                self?.absent   +=  1
                 print("self?.attend ")
                 print(self?.attend )
             }
             
             
-          
+            
             
             let attedString :String? = String( describing: self?.attend  )
             let absentString :String? = String( describing: self?.absent  )
-
             
-        //     mileat.userId  = snapshotValue["userId"] as? String ?? ""
-         //   mileat.userName  = snapshotValue["userName"] as? String ?? ""
-          //  var mileAttend : Dictionary<String, Bool>
-          //   mileAttend  = snapshotValue["mileAttend"] as? [String : Bool] ?? [:]
-         //   mileat.mileCount = snapshotValue["mileCount"] as? Int ?? 0
-         //   mileat.mileKey = snapshotValue["uid"] as? String ?? ""
+        
             
-      //      let key = snapshot.key
-       //     let v_1 = snapshot.value
-      //      let value = v_1
             
-           
-            
-             print("attendlists")
+            print("attendlists")
             var String1 :String
             var String2 : String
             
-  //          String1 = attedString
-       //     String2 = absentString
+            //     String1 = attedString
+            //     String2 = absentString
             
             
-           self?.mile_user.append(attendlists)
+            self?.mile_user.append(attendlists)
+            self?.mile_user_2.append(nonattendlists)
             
             NSLog("append")
             DispatchQueue.main.async{
                 // self?.tableView.endUpdates()
-                self?.tableView.reloadData()
+                self?.collectionA.reloadData()
+                 self?.collectionB.reloadData()
                 self?.attend_count.text = NSNumber(value: (self?.attend)!).stringValue
                 self?.nonattend_count.text = NSNumber(value: (self?.absent)!).stringValue
                 
                 
             }
-        }
+            }
         )
         
-       //print(mileattends)
-        //print(query)
     }
 
     
-    
-    
-    
-    
-    
-    
-    
-    
 }
+
+class customcellA: UICollectionViewCell
+{
+    var indexPath       : IndexPath?    //Notice indexPath
+    @IBOutlet weak var userImage: UIImageView!
+    @IBOutlet weak var userName: UILabel!
+}
+
+
+
+class customcellB: UICollectionViewCell
+{
+    var indexPath       : IndexPath?    //Notice indexPath
+
+    @IBOutlet weak var userImage: UIImageView!
+    @IBOutlet weak var userName: UILabel!
+
+}
+
+
+
+

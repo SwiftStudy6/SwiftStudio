@@ -24,7 +24,6 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
     var naviBar: UINavigationBar!
     
     let maxSize = 200
-
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -327,6 +326,10 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+
+        
+        
         let customController = CustomTabBarController.sharedInstance
         
         self.titleString = "메인"
@@ -380,6 +383,15 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         //Load Data
         loadEvent()
     }
+    
+
+    //반드시 적어줘야함 (PullToRefresh를 사용할 경우)
+    deinit {
+        self.tableView.removePullToRefresh(tableView.topPullToRefresh!)
+        self.tableView.removePullToRefresh(tableView.bottomPullToRefresh!)
+    }
+    
+
 
 
     
@@ -396,8 +408,6 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
     }
 
     // MARK: - Table view data source
-
-
     //표현할 섹션(섹션은 사용할 만큼의 고정값을 줘야 한다)
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
@@ -420,6 +430,13 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
             
             cell.lable?.text = self.noticeList[indexPath.row].text
             cell.lable.textAlignment = .left
+            
+            let selectedView = UIView()
+            selectedView.backgroundColor = UIColor(netHex:0x7e9b96)
+            cell.selectedBackgroundView = selectedView
+            
+            
+            
             
             return cell
         //Board Section
@@ -502,6 +519,13 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
             cell.indexPath = indexPath
             
             cell.delegate = self
+            
+            
+            let selectedView = UIView()
+            selectedView.backgroundColor = UIColor(netHex:0x7e9b96)
+            cell.selectedBackgroundView = selectedView
+            
+            
             
             return cell
         }
@@ -956,6 +980,13 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
                 self.boardList.append(obj)
                 
                 let newIndexPath = IndexPath(row:self.boardList.count-1, section:1)
+                
+//                DispatchQueue.main.async(execute: { 
+//                    self.tableView.reloadData()
+//                    self.tableView.scrollToRow(at: newIndexPath, at: .bottom, animated: false)
+//                })
+//        
+                
                 self.tableView.insertRows(at: [newIndexPath], with: .automatic)
                 
             }
@@ -1122,7 +1153,7 @@ extension UIViewController {
         
         activateController?.dismiss(animated: animated, completion: completion)
     }
-}
+
 
 extension UIImage {
     //resizing Image
@@ -1151,4 +1182,5 @@ extension UIImage {
         
         return newImage!
     }
+
 }
