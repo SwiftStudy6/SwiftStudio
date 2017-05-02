@@ -67,7 +67,9 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </stackView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gve-qq-k3q">
+
                                                     <rect key="frame" x="76" y="73" width="220" height="21"/>
+
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
@@ -88,14 +90,18 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Kg-X7-RXg">
+
                                                     <rect key="frame" x="174" y="8" width="136" height="27"/>
+
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v4z-vf-YuO">
                                                     <rect key="frame" x="24" y="85" width="327" height="45"/>
+
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
@@ -132,8 +138,10 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Swift Study" id="byB-Hj-iBy">
+
                         <barButtonItem key="leftBarButtonItem" image="92B9D066-CC16-4595-AA70-ABB35A9B1A1A" id="Fwd-Pt-pbc"/>
                         <barButtonItem key="rightBarButtonItem" image="97DFB037-B1F0-4D3A-B914-6B62E0B973AB" id="KAZ-vj-Bgp"/>
+
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -147,6 +155,7 @@
     </scenes>
     <resources>
         <image name="92B9D066-CC16-4595-AA70-ABB35A9B1A1A" width="20" height="20">
+
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
@@ -224,7 +233,9 @@ D/oQAxAIEBAQExAYECcQKxAyEDoQRxBMEE4QUBBVEF0QYBBlEG0QcBCCEIUQigAAAAAAAAIBAAAAAAAA
 AEEAAAAAAAAAAAAAAAAAABCMA
 </mutableData>
         </image>
+
         <image name="97DFB037-B1F0-4D3A-B914-6B62E0B973AB" width="20" height="20">
+
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw

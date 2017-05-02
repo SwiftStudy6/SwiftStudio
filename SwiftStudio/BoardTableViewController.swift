@@ -23,7 +23,7 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
  
     var naviBar: UINavigationBar!
     
-    let maxSize = 300
+    let maxSize = 200
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -42,14 +42,20 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
     private var refreshController : UIRefreshControl!
     
     lazy var homeBarButtonItem: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: UIImage(named: "Home"), style: .plain, target: self, action: #selector(self.returnHome))
+        
+        let _image = UIImage(named: "HomeWhite")?.resizeImage(targetSize: CGSize(width: 27 , height: 27))
+        
+        let button = UIBarButtonItem(image: _image, style: .plain, target: self, action: #selector(self.returnHome))
         
         return button
     }()
     
     
     lazy var composeBarButtonItem: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(self.navToWriteHandle))
+        let _image = UIImage(named: "EditWhite")?.resizeImage(targetSize: CGSize(width: 27 , height: 27))
+        
+        let button = UIBarButtonItem(image: _image, style: .plain, target: self, action: #selector(self.navToWriteHandle))
+        
         
         return button
     }()
@@ -334,6 +340,7 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         
         
         navigationItem.title = self.titleString
+        
         navigationItem.rightBarButtonItem = composeBarButtonItem
         navigationItem.leftBarButtonItem = homeBarButtonItem
         
@@ -341,9 +348,16 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         let naviBar = UINavigationBar()
         naviBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 64)
         naviBar.items = [navigationItem]
-        naviBar.barTintColor = .white
+        naviBar.barStyle = .black
+        naviBar.barTintColor = Common().defaultColor
+        naviBar.tintColor = .white
+        naviBar.isTranslucent = true
         
         self.view.addSubview(naviBar)
+        
+        let statusBar = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 20))
+        statusBar.backgroundColor = Common().defaultStatusColor
+        self.view.addSubview(statusBar)
         
         
         //RefreshController Setting
@@ -379,12 +393,21 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
     
 
 
+
+    
+    //반드시 적어줘야함 (PullToRefresh를 사용할 경우)
+
+    deinit {
+        self.tableView.removePullToRefresh(tableView.topPullToRefresh!)
+        self.tableView.removePullToRefresh(tableView.bottomPullToRefresh!)
+    }
+
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 
     // MARK: - Table view data source
-    
     //표현할 섹션(섹션은 사용할 만큼의 고정값을 줘야 한다)
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
@@ -431,7 +454,13 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
             
             let str : String! = boardObj.bodyText
             
-            //더보기 추가
+             //TO-DO : 현재 보여지는 글의 범위를 위한 계산
+            let numLines = (cell.textRecorded?.contentSize.height)!/(cell.textRecorded?.font?.lineHeight)!;
+            
+            print("***** >> \(numLines) , \(cell.indexPath?.row)")
+            
+            
+            //더보기 추가 (현재는 글자수의 갯수에 따라서 바뀜) -> 현재 보이는 최소 라인값의 범위를 구해야함
             if(str.utf16.count >= maxSize){
                 let readMore = "...더 보기"
                 
@@ -502,6 +531,12 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    //TO-DO : 현재 보여지는 글의 범위
+    func visibleTextRagne(_ textView : UITextView) -> NSRange{
+        return NSRange()
+    }
+  
+    // 공지사항 위에 여백을 준다.
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if(section == 0) {
             return 10
@@ -509,6 +544,7 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         return 0
     }
     
+    //셀 선택시
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -541,13 +577,14 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
             
             let cancelAction = UIAlertAction(title: "취소", style: .default, handler: nil)
             
-            
             actionController.addAction(deleteAction)
             actionController.addAction(cancelAction)
             
             if(FIRAuth.auth()?.currentUser?.uid == noticeObj.authorId){
                 self.present(actionController, animated: true, completion: nil)
             }
+            
+            //TO-DO : 그룹의 권한정보에 따른 삭제설정
             
         }else{
             
@@ -569,12 +606,11 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
     
     //menuButtonEvent
     func menuButtonEvent(sender: UIButton, cell: BoardTableCell) {
-        let user = FIRAuth.auth()?.currentUser
         
+        //초기값
+        let user = FIRAuth.auth()?.currentUser
         let boardKey = cell.key
         let authorId = cell.authorId
-        
-        
         
         let alertController = UIAlertController(title: "게시물 수정", message: nil, preferredStyle: .actionSheet)
         
@@ -600,7 +636,7 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
                             return
                         }
                         
-                        let count = self.noticeList.count
+                        let count = self.noticeList.count   //현재 공지사항의 갯수
                         
                         let dict = snapshot.value as! [String : Any]
                         
@@ -964,6 +1000,7 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         let cell = tableView.cellForRow(at: IndexPath(row: (_view?.tag)!, section: 1)) as? BoardTableCell
         
         print("Tab >>>> \(String(describing: cell?.isExpend))")
+
         
         if((cell?.isExpend)!){
             cell?.isExpend = false
@@ -1115,6 +1152,35 @@ extension UIViewController {
         }
         
         activateController?.dismiss(animated: animated, completion: completion)
+    }
+
+
+extension UIImage {
+    //resizing Image
+    func resizeImage(targetSize: CGSize) -> UIImage {
+        let size = self.size
+        
+        let widthRatio  = targetSize.width  / self.size.width
+        let heightRatio = targetSize.height / self.size.height
+        
+        // Figure out what our orientation is, and use that to form the rectangle
+        var newSize: CGSize
+        if(widthRatio > heightRatio) {
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
+        } else {
+            newSize = CGSize(width: size.width * widthRatio, height: size.height * widthRatio)
+        }
+        
+        // This is the rect that we've calculated out and this is what is actually used below
+        let rect = CGRect(x:0, y:0, width:newSize.width, height:newSize.height)
+        
+        // Actually do the resizing to the rect using the ImageContext stuff
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        self.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage!
     }
 
 }

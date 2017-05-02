@@ -2,11 +2,7 @@ import UIKit
 import Firebase
 import Toaster
 
-class User: NSObject {
-    public var uid: String!
-    public var userName: String!
-    public var profile_url: String?
-}
+
 
 class Reply: NSObject {
     public var replyKey: String!

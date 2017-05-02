@@ -26,15 +26,17 @@ class GroupCreateViewController: UIViewController {
     
     private let storageRef = FIRStorage.storage().reference()
     
-    private let placeHolder = UIImage(named: "Camera-100.png")
+
+    private let placeHolder = UIImage(named: "Camera")
     
     lazy var groupName: UITextField! = {
        let _groupName = UITextField()
-        _groupName.borderStyle = .roundedRect
         _groupName.placeholder = "만드실 모임의 이름을 입력해주세요."
         _groupName.returnKeyType = .done
+        _groupName.textColor = .white
         _groupName.delegate = self
         
+        _groupName.borderStyle = .none
         _groupName.translatesAutoresizingMaskIntoConstraints = false
         
         return _groupName
@@ -44,9 +46,13 @@ class GroupCreateViewController: UIViewController {
        
         let _groupImage : UIImageView = UIImageView(image: self.placeHolder)
         _groupImage.layer.cornerRadius = 7
+        _groupImage.layer.borderColor = UIColor.white.cgColor
+        _groupImage.layer.borderWidth = 2
         _groupImage.layer.masksToBounds = true
-        _groupImage.backgroundColor = .gray
+        _groupImage.backgroundColor = .clear
         _groupImage.contentMode = .center
+        _groupImage.tintColor = .white
+
         
         _groupImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlerImage)))
         
@@ -60,6 +66,9 @@ class GroupCreateViewController: UIViewController {
     
     lazy var groupPurpose: UIPickerView! = {
         let _groupPurpose = UIPickerView()
+      
+        _groupPurpose.tintColor = .white
+
         _groupPurpose.dataSource = self
         _groupPurpose.delegate = self
         
@@ -101,7 +110,8 @@ class GroupCreateViewController: UIViewController {
         
         
         _button.setTitle("모임 생성", for: .normal)
-        _button.setTitleColor(.black, for: .normal)
+        _button.setTitleColor(.white, for: .normal)
+
         _button.setTitleColor(.gray, for: .highlighted)
         _button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         _button.titleLabel?.minimumScaleFactor = 0.4
@@ -114,7 +124,7 @@ class GroupCreateViewController: UIViewController {
     }()
     
     
-    override func viewDidLoad() {
+    override viewDidLoad() {
         super.viewDidLoad()
         
         viewSetUp()
@@ -128,7 +138,9 @@ class GroupCreateViewController: UIViewController {
     
     //view Setting
     func viewSetUp(){
-        self.view.backgroundColor = .white
+
+        self.view.backgroundColor = Common().defaultColor
+
         
         //Cancel Button
         self.view.addSubview(cancelButton)
@@ -148,12 +160,17 @@ class GroupCreateViewController: UIViewController {
         self.createButton.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
         
         //Group Name
+
+        groupName.addBorderBottom(height: 1, color: .white, CGRect(x: 0, y: 0, width: self.view.frame.width-40, height: 40))
+
         self.view.addSubview(groupName)
         
         groupName.topAnchor.constraint(equalTo: view.topAnchor, constant: 91).isActive = true
         groupName.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
         groupName.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
-        groupName.heightAnchor.constraint(equalToConstant: 30).isActive = true
+
+        groupName.heightAnchor.constraint(equalToConstant: 40).isActive = true
+
         
         
         //Group Cover ImageView
@@ -174,7 +191,8 @@ class GroupCreateViewController: UIViewController {
         
         label2.text = "어떤 모임을 만드실껀가요?"
         label2.textAlignment = .left
-        label2.textColor = .black
+        label2.textColor = .white
+
         label2.font = UIFont.systemFont(ofSize: 17)
         label2.minimumScaleFactor = 0.52
         
@@ -190,6 +208,15 @@ class GroupCreateViewController: UIViewController {
         
         //Group Purpose PickerView
         self.view.addSubview(groupPurpose)
+
+        
+        groupPurpose.topAnchor.constraint(equalTo: label2.bottomAnchor, constant: 10).isActive = true
+        groupPurpose.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
+        groupPurpose.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        groupPurpose.heightAnchor.constraint(equalToConstant: 83).isActive = true
+        
+        
+        //Gorup Visible Label
         
         groupPurpose.topAnchor.constraint(equalTo: label2.bottomAnchor, constant: 10).isActive = true
         groupPurpose.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
@@ -202,7 +229,7 @@ class GroupCreateViewController: UIViewController {
         
         label3.text = "모임공개설정여부"
         label3.textAlignment = .center
-        label3.textColor = .black
+        label3.textColor = .white
         label3.font = UIFont.systemFont(ofSize: 17)
         label3.minimumScaleFactor = 11 / label3.font.pointSize
         label3.adjustsFontSizeToFitWidth = true
@@ -395,6 +422,7 @@ class GroupCreateViewController: UIViewController {
         self.present(alertSheet, animated: true, completion: nil)
     }
     
+
     
     func imagePickerHandler(_ type : UIImagePickerControllerSourceType){
         
@@ -424,6 +452,8 @@ class GroupCreateViewController: UIViewController {
         }
     }
 
+
+
 }
 
 extension GroupCreateViewController : UIImagePickerControllerDelegate, UINavigationControllerDelegate{
@@ -449,8 +479,16 @@ extension GroupCreateViewController : UIPickerViewDelegate {
         print(row)
     }
     
+    //set DataList
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return pickerList[row]
+    }
+    
+    //set Color
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        
+        let string = pickerList[row]
+        return NSAttributedString(string: string, attributes: [NSForegroundColorAttributeName:UIColor.white])
     }
 }
 
@@ -462,5 +500,23 @@ extension GroupCreateViewController : UIPickerViewDataSource {
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return pickerList.count == 0 ? 1 : pickerList.count
+    }
+    
+    
+}
+
+extension UITextField {
+    /*!
+     @discussion UITextField의 경계선에 밑줄만 그린다.
+     @dicusssion 마지막 파라미터(변수)는 Autolayout을 사용 할 경우 사용 할것(고정값이 없어서 크기를 잡을수 없다)
+     */
+    func addBorderBottom(height: CGFloat, color: UIColor,_ rect : CGRect? = nil) {
+        let _frame = rect ?? self.frame
+  
+        let border = CALayer()
+        border.frame = CGRect(x: 0, y: _frame.height-height, width: _frame.width, height: height)
+        border.backgroundColor = color.cgColor
+        self.layer.addSublayer(border)
+        self.layer.masksToBounds = true
     }
 }
