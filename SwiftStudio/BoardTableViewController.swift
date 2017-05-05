@@ -390,18 +390,6 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
         self.tableView.removePullToRefresh(tableView.topPullToRefresh!)
         self.tableView.removePullToRefresh(tableView.bottomPullToRefresh!)
     }
-    
-
-
-
-    
-    //반드시 적어줘야함 (PullToRefresh를 사용할 경우)
-
-    deinit {
-        self.tableView.removePullToRefresh(tableView.topPullToRefresh!)
-        self.tableView.removePullToRefresh(tableView.bottomPullToRefresh!)
-    }
-
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -457,7 +445,7 @@ class BoardTableViewController: UIViewController, UITableViewDelegate, UITableVi
              //TO-DO : 현재 보여지는 글의 범위를 위한 계산
             let numLines = (cell.textRecorded?.contentSize.height)!/(cell.textRecorded?.font?.lineHeight)!;
             
-            print("***** >> \(numLines) , \(cell.indexPath?.row)")
+            print("***** >> \(numLines) , \(String(describing: cell.indexPath?.row))")
             
             
             //더보기 추가 (현재는 글자수의 갯수에 따라서 바뀜) -> 현재 보이는 최소 라인값의 범위를 구해야함
@@ -1153,7 +1141,7 @@ extension UIViewController {
         
         activateController?.dismiss(animated: animated, completion: completion)
     }
-
+}
 
 extension UIImage {
     //resizing Image

@@ -124,7 +124,7 @@ class GroupCreateViewController: UIViewController {
     }()
     
     
-    override viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         
         viewSetUp()
